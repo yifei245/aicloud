@@ -1,0 +1,2 @@
+# aicloud
+通过ai生成的SpringCloud分布式微服务架构、SpringBoot单体式微服务架构并存的综合型项目
