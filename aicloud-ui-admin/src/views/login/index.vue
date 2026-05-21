@@ -10,7 +10,6 @@
     </section>
     <el-card class="login-card" shadow="never">
       <h2>管理员登录</h2>
-      <p>默认账号：admin / 123456</p>
       <el-form :model="form" size="large" @keyup.enter="submit">
         <el-form-item><el-input v-model="form.username" prefix-icon="User" placeholder="用户名" /></el-form-item>
         <el-form-item><el-input v-model="form.password" prefix-icon="Lock" type="password" show-password placeholder="密码" /></el-form-item>
@@ -23,6 +22,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -35,7 +35,13 @@ const form = reactive({ tenantId: 1, username: 'admin', password: '123456', term
 async function submit() {
   loading.value = true
   try {
-    await auth.login(form)
+    const data = await auth.login(form)
+    const isAdminUser = data.userType === 'ADMIN' || data.roles?.includes('ADMIN') || data.roles?.includes('SUPER_ADMIN')
+    if (!isAdminUser) {
+      auth.logout()
+      ElMessage.warning('当前账号不是管理端账号，请使用 admin 或 ops 登录；会员账号请进入用户端。')
+      return
+    }
     router.replace(String(route.query.redirect || '/dashboard'))
   } finally {
     loading.value = false

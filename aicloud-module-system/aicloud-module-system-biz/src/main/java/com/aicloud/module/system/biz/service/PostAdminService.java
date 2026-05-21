@@ -22,7 +22,7 @@ public class PostAdminService {
     public List<AiPost> list(Long tenantId, String keyword, Integer status) {
         return postMapper.selectList(new LambdaQueryWrapper<AiPost>()
                 .eq(AiPost::getTenantId, tenantId)
-                .like(StringUtils.hasText(keyword), AiPost::getName, keyword)
+                .and(StringUtils.hasText(keyword), w -> w.like(AiPost::getName, keyword).or().like(AiPost::getCode, keyword))
                 .eq(status != null, AiPost::getStatus, status)
                 .orderByAsc(AiPost::getSort, AiPost::getId));
     }

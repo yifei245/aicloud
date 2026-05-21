@@ -11,14 +11,16 @@ fi
 
 cd docker
 
-INFRA_SERVICES=(mysql nacos redis)
+INFRA_SERVICES=()
 APP_SERVICES=(gateway auth system member mp openapi infra product trade pay promotion merchant crm erp bpm report)
 
-docker compose up -d --build "${INFRA_SERVICES[@]}"
+if [[ "${#INFRA_SERVICES[@]}" -gt 0 ]]; then
+  docker compose up -d --build "${INFRA_SERVICES[@]}"
+fi
 
-echo "[run-local] Waiting for MySQL to be ready..."
+echo "[run-local] Waiting for local MySQL(:3306) to be ready..."
 for i in {1..60}; do
-  if docker exec aicloud-mysql mysqladmin ping -uroot -proot --silent >/dev/null 2>&1; then
+  if docker exec mysql mysqladmin ping -uroot -pAa123456 --silent >/dev/null 2>&1; then
     break
   fi
   if [[ "$i" == "60" ]]; then
@@ -28,13 +30,36 @@ for i in {1..60}; do
   sleep 2
 done
 
-echo "[run-local] Waiting for Nacos to be ready..."
+echo "[run-local] Waiting for local Nacos(:8848) to be ready..."
 for i in {1..60}; do
-  if docker exec aicloud-nacos sh -lc "wget -qO- http://127.0.0.1:8848/nacos/actuator/health || curl -fsS http://127.0.0.1:8848/nacos/actuator/health" >/dev/null 2>&1; then
+  if curl -fsS http://127.0.0.1:8848/nacos/actuator/health >/dev/null 2>&1; then
     break
   fi
   if [[ "$i" == "60" ]]; then
-    echo "[run-local] Nacos is not ready after timeout."
+    echo "[run-local] Local Nacos(:8848) is not ready after timeout."
+    exit 1
+  fi
+  sleep 2
+done
+
+echo "[run-local] Waiting for local Redis(:6379) to be ready..."
+for i in {1..60}; do
+  if python3 - <<'PYREDIS'
+import socket, sys
+s = socket.socket(); s.settimeout(1)
+try:
+    s.connect(('127.0.0.1', 6379))
+    sys.exit(0)
+except Exception:
+    sys.exit(1)
+finally:
+    s.close()
+PYREDIS
+  then
+    break
+  fi
+  if [[ "$i" == "60" ]]; then
+    echo "[run-local] Local Redis(:6379) is not ready after timeout."
     exit 1
   fi
   sleep 2

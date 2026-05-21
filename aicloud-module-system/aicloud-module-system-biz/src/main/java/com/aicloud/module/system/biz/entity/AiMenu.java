@@ -1,13 +1,14 @@
 package com.aicloud.module.system.biz.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("ai_menu")
 public class AiMenu {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @TableField("tenant_id")
@@ -21,6 +22,8 @@ public class AiMenu {
     private String path;
     private String component;
     private String permission;
+    private String icon;
+    private Integer visible;
     private Integer sort;
     private Integer status;
 
@@ -86,6 +89,22 @@ public class AiMenu {
 
     public void setPermission(String permission) {
         this.permission = permission;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Integer visible) {
+        this.visible = visible;
     }
 
     public Integer getSort() {

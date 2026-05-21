@@ -1,0 +1,1 @@
+import{_ as e,u as n}from"./useModule-D3jS84CU.js";import{i as r,d as t,w as m,l as s}from"./index-D6PmJrwQ.js";import"./DataMetric.vue_vue_type_script_setup_true_lang-CithBye4.js";import"./modules-DRVBA_NT.js";const d=r({__name:"index",setup(a){const o=n("promotion");return(u,p)=>(s(),t(e,{module:m(o)},null,8,["module"]))}});export{d as default};

@@ -12,12 +12,20 @@ public class MenuNode {
     private String path;
     private String component;
     private String permission;
+    private String icon;
+    private Integer visible;
+    private Integer sort;
+    private Integer status;
     private List<MenuNode> children = new ArrayList<>();
 
     public MenuNode() {
     }
 
     public MenuNode(Long id, Long parentId, String name, Integer type, String path, String component, String permission) {
+        this(id, parentId, name, type, path, component, permission, null, null, null, null);
+    }
+
+    public MenuNode(Long id, Long parentId, String name, Integer type, String path, String component, String permission, String icon, Integer visible, Integer sort, Integer status) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
@@ -25,6 +33,10 @@ public class MenuNode {
         this.path = path;
         this.component = component;
         this.permission = permission;
+        this.icon = icon;
+        this.visible = visible;
+        this.sort = sort;
+        this.status = status;
     }
 
     public Long getId() {
@@ -82,6 +94,15 @@ public class MenuNode {
     public void setPermission(String permission) {
         this.permission = permission;
     }
+
+    public String getIcon() { return icon; }
+    public void setIcon(String icon) { this.icon = icon; }
+    public Integer getVisible() { return visible; }
+    public void setVisible(Integer visible) { this.visible = visible; }
+    public Integer getSort() { return sort; }
+    public void setSort(Integer sort) { this.sort = sort; }
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 
     public List<MenuNode> getChildren() {
         return children;

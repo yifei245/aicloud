@@ -19,7 +19,7 @@ public interface UserMapper extends BaseMapper<AiUser> {
             LEFT JOIN ai_user_dept_post udp ON udp.user_id = u.id AND udp.tenant_id = u.tenant_id
             LEFT JOIN ai_dept d ON d.id = udp.dept_id AND d.tenant_id = u.tenant_id
             WHERE u.tenant_id = #{tenantId}
-              AND (#{keyword} IS NULL OR #{keyword} = '' OR u.username LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%'))
+              AND (#{keyword} IS NULL OR #{keyword} = '' OR u.username LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%') OR u.mobile LIKE CONCAT('%', #{keyword}, '%') OR u.email LIKE CONCAT('%', #{keyword}, '%'))
               AND (#{status} IS NULL OR u.status = #{status})
               AND (#{deptId} IS NULL OR udp.dept_id = #{deptId})
             GROUP BY u.id, u.username, u.nickname, u.mobile, u.email, u.user_type, u.status,

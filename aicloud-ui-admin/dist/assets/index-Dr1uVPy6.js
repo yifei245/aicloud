@@ -1,1 +1,0 @@
-import{_ as o,u as n}from"./useModule-Eh3jYGLy.js";import{h as a,o as s,b as r,u as t}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const i=a({__name:"index",setup(u){const e=n("openapi");return(m,p)=>(s(),r(o,{module:t(e)},null,8,["module"]))}});export{i as default};

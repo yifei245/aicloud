@@ -1,0 +1,1 @@
+import{_ as o,u as n}from"./useModule-D3jS84CU.js";import{i as r,d as t,w as a,l as m}from"./index-D6PmJrwQ.js";import"./DataMetric.vue_vue_type_script_setup_true_lang-CithBye4.js";import"./modules-DRVBA_NT.js";const d=r({__name:"index",setup(s){const e=n("merchant");return(u,c)=>(m(),t(o,{module:a(e)},null,8,["module"]))}});export{d as default};

@@ -7,9 +7,9 @@ cd "$ROOT_DIR"
 run_mysql_file() {
   local file="$1"
   if command -v mysql >/dev/null 2>&1; then
-    mysql -h127.0.0.1 -P13306 -uroot -proot < "$file"
+    mysql --default-character-set=utf8mb4 -h127.0.0.1 -P3306 -uroot -pAa123456 < "$file"
   else
-    docker exec -i aicloud-mysql mysql -uroot -proot < "$file"
+    docker exec -i mysql mysql --default-character-set=utf8mb4 -uroot -pAa123456 < "$file"
   fi
 }
 

@@ -1,53 +1,23 @@
 version: '3.9'
 x-app-env: &app_env
-  SPRING_CLOUD_NACOS_SERVER_ADDR: nacos:8848
-  SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: nacos:8848
-  SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR: nacos:8848
+  SPRING_CLOUD_NACOS_SERVER_ADDR: host.docker.internal:8848
+  SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: host.docker.internal:8848
+  SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR: host.docker.internal:8848
   SPRING_CLOUD_NACOS_DISCOVERY_FAIL_FAST: "false"
   SPRING_CLOUD_NACOS_CONFIG_FAIL_FAST: "false"
-  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  SPRING_CLOUD_NACOS_USERNAME: nacos
+  SPRING_CLOUD_NACOS_PASSWORD: nacos
+  SPRING_CLOUD_NACOS_DISCOVERY_USERNAME: nacos
+  SPRING_CLOUD_NACOS_DISCOVERY_PASSWORD: nacos
+  SPRING_CLOUD_NACOS_CONFIG_USERNAME: nacos
+  SPRING_CLOUD_NACOS_CONFIG_PASSWORD: nacos
+  SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_0900_ai_ci&serverTimezone=Asia/Shanghai
   SPRING_DATASOURCE_USERNAME: root
-  SPRING_DATASOURCE_PASSWORD: root
-  SPRING_DATA_REDIS_HOST: redis
+  SPRING_DATASOURCE_PASSWORD: Aa123456
+  SPRING_DATA_REDIS_HOST: host.docker.internal
   SPRING_DATA_REDIS_PORT: 6379
+  SPRING_DATA_REDIS_PASSWORD: Aa123456
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: aicloud-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: aicloud
-      TZ: Asia/Shanghai
-    command:
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_general_ci
-    ports:
-      - "13306:3306"
-    volumes:
-      - ./mysql/data9:/var/lib/mysql
-      - ../sql:/docker-entrypoint-initdb.d
-
-  nacos:
-    image: nacos/nacos-server:v2.4.3
-    container_name: aicloud-nacos
-    environment:
-      MODE: standalone
-      NACOS_AUTH_ENABLE: "false"
-      JVM_XMS: 256m
-      JVM_XMX: 256m
-    ports:
-      - "18848:8848"
-      - "19848:9848"
-
-  redis:
-    image: redis:7.2-alpine
-    container_name: aicloud-redis
-    command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - "16379:6379"
-    volumes:
-      - ./redis/data:/data
-
   gateway:
     build:
       context: ..
@@ -73,9 +43,6 @@ services:
       AICLOUD_GATEWAY_AUTH_SERVICE_URL: http://auth:48081
     ports:
       - "48080:48080"
-    depends_on:
-      - nacos
-      - redis
 
   auth:
     build:
@@ -86,9 +53,6 @@ services:
       <<: *app_env
     ports:
       - "48081:48081"
-    depends_on:
-      - nacos
-      - mysql
 
   system:
     build:
@@ -101,9 +65,6 @@ services:
       <<: *app_env
     ports:
       - "49010:49010"
-    depends_on:
-      - nacos
-      - mysql
 
   member:
     build:
@@ -116,8 +77,6 @@ services:
       <<: *app_env
     ports:
       - "49012:49012"
-    depends_on:
-      - nacos
 
   mp:
     build:
@@ -130,8 +89,6 @@ services:
       <<: *app_env
     ports:
       - "49013:49013"
-    depends_on:
-      - nacos
 
   openapi:
     build:
@@ -144,8 +101,6 @@ services:
       <<: *app_env
     ports:
       - "49023:49023"
-    depends_on:
-      - nacos
 
   infra:
     build:
@@ -158,8 +113,6 @@ services:
       <<: *app_env
     ports:
       - "49011:49011"
-    depends_on:
-      - nacos
 
   trade:
     build:
@@ -172,9 +125,6 @@ services:
       <<: *app_env
     ports:
       - "49014:49014"
-    depends_on:
-      - nacos
-      - mysql
 
   pay:
     build:
@@ -187,9 +137,6 @@ services:
       <<: *app_env
     ports:
       - "49015:49015"
-    depends_on:
-      - nacos
-      - mysql
 
   promotion:
     build:
@@ -202,8 +149,6 @@ services:
       <<: *app_env
     ports:
       - "49016:49016"
-    depends_on:
-      - nacos
 
   product:
     build:
@@ -216,9 +161,6 @@ services:
       <<: *app_env
     ports:
       - "49017:49017"
-    depends_on:
-      - nacos
-      - mysql
 
   merchant:
     build:
@@ -231,8 +173,6 @@ services:
       <<: *app_env
     ports:
       - "49018:49018"
-    depends_on:
-      - nacos
 
   crm:
     build:
@@ -245,8 +185,6 @@ services:
       <<: *app_env
     ports:
       - "49019:49019"
-    depends_on:
-      - nacos
 
   erp:
     build:
@@ -259,8 +197,6 @@ services:
       <<: *app_env
     ports:
       - "49020:49020"
-    depends_on:
-      - nacos
 
   bpm:
     build:
@@ -273,8 +209,6 @@ services:
       <<: *app_env
     ports:
       - "49021:49021"
-    depends_on:
-      - nacos
 
   report:
     build:
@@ -287,5 +221,3 @@ services:
       <<: *app_env
     ports:
       - "49022:49022"
-    depends_on:
-      - nacos

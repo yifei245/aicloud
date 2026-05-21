@@ -1,1 +1,0 @@
-import{_ as o,u as n}from"./useModule-Eh3jYGLy.js";import{h as r,o as s,b as t,u}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const d=r({__name:"index",setup(a){const e=n("product");return(m,c)=>(s(),t(o,{module:u(e)},null,8,["module"]))}});export{d as default};

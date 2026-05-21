@@ -612,7 +612,7 @@ aicloud:
       - name: allow-admin-permission-buttons
         method: GET
         path: /system/permission/buttons
-        permission: system:role:assign
+        permission: system:menu:list
         effect: ALLOW
         priority: 10
         terminals: [ADMIN]

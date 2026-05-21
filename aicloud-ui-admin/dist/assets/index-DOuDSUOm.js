@@ -1,1 +1,0 @@
-import{_ as e,u as n}from"./useModule-Eh3jYGLy.js";import{h as r,o as s,b as t,u as a}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const i=r({__name:"index",setup(m){const o=n("promotion");return(u,_)=>(s(),t(e,{module:a(o)},null,8,["module"]))}});export{i as default};

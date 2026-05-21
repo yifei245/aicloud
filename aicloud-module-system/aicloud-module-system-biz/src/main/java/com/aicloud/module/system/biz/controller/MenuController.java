@@ -2,12 +2,18 @@ package com.aicloud.module.system.biz.controller;
 
 import com.aicloud.module.system.biz.annotation.RequirePermission;
 import com.aicloud.module.system.biz.model.ApiResponse;
+import com.aicloud.module.system.biz.entity.AiMenu;
 import com.aicloud.module.system.biz.model.MenuNode;
+import com.aicloud.module.system.biz.model.menu.MenuSaveRequest;
 import com.aicloud.module.system.biz.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +48,24 @@ public class MenuController {
     public ApiResponse<List<MenuNode>> menuList(@RequestHeader(name = "X-Tenant-Id", required = false) String tenantIdHeader) {
         Long tenantId = parseTenantId(tenantIdHeader);
         return ApiResponse.ok(menuService.getAllMenus(tenantId));
+    }
+
+
+    @Operation(summary = "保存菜单")
+    @RequirePermission("system:menu:list")
+    @PostMapping("/menu/save")
+    public ApiResponse<AiMenu> saveMenu(@RequestHeader(name = "X-Tenant-Id", required = false) String tenantIdHeader,
+                                        @RequestBody MenuSaveRequest request) {
+        return ApiResponse.ok(menuService.save(parseTenantId(tenantIdHeader), request));
+    }
+
+    @Operation(summary = "删除菜单")
+    @RequirePermission("system:menu:list")
+    @DeleteMapping("/menu/{id}")
+    public ApiResponse<Boolean> deleteMenu(@RequestHeader(name = "X-Tenant-Id", required = false) String tenantIdHeader,
+                                           @PathVariable("id") Long id) {
+        menuService.delete(parseTenantId(tenantIdHeader), id);
+        return ApiResponse.ok(true);
     }
 
     @Operation(summary = "获取按钮级权限")

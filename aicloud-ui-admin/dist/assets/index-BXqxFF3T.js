@@ -1,1 +1,0 @@
-import{_ as o,u as n}from"./useModule-Eh3jYGLy.js";import{h as r,o as s,b as a,u as t}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const d=r({__name:"index",setup(u){const e=n("erp");return(m,_)=>(s(),a(o,{module:t(e)},null,8,["module"]))}});export{d as default};
