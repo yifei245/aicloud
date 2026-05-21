@@ -1,0 +1,144 @@
+import { request } from '@/utils/request'
+
+export interface EndpointAction {
+  label: string
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  path: string
+  permission?: string
+  body?: Record<string, unknown>
+}
+
+export interface ModuleCard {
+  key: string
+  title: string
+  summary: string
+  icon: string
+  accent: string
+  endpoints: EndpointAction[]
+}
+
+export function callEndpoint<T = unknown>(action: EndpointAction) {
+  return request<T>({ url: action.path, method: action.method, data: action.body })
+}
+
+export const moduleCatalog: ModuleCard[] = [
+  {
+    key: 'system', title: '系统管理', summary: '用户、角色、菜单、按钮权限、SSO 会话', icon: 'Setting', accent: '#1c4c5b',
+    endpoints: [
+      { label: '用户列表', method: 'GET', path: '/system/user/list', permission: 'system:user:query' },
+      { label: '角色列表', method: 'GET', path: '/system/role/list' },
+      { label: '菜单树', method: 'GET', path: '/system/menu/tree', permission: 'system:menu:list' },
+      { label: '按钮权限', method: 'GET', path: '/system/permission/buttons', permission: 'system:menu:list' },
+      { label: '在线会话', method: 'GET', path: '/auth/sso/sessions' }
+    ]
+  },
+  {
+    key: 'infra', title: '基础设施', summary: '配置中心、文件管理、定时任务、系统公告', icon: 'Cpu', accent: '#8b5d33',
+    endpoints: [
+      { label: '配置状态', method: 'GET', path: '/infra/config/status' },
+      { label: '配置列表', method: 'GET', path: '/infra/config/list' },
+      { label: '文件列表', method: 'GET', path: '/infra/file/list' },
+      { label: '任务列表', method: 'GET', path: '/infra/job/list' },
+      { label: '公告列表', method: 'GET', path: '/infra/notice/list' }
+    ]
+  },
+  {
+    key: 'report', title: '报表中心', summary: '运营、销售、支付、会员、商户、库存、漏斗', icon: 'DataAnalysis', accent: '#284c8f',
+    endpoints: [
+      { label: '运营看板', method: 'GET', path: '/report/dashboard/operation' },
+      { label: '销售概览', method: 'GET', path: '/report/sales/overview' },
+      { label: '支付概览', method: 'GET', path: '/report/pay/overview' },
+      { label: '会员概览', method: 'GET', path: '/report/member/overview' },
+      { label: '漏斗分析', method: 'GET', path: '/report/dashboard/funnel' }
+    ]
+  },
+  {
+    key: 'member', title: '会员中心', summary: '会员资料、地址、积分、余额账户', icon: 'UserFilled', accent: '#166534',
+    endpoints: [
+      { label: '会员资料', method: 'GET', path: '/app/member/profile' },
+      { label: '会员概览', method: 'GET', path: '/report/member/overview' }
+    ]
+  },
+  {
+    key: 'promotion', title: '营销中心', summary: '优惠券模板、用户券、领取核销', icon: 'Present', accent: '#be123c',
+    endpoints: [
+      { label: '券模板', method: 'GET', path: '/promotion/coupon/template/list' },
+      { label: '模板详情', method: 'GET', path: '/promotion/coupon/template/1' },
+      { label: '用户券', method: 'GET', path: '/promotion/coupon/user/list' }
+    ]
+  },
+  {
+    key: 'merchant', title: '商户中心', summary: '商户资料、入驻审核、账户资金', icon: 'Shop', accent: '#854d0e',
+    endpoints: [
+      { label: '商户概览', method: 'GET', path: '/merchant/overview' },
+      { label: '商户资料', method: 'GET', path: '/merchant/profile/list' },
+      { label: '商户账户', method: 'GET', path: '/merchant/account/list' }
+    ]
+  },
+  {
+    key: 'bpm', title: '工作流', summary: '流程定义、流程实例、待办任务', icon: 'Connection', accent: '#365314',
+    endpoints: [
+      { label: '流程定义', method: 'GET', path: '/bpm/process-definition/list' },
+      { label: '待办任务', method: 'GET', path: '/bpm/task/todo?assignee=admin' }
+    ]
+  },
+  {
+    key: 'product', title: '商品中心', summary: '类目、SPU、SKU、库存和上下架', icon: 'Goods', accent: '#386641',
+    endpoints: [
+      { label: '类目树', method: 'GET', path: '/product/category/tree' },
+      { label: '商品列表', method: 'GET', path: '/product/spu/list' },
+      { label: 'AI 商品搜索', method: 'GET', path: '/product/spu/list?keyword=AI' }
+    ]
+  },
+  {
+    key: 'trade', title: '交易中心', summary: '订单、购物车、物流、售后', icon: 'ShoppingCart', accent: '#9a3412',
+    endpoints: [
+      { label: '订单列表', method: 'GET', path: '/trade/order/list' },
+      { label: '购物车', method: 'GET', path: '/trade/app/cart/list' },
+      { label: '物流列表', method: 'GET', path: '/trade/delivery/list' },
+      { label: '售后列表', method: 'GET', path: '/trade/after-sale/list' }
+    ]
+  },
+  {
+    key: 'pay', title: '支付中心', summary: '支付订单、支付渠道、退款单、回调模拟', icon: 'Wallet', accent: '#0f766e',
+    endpoints: [
+      { label: '支付订单', method: 'GET', path: '/pay/order/list' },
+      { label: '支付渠道', method: 'GET', path: '/pay/channel/list' },
+      { label: '退款列表', method: 'GET', path: '/pay/refund/list' }
+    ]
+  },
+  {
+    key: 'crm', title: 'CRM', summary: '客户、公海、跟进、商机阶段', icon: 'TrendCharts', accent: '#7c2d12',
+    endpoints: [
+      { label: 'CRM 概览', method: 'GET', path: '/crm/overview' },
+      { label: '客户列表', method: 'GET', path: '/crm/customer/list' },
+      { label: '商机列表', method: 'GET', path: '/crm/opportunity/list' }
+    ]
+  },
+  {
+    key: 'erp', title: 'ERP', summary: '库存、出入库、锁库、盘点', icon: 'Box', accent: '#475569',
+    endpoints: [
+      { label: '库存列表', method: 'GET', path: '/erp/inventory/list' },
+      { label: '库存汇总', method: 'GET', path: '/erp/inventory/summary' },
+      { label: '低库存', method: 'GET', path: '/erp/inventory/low-stock' },
+      { label: '出入库流水', method: 'GET', path: '/erp/stock-record/list' }
+    ]
+  },
+  {
+    key: 'mp', title: '小程序平台', summary: '用户绑定、菜单、素材、模板消息', icon: 'Cellphone', accent: '#0369a1',
+    endpoints: [
+      { label: '菜单列表', method: 'GET', path: '/mp/menu/list' },
+      { label: '素材列表', method: 'GET', path: '/mp/material/list' },
+      { label: '消息模板', method: 'GET', path: '/mp/message/template/list' },
+      { label: '发送日志', method: 'GET', path: '/mp/message/log/list' }
+    ]
+  },
+  {
+    key: 'openapi', title: '开放平台', summary: '第三方应用、调用日志、Webhook', icon: 'Share', accent: '#4338ca',
+    endpoints: [
+      { label: '开放应用', method: 'GET', path: '/openapi/app/list' },
+      { label: '调用日志', method: 'GET', path: '/openapi/log/list' },
+      { label: 'Webhook', method: 'GET', path: '/openapi/webhook/list' }
+    ]
+  }
+]

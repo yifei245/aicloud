@@ -1,0 +1,748 @@
+USE aicloud;
+
+CREATE TABLE IF NOT EXISTS ai_member_profile (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  nickname VARCHAR(64) NULL,
+  mobile VARCHAR(20) NULL,
+  email VARCHAR(128) NULL,
+  avatar VARCHAR(255) NULL,
+  gender TINYINT NOT NULL DEFAULT 0,
+  birthday DATE NULL,
+  level VARCHAR(32) NOT NULL DEFAULT 'NORMAL',
+  points BIGINT NOT NULL DEFAULT 0,
+  balance DECIMAL(18,2) NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_user (tenant_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'nickname'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN nickname VARCHAR(64) NULL'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'mobile'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN mobile VARCHAR(20) NULL'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'email'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN email VARCHAR(128) NULL'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'avatar'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN avatar VARCHAR(255) NULL'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'gender'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN gender TINYINT NOT NULL DEFAULT 0'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'birthday'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN birthday DATE NULL'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_member_profile' AND COLUMN_NAME = 'status'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_member_profile ADD COLUMN status TINYINT NOT NULL DEFAULT 1'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+CREATE TABLE IF NOT EXISTS ai_member_level (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  level_code VARCHAR(32) NOT NULL,
+  level_name VARCHAR(64) NOT NULL,
+  threshold_points BIGINT NOT NULL DEFAULT 0,
+  discount_rate DECIMAL(5,2) NOT NULL DEFAULT 100.00,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_level_code (tenant_id, level_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_member_address (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  receiver_name VARCHAR(64) NOT NULL,
+  mobile VARCHAR(20) NOT NULL,
+  province VARCHAR(64) NOT NULL,
+  city VARCHAR(64) NOT NULL,
+  district VARCHAR(64) NOT NULL,
+  detail_address VARCHAR(255) NOT NULL,
+  default_status TINYINT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_user (tenant_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_member_account_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  biz_type VARCHAR(32) NOT NULL,
+  change_type VARCHAR(16) NOT NULL,
+  points_delta BIGINT NOT NULL DEFAULT 0,
+  balance_delta DECIMAL(18,2) NOT NULL DEFAULT 0,
+  points_after BIGINT NOT NULL DEFAULT 0,
+  balance_after DECIMAL(18,2) NOT NULL DEFAULT 0,
+  remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_tenant_user_time (tenant_id, user_id, create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_mp_user_bind (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  open_id VARCHAR(64) NOT NULL,
+  union_id VARCHAR(64) NULL,
+  nickname VARCHAR(64) NULL,
+  avatar_url VARCHAR(255) NULL,
+  phone VARCHAR(20) NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  bind_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_open_id (tenant_id, open_id),
+  UNIQUE KEY uk_tenant_user_mp (tenant_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_product_spu (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  spu_no VARCHAR(64) NULL,
+  name VARCHAR(128) NOT NULL,
+  sub_title VARCHAR(255) NULL,
+  category_id BIGINT NULL,
+  brand_name VARCHAR(64) NULL,
+  unit_name VARCHAR(32) NULL,
+  cover_url VARCHAR(255) NULL,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  sale_price DECIMAL(18,2) NOT NULL DEFAULT 0,
+  stock INT NOT NULL DEFAULT 0,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_product_category (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  parent_id BIGINT NOT NULL DEFAULT 0,
+  name VARCHAR(64) NOT NULL,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_parent (tenant_id, parent_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'spu_no'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN spu_no VARCHAR(64) NULL AFTER tenant_id'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'sub_title'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN sub_title VARCHAR(255) NULL AFTER name'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'brand_name'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN brand_name VARCHAR(64) NULL AFTER category_id'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'unit_name'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN unit_name VARCHAR(32) NULL AFTER brand_name'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'cover_url'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN cover_url VARCHAR(255) NULL AFTER unit_name'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @ddl = IF (
+  EXISTS (
+    SELECT 1 FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_product_spu' AND COLUMN_NAME = 'sort'
+  ),
+  'SELECT 1',
+  'ALTER TABLE ai_product_spu ADD COLUMN sort INT NOT NULL DEFAULT 0 AFTER cover_url'
+);
+PREPARE stmt FROM @ddl;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+CREATE TABLE IF NOT EXISTS ai_trade_order (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  order_no VARCHAR(64) NOT NULL,
+  user_id BIGINT NOT NULL,
+  total_amount DECIMAL(18,2) NOT NULL,
+  pay_amount DECIMAL(18,2) NOT NULL,
+  status VARCHAR(32) NOT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_order_no (tenant_id, order_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_pay_order (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  trade_order_id BIGINT NOT NULL,
+  pay_order_no VARCHAR(64) NOT NULL,
+  channel VARCHAR(32) NOT NULL,
+  amount DECIMAL(18,2) NOT NULL,
+  status VARCHAR(32) NOT NULL,
+  success_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_pay_no (tenant_id, pay_order_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_promotion_coupon_template (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  template_no VARCHAR(64) NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  discount_type VARCHAR(16) NOT NULL,
+  discount_value DECIMAL(18,2) NOT NULL DEFAULT 0,
+  min_amount DECIMAL(18,2) NOT NULL DEFAULT 0,
+  total_count INT NOT NULL DEFAULT 0,
+  claim_count INT NOT NULL DEFAULT 0,
+  receive_limit INT NOT NULL DEFAULT 1,
+  start_time DATETIME NULL,
+  end_time DATETIME NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_template_no (tenant_id, template_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_promotion_user_coupon (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  template_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  coupon_code VARCHAR(64) NOT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'UNUSED',
+  claim_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  use_time DATETIME NULL,
+  expire_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_coupon_code (coupon_code),
+  KEY idx_tenant_user_status (tenant_id, user_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS ai_merchant_profile (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  merchant_no VARCHAR(64) NOT NULL,
+  merchant_name VARCHAR(128) NOT NULL,
+  contact_name VARCHAR(64) NULL,
+  contact_mobile VARCHAR(20) NULL,
+  contact_email VARCHAR(128) NULL,
+  settle_account VARCHAR(64) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'ENABLED',
+  audit_status VARCHAR(16) NOT NULL DEFAULT 'PENDING',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_merchant_no (tenant_id, merchant_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_merchant_account (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  merchant_id BIGINT NOT NULL,
+  username VARCHAR(64) NOT NULL,
+  nickname VARCHAR(64) NULL,
+  mobile VARCHAR(20) NULL,
+  role_code VARCHAR(32) NOT NULL DEFAULT 'MERCHANT_ADMIN',
+  status VARCHAR(16) NOT NULL DEFAULT 'ENABLED',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_merchant_username (tenant_id, merchant_id, username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_crm_customer (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  customer_no VARCHAR(64) NOT NULL,
+  customer_name VARCHAR(128) NOT NULL,
+  mobile VARCHAR(20) NULL,
+  email VARCHAR(128) NULL,
+  level VARCHAR(32) NOT NULL DEFAULT 'A',
+  source VARCHAR(32) NOT NULL DEFAULT 'MANUAL',
+  owner_user VARCHAR(64) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  next_follow_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_customer_no (tenant_id, customer_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_crm_follow_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  customer_id BIGINT NOT NULL,
+  follow_type VARCHAR(32) NOT NULL,
+  content VARCHAR(255) NOT NULL,
+  next_follow_time DATETIME NULL,
+  create_by VARCHAR(64) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_tenant_customer_time (tenant_id, customer_id, create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_crm_opportunity (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  customer_id BIGINT NOT NULL,
+  opportunity_no VARCHAR(64) NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  stage VARCHAR(32) NOT NULL DEFAULT 'INIT',
+  amount DECIMAL(18,2) NOT NULL DEFAULT 0,
+  expected_date DATE NULL,
+  owner_user VARCHAR(64) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'OPEN',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_opportunity_no (tenant_id, opportunity_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS ai_erp_inventory (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  sku_code VARCHAR(64) NOT NULL,
+  sku_name VARCHAR(128) NOT NULL,
+  warehouse_code VARCHAR(32) NOT NULL,
+  available_qty INT NOT NULL DEFAULT 0,
+  locked_qty INT NOT NULL DEFAULT 0,
+  unit_cost DECIMAL(18,2) NOT NULL DEFAULT 0,
+  safety_stock INT NOT NULL DEFAULT 0,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_sku_wh (tenant_id, sku_code, warehouse_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_erp_stock_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  sku_code VARCHAR(64) NOT NULL,
+  warehouse_code VARCHAR(32) NOT NULL,
+  biz_type VARCHAR(16) NOT NULL,
+  biz_no VARCHAR(64) NOT NULL,
+  qty_delta INT NOT NULL,
+  qty_after INT NOT NULL,
+  remark VARCHAR(255) NULL,
+  create_by VARCHAR(64) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_tenant_sku_time (tenant_id, sku_code, create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_erp_stock_check (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  check_no VARCHAR(64) NOT NULL,
+  warehouse_code VARCHAR(32) NOT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'DRAFT',
+  remark VARCHAR(255) NULL,
+  create_by VARCHAR(64) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_check_no (tenant_id, check_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_bpm_process_definition (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  process_key VARCHAR(64) NOT NULL,
+  process_name VARCHAR(128) NOT NULL,
+  version_no INT NOT NULL DEFAULT 1,
+  status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  category VARCHAR(32) NULL,
+  create_by VARCHAR(64) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_process_version (tenant_id, process_key, version_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_bpm_process_instance (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  instance_no VARCHAR(64) NOT NULL,
+  process_definition_id BIGINT NOT NULL,
+  process_key VARCHAR(64) NOT NULL,
+  business_id VARCHAR(64) NULL,
+  starter VARCHAR(64) NULL,
+  current_assignee VARCHAR(64) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'RUNNING',
+  start_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  end_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_instance_no (tenant_id, instance_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_bpm_task (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  task_no VARCHAR(64) NOT NULL,
+  instance_id BIGINT NOT NULL,
+  task_name VARCHAR(128) NOT NULL,
+  assignee VARCHAR(64) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'TODO',
+  complete_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_task_no (tenant_id, task_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_infra_config (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  config_key VARCHAR(128) NOT NULL,
+  config_name VARCHAR(128) NOT NULL,
+  config_value VARCHAR(1024) NOT NULL,
+  config_type VARCHAR(32) NOT NULL DEFAULT 'SYSTEM',
+  status TINYINT NOT NULL DEFAULT 1,
+  remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_config_key (tenant_id, config_key),
+  KEY idx_tenant_status (tenant_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_trade_cart_item (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  spu_id BIGINT NOT NULL,
+  spu_name VARCHAR(128) NOT NULL,
+  price DECIMAL(18,2) NOT NULL DEFAULT 0,
+  quantity INT NOT NULL DEFAULT 1,
+  selected TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_user_spu (tenant_id, user_id, spu_id),
+  KEY idx_tenant_user (tenant_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_trade_delivery (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  order_id BIGINT NOT NULL,
+  delivery_no VARCHAR(64) NOT NULL,
+  company_code VARCHAR(32) NULL,
+  company_name VARCHAR(64) NULL,
+  receiver_name VARCHAR(64) NULL,
+  receiver_mobile VARCHAR(20) NULL,
+  receiver_address VARCHAR(255) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'WAIT_SHIP',
+  shipped_time DATETIME NULL,
+  received_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_delivery_no (tenant_id, delivery_no),
+  KEY idx_tenant_order (tenant_id, order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_trade_after_sale (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  after_sale_no VARCHAR(64) NOT NULL,
+  order_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  type VARCHAR(16) NOT NULL,
+  reason VARCHAR(128) NOT NULL,
+  amount DECIMAL(18,2) NOT NULL DEFAULT 0,
+  status VARCHAR(16) NOT NULL DEFAULT 'APPLY',
+  audit_remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_after_sale_no (tenant_id, after_sale_no),
+  KEY idx_tenant_order (tenant_id, order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_pay_channel (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  channel_code VARCHAR(32) NOT NULL,
+  channel_name VARCHAR(64) NOT NULL,
+  app_id VARCHAR(128) NULL,
+  mch_id VARCHAR(128) NULL,
+  notify_url VARCHAR(255) NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_channel_code (tenant_id, channel_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_pay_refund (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  pay_order_id BIGINT NOT NULL,
+  trade_order_id BIGINT NOT NULL,
+  refund_no VARCHAR(64) NOT NULL,
+  channel VARCHAR(32) NOT NULL,
+  amount DECIMAL(18,2) NOT NULL,
+  reason VARCHAR(128) NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'WAITING',
+  success_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_refund_no (tenant_id, refund_no),
+  KEY idx_tenant_pay_order (tenant_id, pay_order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_infra_file (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  file_name VARCHAR(128) NOT NULL,
+  file_url VARCHAR(512) NOT NULL,
+  file_type VARCHAR(64) NULL,
+  file_size BIGINT NOT NULL DEFAULT 0,
+  storage VARCHAR(32) NOT NULL DEFAULT 'LOCAL',
+  uploader VARCHAR(64) NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_file_name (tenant_id, file_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_infra_job (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  job_name VARCHAR(128) NOT NULL,
+  handler_name VARCHAR(128) NOT NULL,
+  cron_expr VARCHAR(64) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  last_run_time DATETIME NULL,
+  next_run_time DATETIME NULL,
+  remark VARCHAR(255) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_status (tenant_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_infra_notice (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  notice_type VARCHAR(32) NOT NULL,
+  title VARCHAR(128) NOT NULL,
+  content VARCHAR(1024) NOT NULL,
+  receiver_type VARCHAR(32) NOT NULL DEFAULT 'ALL',
+  receiver_id BIGINT NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'DRAFT',
+  publish_time DATETIME NULL,
+  create_by VARCHAR(64) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_status (tenant_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS ai_openapi_app (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  app_key VARCHAR(64) NOT NULL,
+  app_secret VARCHAR(128) NOT NULL,
+  app_name VARCHAR(128) NOT NULL,
+  scopes VARCHAR(512) DEFAULT NULL,
+  qps_limit INT NOT NULL DEFAULT 50,
+  daily_limit INT NOT NULL DEFAULT 10000,
+  status TINYINT NOT NULL DEFAULT 1,
+  remark VARCHAR(512) DEFAULT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_openapi_app_key (app_key),
+  KEY idx_openapi_app_tenant (tenant_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_openapi_call_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  app_key VARCHAR(64) NOT NULL,
+  api_path VARCHAR(255) NOT NULL,
+  method VARCHAR(16) NOT NULL,
+  request_id VARCHAR(64) NOT NULL,
+  request_ip VARCHAR(64) DEFAULT NULL,
+  success TINYINT NOT NULL DEFAULT 1,
+  cost_ms INT NOT NULL DEFAULT 0,
+  error_msg VARCHAR(512) DEFAULT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_openapi_call_tenant_app (tenant_id, app_key),
+  KEY idx_openapi_call_path (api_path)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_openapi_webhook (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  app_key VARCHAR(64) NOT NULL,
+  event_type VARCHAR(64) NOT NULL,
+  target_url VARCHAR(255) NOT NULL,
+  secret VARCHAR(128) DEFAULT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  last_push_time DATETIME DEFAULT NULL,
+  remark VARCHAR(512) DEFAULT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_openapi_webhook_tenant_app (tenant_id, app_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_mp_menu (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  name VARCHAR(64) NOT NULL,
+  menu_type VARCHAR(32) NOT NULL DEFAULT 'VIEW',
+  menu_key VARCHAR(128) DEFAULT NULL,
+  url VARCHAR(255) DEFAULT NULL,
+  parent_id BIGINT NOT NULL DEFAULT 0,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_mp_menu_tenant_parent (tenant_id, parent_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_mp_material (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  material_type VARCHAR(32) NOT NULL,
+  title VARCHAR(128) NOT NULL,
+  media_url VARCHAR(255) NOT NULL,
+  thumb_url VARCHAR(255) DEFAULT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_mp_material_tenant_type (tenant_id, material_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_mp_message_template (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  template_code VARCHAR(64) NOT NULL,
+  template_name VARCHAR(128) NOT NULL,
+  content VARCHAR(512) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_mp_template_code (tenant_id, template_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_mp_message_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  user_id BIGINT NOT NULL,
+  template_code VARCHAR(64) NOT NULL,
+  open_id VARCHAR(128) NOT NULL,
+  content VARCHAR(512) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_mp_message_log_tenant_user (tenant_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

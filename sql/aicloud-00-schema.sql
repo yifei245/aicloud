@@ -1,0 +1,271 @@
+CREATE DATABASE IF NOT EXISTS aicloud DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE aicloud;
+
+CREATE TABLE IF NOT EXISTS ai_tenant (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  code VARCHAR(64) NOT NULL UNIQUE,
+  status TINYINT NOT NULL DEFAULT 1,
+  expire_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_user (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  username VARCHAR(64) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  nickname VARCHAR(64) NOT NULL,
+  mobile VARCHAR(20) NULL,
+  email VARCHAR(128) NULL,
+  user_type VARCHAR(32) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  last_login_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_username (tenant_id, username),
+  KEY idx_user_type (user_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  code VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  data_scope VARCHAR(32) NOT NULL DEFAULT 'ALL',
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_role_code (tenant_id, code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_menu (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  parent_id BIGINT NOT NULL DEFAULT 0,
+  name VARCHAR(64) NOT NULL,
+  type TINYINT NOT NULL COMMENT '1目录 2菜单 3按钮',
+  path VARCHAR(255) NULL,
+  component VARCHAR(255) NULL,
+  permission VARCHAR(128) NULL,
+  icon VARCHAR(64) NULL,
+  visible TINYINT NOT NULL DEFAULT 1,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_parent (tenant_id, parent_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_user_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
+  UNIQUE KEY uk_user_role (tenant_id, user_id, role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_role_menu (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
+  menu_id BIGINT NOT NULL,
+  UNIQUE KEY uk_role_menu (tenant_id, role_id, menu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_dept (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  parent_id BIGINT NOT NULL DEFAULT 0,
+  name VARCHAR(64) NOT NULL,
+  leader_user_id BIGINT NULL,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_parent (tenant_id, parent_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_post (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  code VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_post_code (tenant_id, code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_user_dept_post (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  dept_id BIGINT NOT NULL,
+  post_id BIGINT NULL,
+  UNIQUE KEY uk_user_dept_post (tenant_id, user_id, dept_id, post_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_oauth2_client (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  client_id VARCHAR(64) NOT NULL,
+  client_secret VARCHAR(255) NOT NULL,
+  grant_types VARCHAR(255) NOT NULL,
+  scopes VARCHAR(255) NOT NULL,
+  redirect_uris VARCHAR(1000) NULL,
+  access_token_validity INT NOT NULL DEFAULT 7200,
+  refresh_token_validity INT NOT NULL DEFAULT 2592000,
+  status TINYINT NOT NULL DEFAULT 1,
+  UNIQUE KEY uk_tenant_client (tenant_id, client_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_sso_session (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  session_id VARCHAR(128) NOT NULL,
+  access_token VARCHAR(512) NOT NULL,
+  refresh_token VARCHAR(512) NULL,
+  login_terminal VARCHAR(32) NOT NULL,
+  expire_time DATETIME NOT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_session (session_id),
+  KEY idx_token (access_token(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_api_app (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  app_key VARCHAR(64) NOT NULL,
+  app_secret VARCHAR(128) NOT NULL,
+  app_name VARCHAR(64) NOT NULL,
+  sign_type VARCHAR(16) NOT NULL DEFAULT 'HMAC_SHA256',
+  ip_whitelist VARCHAR(1000) NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_app_key (tenant_id, app_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_terminal_client (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  terminal_code VARCHAR(32) NOT NULL COMMENT 'ADMIN/WEB/APP/MP/OPENAPI',
+  client_id VARCHAR(64) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_terminal (tenant_id, terminal_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_dict_type (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  dict_type VARCHAR(64) NOT NULL,
+  dict_name VARCHAR(64) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_dict_type (tenant_id, dict_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_dict_data (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  dict_type VARCHAR(64) NOT NULL,
+  dict_label VARCHAR(64) NOT NULL,
+  dict_value VARCHAR(64) NOT NULL,
+  sort INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_tenant_type (tenant_id, dict_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_system_config (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  config_key VARCHAR(128) NOT NULL,
+  config_name VARCHAR(128) NOT NULL,
+  config_value VARCHAR(2000) NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  remark VARCHAR(500) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_config_key (tenant_id, config_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_audit_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NULL,
+  username VARCHAR(64) NULL,
+  module VARCHAR(64) NOT NULL,
+  operation VARCHAR(128) NOT NULL,
+  request_uri VARCHAR(255) NOT NULL,
+  request_method VARCHAR(16) NOT NULL,
+  request_ip VARCHAR(64) NULL,
+  success TINYINT NOT NULL,
+  error_msg VARCHAR(1000) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_tenant_create (tenant_id, create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_login_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NULL,
+  username VARCHAR(64) NULL,
+  user_type VARCHAR(32) NULL,
+  login_terminal VARCHAR(32) NOT NULL,
+  login_ip VARCHAR(64) NULL,
+  success TINYINT NOT NULL,
+  error_msg VARCHAR(1000) NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_tenant_login_create (tenant_id, create_time),
+  KEY idx_tenant_username (tenant_id, username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_audit_log_archive (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  source_id BIGINT NOT NULL,
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT NULL,
+  username VARCHAR(64) NULL,
+  module VARCHAR(64) NOT NULL,
+  operation VARCHAR(128) NOT NULL,
+  request_uri VARCHAR(255) NOT NULL,
+  request_method VARCHAR(16) NOT NULL,
+  request_ip VARCHAR(64) NULL,
+  success TINYINT NOT NULL,
+  error_msg VARCHAR(1000) NULL,
+  create_time DATETIME NOT NULL,
+  archived_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_archive_tenant_create (tenant_id, create_time),
+  UNIQUE KEY uk_source_id (source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ai_audit_export_task (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  task_id VARCHAR(64) NOT NULL,
+  status VARCHAR(16) NOT NULL,
+  message VARCHAR(500) NULL,
+  archived TINYINT NOT NULL DEFAULT 0,
+  tenant_id BIGINT NULL,
+  user_id BIGINT NULL,
+  success TINYINT NULL,
+  start_time DATETIME NULL,
+  end_time DATETIME NULL,
+  max_rows INT NOT NULL DEFAULT 5000,
+  filename VARCHAR(255) NULL,
+  file_size BIGINT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  finished_at DATETIME NULL,
+  UNIQUE KEY uk_task_id (task_id),
+  KEY idx_created_at (created_at),
+  KEY idx_status_created (status, created_at),
+  KEY idx_archived_created (archived, created_at),
+  KEY idx_success_created (success, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

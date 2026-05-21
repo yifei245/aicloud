@@ -1,0 +1,648 @@
+spring:
+  config:
+    import:
+      - optional:nacos:${spring.application.name}.yaml
+  application:
+    name: aicloud-gateway
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    gateway:
+      routes:
+        - id: docs-auth
+          uri: http://${AICLOUD_AUTH_HOST:127.0.0.1}:48081
+          predicates:
+            - Path=/v3/api-docs/auth
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-system
+          uri: http://${AICLOUD_SYSTEM_HOST:127.0.0.1}:49010
+          predicates:
+            - Path=/v3/api-docs/system
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-member
+          uri: http://${AICLOUD_MEMBER_HOST:127.0.0.1}:49012
+          predicates:
+            - Path=/v3/api-docs/member
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-mp
+          uri: http://${AICLOUD_MP_HOST:127.0.0.1}:49013
+          predicates:
+            - Path=/v3/api-docs/mp
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-openapi
+          uri: http://${AICLOUD_OPENAPI_HOST:127.0.0.1}:49023
+          predicates:
+            - Path=/v3/api-docs/openapi
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-infra
+          uri: http://${AICLOUD_INFRA_HOST:127.0.0.1}:49011
+          predicates:
+            - Path=/v3/api-docs/infra
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-product
+          uri: http://${AICLOUD_PRODUCT_HOST:127.0.0.1}:49017
+          predicates:
+            - Path=/v3/api-docs/product
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-trade
+          uri: http://${AICLOUD_TRADE_HOST:127.0.0.1}:49014
+          predicates:
+            - Path=/v3/api-docs/trade
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-pay
+          uri: http://${AICLOUD_PAY_HOST:127.0.0.1}:49015
+          predicates:
+            - Path=/v3/api-docs/pay
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-promotion
+          uri: http://${AICLOUD_PROMOTION_HOST:127.0.0.1}:49016
+          predicates:
+            - Path=/v3/api-docs/promotion
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-merchant
+          uri: http://${AICLOUD_MERCHANT_HOST:127.0.0.1}:49018
+          predicates:
+            - Path=/v3/api-docs/merchant
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-crm
+          uri: http://${AICLOUD_CRM_HOST:127.0.0.1}:49019
+          predicates:
+            - Path=/v3/api-docs/crm
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-erp
+          uri: http://${AICLOUD_ERP_HOST:127.0.0.1}:49020
+          predicates:
+            - Path=/v3/api-docs/erp
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-bpm
+          uri: http://${AICLOUD_BPM_HOST:127.0.0.1}:49021
+          predicates:
+            - Path=/v3/api-docs/bpm
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: docs-report
+          uri: http://${AICLOUD_REPORT_HOST:127.0.0.1}:49022
+          predicates:
+            - Path=/v3/api-docs/report
+          filters:
+            - PreserveHostHeader
+            - SetPath=/v3/api-docs
+        - id: aicloud-auth
+          uri: http://${AICLOUD_AUTH_HOST:127.0.0.1}:48081
+          predicates:
+            - Path=/auth/**
+        - id: aicloud-system
+          uri: http://${AICLOUD_SYSTEM_HOST:127.0.0.1}:49010
+          predicates:
+            - Path=/system/**
+        - id: aicloud-product-app
+          uri: http://${AICLOUD_PRODUCT_HOST:127.0.0.1}:49017
+          predicates:
+            - Path=/app/product/**,/web/product/**
+        - id: aicloud-promotion-app
+          uri: http://${AICLOUD_PROMOTION_HOST:127.0.0.1}:49016
+          predicates:
+            - Path=/app/promotion/**,/web/promotion/**
+        - id: aicloud-member
+          uri: http://${AICLOUD_MEMBER_HOST:127.0.0.1}:49012
+          predicates:
+            - Path=/app/**,/web/**
+        - id: aicloud-mp
+          uri: http://${AICLOUD_MP_HOST:127.0.0.1}:49013
+          predicates:
+            - Path=/mp/**
+        - id: aicloud-openapi
+          uri: http://${AICLOUD_OPENAPI_HOST:127.0.0.1}:49023
+          predicates:
+            - Path=/openapi/**
+        - id: aicloud-infra
+          uri: http://${AICLOUD_INFRA_HOST:127.0.0.1}:49011
+          predicates:
+            - Path=/infra/**
+        - id: aicloud-product
+          uri: http://${AICLOUD_PRODUCT_HOST:127.0.0.1}:49017
+          predicates:
+            - Path=/product/**
+        - id: aicloud-trade
+          uri: http://${AICLOUD_TRADE_HOST:127.0.0.1}:49014
+          predicates:
+            - Path=/trade/**
+        - id: aicloud-pay
+          uri: http://${AICLOUD_PAY_HOST:127.0.0.1}:49015
+          predicates:
+            - Path=/pay/**
+        - id: aicloud-promotion
+          uri: http://${AICLOUD_PROMOTION_HOST:127.0.0.1}:49016
+          predicates:
+            - Path=/promotion/**
+        - id: aicloud-merchant
+          uri: http://${AICLOUD_MERCHANT_HOST:127.0.0.1}:49018
+          predicates:
+            - Path=/merchant/**
+        - id: aicloud-crm
+          uri: http://${AICLOUD_CRM_HOST:127.0.0.1}:49019
+          predicates:
+            - Path=/crm/**
+        - id: aicloud-erp
+          uri: http://${AICLOUD_ERP_HOST:127.0.0.1}:49020
+          predicates:
+            - Path=/erp/**
+        - id: aicloud-bpm
+          uri: http://${AICLOUD_BPM_HOST:127.0.0.1}:49021
+          predicates:
+            - Path=/bpm/**
+        - id: aicloud-report
+          uri: http://${AICLOUD_REPORT_HOST:127.0.0.1}:49022
+          predicates:
+            - Path=/report/**
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        refresh-enabled: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+server:
+  port: 48080
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: gateway
+        url: /v3/api-docs
+      - name: auth
+        url: /v3/api-docs/auth
+      - name: system
+        url: /v3/api-docs/system
+      - name: member
+        url: /v3/api-docs/member
+      - name: mp
+        url: /v3/api-docs/mp
+      - name: openapi
+        url: /v3/api-docs/openapi
+      - name: infra
+        url: /v3/api-docs/infra
+      - name: product
+        url: /v3/api-docs/product
+      - name: trade
+        url: /v3/api-docs/trade
+      - name: pay
+        url: /v3/api-docs/pay
+      - name: promotion
+        url: /v3/api-docs/promotion
+      - name: merchant
+        url: /v3/api-docs/merchant
+      - name: crm
+        url: /v3/api-docs/crm
+      - name: erp
+        url: /v3/api-docs/erp
+      - name: bpm
+        url: /v3/api-docs/bpm
+      - name: report
+        url: /v3/api-docs/report
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+  gateway:
+    enabled: true
+    strategy: manual
+    tags-sorter: order
+    operations-sorter: order
+    routes:
+      - name: 网关服务
+        url: /v3/api-docs
+        service-name: aicloud-gateway
+        context-path: /
+        order: 1
+      - name: 认证中心
+        url: /v3/api-docs/auth
+        service-name: aicloud-auth
+        context-path: /
+        order: 2
+      - name: 系统服务
+        url: /v3/api-docs/system
+        service-name: aicloud-system
+        context-path: /
+        order: 3
+      - name: 会员服务
+        url: /v3/api-docs/member
+        service-name: aicloud-member
+        context-path: /
+        order: 4
+      - name: 小程序服务
+        url: /v3/api-docs/mp
+        service-name: aicloud-mp
+        context-path: /
+        order: 5
+      - name: 基础设施服务
+        url: /v3/api-docs/infra
+        service-name: aicloud-infra
+        context-path: /
+        order: 6
+      - name: 商品服务
+        url: /v3/api-docs/product
+        service-name: aicloud-product
+        context-path: /
+        order: 7
+      - name: 交易服务
+        url: /v3/api-docs/trade
+        service-name: aicloud-trade
+        context-path: /
+        order: 8
+      - name: 支付服务
+        url: /v3/api-docs/pay
+        service-name: aicloud-pay
+        context-path: /
+        order: 9
+      - name: 营销服务
+        url: /v3/api-docs/promotion
+        service-name: aicloud-promotion
+        context-path: /
+        order: 10
+      - name: 商户服务
+        url: /v3/api-docs/merchant
+        service-name: aicloud-merchant
+        context-path: /
+        order: 11
+      - name: CRM 服务
+        url: /v3/api-docs/crm
+        service-name: aicloud-crm
+        context-path: /
+        order: 12
+      - name: ERP 服务
+        url: /v3/api-docs/erp
+        service-name: aicloud-erp
+        context-path: /
+        order: 13
+      - name: BPM 服务
+        url: /v3/api-docs/bpm
+        service-name: aicloud-bpm
+        context-path: /
+        order: 14
+      - name: 报表服务
+        url: /v3/api-docs/report
+        service-name: aicloud-report
+        context-path: /
+        order: 15
+      - name: 开放平台
+        url: /v3/api-docs/openapi
+        service-name: aicloud-openapi
+        context-path: /
+        order: 16
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+aicloud:
+  gateway:
+    openapi:
+      enabled: true
+      max-time-drift-seconds: 300
+      max-future-seconds: 30
+      replay-protect-enabled: true
+      nonce-ttl-seconds: 300
+      min-nonce-window-seconds: 60
+      rate-limit-enabled: true
+      requests-per-minute: 120
+      redis-guard-enabled: true
+    audit:
+      archive:
+        enabled: true
+        retention-days: 30
+        batch-size: 1000
+        cron: "0 15 3 * * ?"
+      export:
+        cleanup:
+          enabled: true
+          retention-days: 7
+          batch-size: 500
+          cron: "0 40 3 * * ?"
+    permission-rules:
+      # 高优先级 deny 规则：禁止 MEMBER 访问全部 system 管理端路径
+      - name: deny-member-system
+        path: /system/**
+        effect: DENY
+        priority: 100
+        user-types: [MEMBER]
+        enabled: true
+      # 高优先级 deny 规则：禁止 MEMBER 访问网关管理路径
+      - name: deny-member-gateway-admin
+        path: /gateway/**
+        effect: DENY
+        priority: 100
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-admin-audit-stats
+        method: GET
+        path: /gateway/audit/stats
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-logs
+        method: GET
+        path: /gateway/audit/logs
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-logs-export
+        method: GET
+        path: /gateway/audit/logs/export
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-create
+        method: POST
+        path: /gateway/audit/export/tasks
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-query
+        method: GET
+        path: /gateway/audit/export/tasks/**
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-list
+        method: GET
+        path: /gateway/audit/export/tasks/list
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 21
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-cleanup-run
+        method: POST
+        path: /gateway/audit/export/tasks/cleanup/run
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-archive-run
+        method: POST
+        path: /gateway/audit/archive/run
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-member-web-profile
+        method: GET
+        path: /web/member/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [WEB]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-app-profile
+        method: GET
+        path: /app/member/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [APP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-mp-profile
+        method: GET
+        path: /mp/user/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [MP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-app-product
+        path: /app/product/**
+        effect: ALLOW
+        priority: 9
+        terminals: [APP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-web-product
+        path: /web/product/**
+        effect: ALLOW
+        priority: 9
+        terminals: [WEB]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-app-promotion
+        path: /app/promotion/**
+        effect: ALLOW
+        priority: 9
+        terminals: [APP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-web-promotion
+        path: /web/promotion/**
+        effect: ALLOW
+        priority: 9
+        terminals: [WEB]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-openapi-ping
+        method: GET
+        path: /openapi/v1/ping
+        effect: ALLOW
+        priority: 8
+        terminals: [OPENAPI]
+        user-types: [OPENAPI]
+        enabled: true
+      - name: allow-openapi-member-summary
+        method: GET
+        path: /openapi/v1/member/summary
+        effect: ALLOW
+        priority: 8
+        terminals: [OPENAPI]
+        user-types: [OPENAPI]
+        enabled: true
+      - name: allow-admin-infra
+        path: /infra/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-product
+        path: /product/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-trade
+        path: /trade/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-pay
+        path: /pay/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-promotion
+        path: /promotion/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-merchant
+        path: /merchant/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-crm
+        path: /crm/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-erp
+        path: /erp/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-bpm
+        path: /bpm/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-report
+        path: /report/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-openapi
+        path: /openapi/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-mp
+        path: /mp/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-system-all
+        path: /system/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      # 管理端严格策略：ADMIN 终端 + ADMIN 用户类型全部开启路由级鉴权
+      - name: allow-admin-menu-tree
+        method: GET
+        path: /system/menu/tree
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-permission-buttons
+        method: GET
+        path: /system/permission/buttons
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-list
+        method: GET
+        path: /system/user/list
+        permission: system:user:query
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-create
+        method: POST
+        path: /system/user/create
+        permission: system:user:create
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-update
+        method: PUT
+        path: /system/user/update
+        permission: system:user:update
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      # 用户端宽松策略：APP/MP/WEB 不在网关做路由级权限拦截，交给业务服务侧注解鉴权

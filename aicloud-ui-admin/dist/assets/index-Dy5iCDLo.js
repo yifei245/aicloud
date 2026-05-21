@@ -1,0 +1,1 @@
+import{_ as o,u as n}from"./useModule-Eh3jYGLy.js";import{h as s,o as a,b as m,u as r}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const d=s({__name:"index",setup(t){const e=n("mp");return(u,_)=>(a(),m(o,{module:r(e)},null,8,["module"]))}});export{d as default};

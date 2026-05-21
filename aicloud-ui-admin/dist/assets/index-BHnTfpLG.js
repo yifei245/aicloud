@@ -1,0 +1,1 @@
+import{_ as o,u as m}from"./useModule-Eh3jYGLy.js";import{h as n,o as r,b as s,u as a}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const d=n({__name:"index",setup(t){const e=m("member");return(u,_)=>(r(),s(o,{module:a(e)},null,8,["module"]))}});export{d as default};

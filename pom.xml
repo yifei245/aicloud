@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.aicloud</groupId>
+    <artifactId>aicloud</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>aicloud</name>
+    <description>Aicloud large-scale microservice backend platform</description>
+
+    <modules>
+        <module>aicloud-dependencies</module>
+        <module>aicloud-framework</module>
+        <module>aicloud-gateway</module>
+        <module>aicloud-auth</module>
+        <module>aicloud-module-system</module>
+        <module>aicloud-module-infra</module>
+        <module>aicloud-module-member</module>
+        <module>aicloud-module-mp</module>
+        <module>aicloud-module-trade</module>
+        <module>aicloud-module-pay</module>
+        <module>aicloud-module-promotion</module>
+        <module>aicloud-module-product</module>
+        <module>aicloud-module-merchant</module>
+        <module>aicloud-module-crm</module>
+        <module>aicloud-module-erp</module>
+        <module>aicloud-module-bpm</module>
+        <module>aicloud-module-report</module>
+        <module>aicloud-module-openapi</module>
+        <module>aicloud-api</module>
+        <module>aicloud-server</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.5.0</spring-boot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.aicloud</groupId>
+                <artifactId>aicloud-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

@@ -1,0 +1,1 @@
+import{_ as o,u as n}from"./useModule-Eh3jYGLy.js";import{h as a,o as r,b as s,u as t}from"./index-Etdyp51e.js";import"./modules-u2f6eO48.js";const f=a({__name:"index",setup(u){const e=n("infra");return(m,_)=>(r(),s(o,{module:t(e)},null,8,["module"]))}});export{f as default};

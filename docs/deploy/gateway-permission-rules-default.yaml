@@ -1,0 +1,246 @@
+aicloud:
+  gateway:
+    permission-rules:
+      # 高优先级 deny 规则：禁止 MEMBER 访问全部 system 管理端路径
+      - name: deny-member-system
+        path: /system/**
+        effect: DENY
+        priority: 100
+        user-types: [MEMBER]
+        enabled: true
+      # 高优先级 deny 规则：禁止 MEMBER 访问网关管理路径
+      - name: deny-member-gateway-admin
+        path: /gateway/**
+        effect: DENY
+        priority: 100
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-admin-audit-stats
+        method: GET
+        path: /gateway/audit/stats
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-logs
+        method: GET
+        path: /gateway/audit/logs
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-logs-export
+        method: GET
+        path: /gateway/audit/logs/export
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-create
+        method: POST
+        path: /gateway/audit/export/tasks
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-query
+        method: GET
+        path: /gateway/audit/export/tasks/**
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-list
+        method: GET
+        path: /gateway/audit/export/tasks/list
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 21
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-export-cleanup-run
+        method: POST
+        path: /gateway/audit/export/tasks/cleanup/run
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-audit-archive-run
+        method: POST
+        path: /gateway/audit/archive/run
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 20
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-member-web-profile
+        method: GET
+        path: /web/member/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [WEB]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-app-profile
+        method: GET
+        path: /app/member/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [APP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-member-mp-profile
+        method: GET
+        path: /mp/user/profile
+        effect: ALLOW
+        priority: 8
+        terminals: [MP]
+        user-types: [MEMBER]
+        enabled: true
+      - name: allow-openapi-ping
+        method: GET
+        path: /openapi/v1/ping
+        effect: ALLOW
+        priority: 8
+        terminals: [OPENAPI]
+        user-types: [OPENAPI]
+        enabled: true
+      - name: allow-openapi-member-summary
+        method: GET
+        path: /openapi/v1/member/summary
+        effect: ALLOW
+        priority: 8
+        terminals: [OPENAPI]
+        user-types: [OPENAPI]
+        enabled: true
+      - name: allow-admin-infra
+        path: /infra/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-product
+        path: /product/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-trade
+        path: /trade/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-pay
+        path: /pay/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-promotion
+        path: /promotion/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-merchant
+        path: /merchant/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-crm
+        path: /crm/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-erp
+        path: /erp/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-bpm
+        path: /bpm/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-report
+        path: /report/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      # 管理端严格策略（ADMIN 终端 + ADMIN 用户类型）
+      - name: allow-admin-menu-tree
+        method: GET
+        path: /system/menu/tree
+        permission: system:menu:list
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-permission-buttons
+        method: GET
+        path: /system/permission/buttons
+        permission: system:role:assign
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-list
+        method: GET
+        path: /system/user/list
+        permission: system:user:query
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-create
+        method: POST
+        path: /system/user/create
+        permission: system:user:create
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-user-update
+        method: PUT
+        path: /system/user/update
+        permission: system:user:update
+        effect: ALLOW
+        priority: 10
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      # 用户端宽松策略：APP/MP/WEB 不配置路由级规则，默认放行到业务服务

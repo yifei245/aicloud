@@ -1,0 +1,291 @@
+version: '3.9'
+x-app-env: &app_env
+  SPRING_CLOUD_NACOS_SERVER_ADDR: nacos:8848
+  SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: nacos:8848
+  SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR: nacos:8848
+  SPRING_CLOUD_NACOS_DISCOVERY_FAIL_FAST: "false"
+  SPRING_CLOUD_NACOS_CONFIG_FAIL_FAST: "false"
+  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  SPRING_DATASOURCE_USERNAME: root
+  SPRING_DATASOURCE_PASSWORD: root
+  SPRING_DATA_REDIS_HOST: redis
+  SPRING_DATA_REDIS_PORT: 6379
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: aicloud-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aicloud
+      TZ: Asia/Shanghai
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./mysql/data9:/var/lib/mysql
+      - ../sql:/docker-entrypoint-initdb.d
+
+  nacos:
+    image: nacos/nacos-server:v2.4.3
+    container_name: aicloud-nacos
+    environment:
+      MODE: standalone
+      NACOS_AUTH_ENABLE: "false"
+      JVM_XMS: 256m
+      JVM_XMX: 256m
+    ports:
+      - "18848:8848"
+      - "19848:9848"
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: aicloud-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./redis/data:/data
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: docker/gateway/Dockerfile
+    container_name: aicloud-gateway
+    environment:
+      <<: *app_env
+      AICLOUD_AUTH_HOST: auth
+      AICLOUD_SYSTEM_HOST: system
+      AICLOUD_MEMBER_HOST: member
+      AICLOUD_MP_HOST: mp
+      AICLOUD_OPENAPI_HOST: openapi
+      AICLOUD_INFRA_HOST: infra
+      AICLOUD_PRODUCT_HOST: product
+      AICLOUD_TRADE_HOST: trade
+      AICLOUD_PAY_HOST: pay
+      AICLOUD_PROMOTION_HOST: promotion
+      AICLOUD_MERCHANT_HOST: merchant
+      AICLOUD_CRM_HOST: crm
+      AICLOUD_ERP_HOST: erp
+      AICLOUD_BPM_HOST: bpm
+      AICLOUD_REPORT_HOST: report
+      AICLOUD_GATEWAY_AUTH_SERVICE_URL: http://auth:48081
+    ports:
+      - "48080:48080"
+    depends_on:
+      - nacos
+      - redis
+
+  auth:
+    build:
+      context: ..
+      dockerfile: docker/auth/Dockerfile
+    container_name: aicloud-auth
+    environment:
+      <<: *app_env
+    ports:
+      - "48081:48081"
+    depends_on:
+      - nacos
+      - mysql
+
+  system:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-system/aicloud-module-system-biz/target/aicloud-module-system-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-system
+    environment:
+      <<: *app_env
+    ports:
+      - "49010:49010"
+    depends_on:
+      - nacos
+      - mysql
+
+  member:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-member/aicloud-module-member-biz/target/aicloud-module-member-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-member
+    environment:
+      <<: *app_env
+    ports:
+      - "49012:49012"
+    depends_on:
+      - nacos
+
+  mp:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mp/aicloud-module-mp-biz/target/aicloud-module-mp-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-mp
+    environment:
+      <<: *app_env
+    ports:
+      - "49013:49013"
+    depends_on:
+      - nacos
+
+  openapi:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-openapi/aicloud-module-openapi-biz/target/aicloud-module-openapi-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-openapi
+    environment:
+      <<: *app_env
+    ports:
+      - "49023:49023"
+    depends_on:
+      - nacos
+
+  infra:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-infra/aicloud-module-infra-biz/target/aicloud-module-infra-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-infra
+    environment:
+      <<: *app_env
+    ports:
+      - "49011:49011"
+    depends_on:
+      - nacos
+
+  trade:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-trade/aicloud-module-trade-biz/target/aicloud-module-trade-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-trade
+    environment:
+      <<: *app_env
+    ports:
+      - "49014:49014"
+    depends_on:
+      - nacos
+      - mysql
+
+  pay:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-pay/aicloud-module-pay-biz/target/aicloud-module-pay-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-pay
+    environment:
+      <<: *app_env
+    ports:
+      - "49015:49015"
+    depends_on:
+      - nacos
+      - mysql
+
+  promotion:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-promotion/aicloud-module-promotion-biz/target/aicloud-module-promotion-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-promotion
+    environment:
+      <<: *app_env
+    ports:
+      - "49016:49016"
+    depends_on:
+      - nacos
+
+  product:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-product/aicloud-module-product-biz/target/aicloud-module-product-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-product
+    environment:
+      <<: *app_env
+    ports:
+      - "49017:49017"
+    depends_on:
+      - nacos
+      - mysql
+
+  merchant:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-merchant/aicloud-module-merchant-biz/target/aicloud-module-merchant-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-merchant
+    environment:
+      <<: *app_env
+    ports:
+      - "49018:49018"
+    depends_on:
+      - nacos
+
+  crm:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-crm/aicloud-module-crm-biz/target/aicloud-module-crm-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-crm
+    environment:
+      <<: *app_env
+    ports:
+      - "49019:49019"
+    depends_on:
+      - nacos
+
+  erp:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-erp/aicloud-module-erp-biz/target/aicloud-module-erp-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-erp
+    environment:
+      <<: *app_env
+    ports:
+      - "49020:49020"
+    depends_on:
+      - nacos
+
+  bpm:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-bpm/aicloud-module-bpm-biz/target/aicloud-module-bpm-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-bpm
+    environment:
+      <<: *app_env
+    ports:
+      - "49021:49021"
+    depends_on:
+      - nacos
+
+  report:
+    build:
+      context: ..
+      dockerfile: docker/modules/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-report/aicloud-module-report-biz/target/aicloud-module-report-biz-1.0.0-SNAPSHOT.jar
+    container_name: aicloud-report
+    environment:
+      <<: *app_env
+    ports:
+      - "49022:49022"
+    depends_on:
+      - nacos

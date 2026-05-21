@@ -1,0 +1,9 @@
+-- 聚合入口说明：
+-- 1) docker-entrypoint-initdb.d 会自动按文件名顺序执行
+--    aicloud-00-schema.sql ~ aicloud-99-demo.sql，无需在此再次 SOURCE。
+-- 2) 若在本机 mysql 客户端手工导入，请直接执行：
+--    source sql/aicloud-00-schema.sql;
+--    source sql/aicloud-01-system.sql;
+--    source sql/aicloud-02-auth.sql;
+--    source sql/aicloud-03-business.sql;
+--    source sql/aicloud-99-demo.sql;

@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.aicloud</groupId>
+        <artifactId>aicloud</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>aicloud-server</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>aicloud-server-gateway</module>
+        <module>aicloud-server-auth</module>
+        <module>aicloud-server-system</module>
+        <module>aicloud-server-member</module>
+        <module>aicloud-server-mp</module>
+        <module>aicloud-server-openapi</module>
+        <module>aicloud-server-infra</module>
+        <module>aicloud-server-product</module>
+        <module>aicloud-server-trade</module>
+        <module>aicloud-server-pay</module>
+        <module>aicloud-server-promotion</module>
+        <module>aicloud-server-merchant</module>
+        <module>aicloud-server-crm</module>
+        <module>aicloud-server-erp</module>
+        <module>aicloud-server-bpm</module>
+        <module>aicloud-server-report</module>
+    </modules>
+</project>

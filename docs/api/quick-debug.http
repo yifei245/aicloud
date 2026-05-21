@@ -1,0 +1,304 @@
+### 1) 登录
+POST http://127.0.0.1:48080/auth/login
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "username": "admin",
+  "password": "123456",
+  "terminal": "ADMIN"
+}
+
+### 2) 刷新 token
+POST http://127.0.0.1:48080/auth/token/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 3) 使用 accessToken 调用动态菜单
+GET http://127.0.0.1:48080/system/menu/tree
+Authorization: Bearer {{accessToken}}
+
+### 4) 按钮权限
+GET http://127.0.0.1:48080/system/permission/buttons
+Authorization: Bearer {{accessToken}}
+
+### 5) 在线会话列表
+GET http://127.0.0.1:48080/auth/sso/sessions
+Authorization: Bearer {{accessToken}}
+
+### 6) 按 sessionId 强制下线
+POST http://127.0.0.1:48080/auth/sso/kickout/session?sessionId={{sessionId}}
+Authorization: Bearer {{accessToken}}
+
+### 7) 权限点校验
+GET http://127.0.0.1:48080/auth/permission/check?permission=system:user:query
+Authorization: Bearer {{accessToken}}
+
+### 8) 接口级权限拦截示例：用户列表（需 system:user:query）
+GET http://127.0.0.1:48080/system/user/list
+Authorization: Bearer {{accessToken}}
+
+### 9) 接口级权限拦截示例：创建用户（需 system:user:create）
+POST http://127.0.0.1:48080/system/user/create
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "username": "new_user",
+  "nickname": "新用户"
+}
+
+### 10) 接口级权限拦截示例：更新用户（需 system:user:update）
+PUT http://127.0.0.1:48080/system/user/update
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "id": 2,
+  "username": "ops",
+  "nickname": "运维管理员-更新"
+}
+
+### 11) 网关审计统计（管理员）
+GET http://127.0.0.1:48080/gateway/audit/stats?retentionDays=30
+Authorization: Bearer {{accessToken}}
+
+### 12) 手动触发网关审计归档（管理员）
+POST http://127.0.0.1:48080/gateway/audit/archive/run?retentionDays=30&batchSize=500
+Authorization: Bearer {{accessToken}}
+
+### 13) 审计日志分页查询（主表）
+GET http://127.0.0.1:48080/gateway/audit/logs?archived=false&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 14) 审计日志分页查询（归档表 + 时间区间）
+GET http://127.0.0.1:48080/gateway/audit/logs?archived=true&startTime=2026-01-01%2000:00:00&endTime=2026-12-31%2023:59:59&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 15) 审计日志导出 CSV（管理员）
+GET http://127.0.0.1:48080/gateway/audit/logs/export?archived=false&maxRows=5000
+Authorization: Bearer {{accessToken}}
+
+### 16) 创建异步导出任务（管理员）
+POST http://127.0.0.1:48080/gateway/audit/export/tasks?archived=false&maxRows=5000
+Authorization: Bearer {{accessToken}}
+
+### 17) 查询异步导出任务状态（管理员）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/{{taskId}}
+Authorization: Bearer {{accessToken}}
+
+### 18) 下载异步导出结果（管理员）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/{{taskId}}/download
+Authorization: Bearer {{accessToken}}
+
+### 19) 手动清理导出任务（管理员）
+POST http://127.0.0.1:48080/gateway/audit/export/tasks/cleanup/run?retentionDays=7&batchSize=500
+Authorization: Bearer {{accessToken}}
+
+### 20) 分页查询异步导出任务（管理员）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/list?status=SUCCESS&archived=false&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 21) 分页查询异步导出任务（关键字 + 排序）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/list?keyword=gateway-audit-export&sortBy=finishedAt&sortOrder=desc&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 22) 分页查询异步导出任务（按租户+用户筛选）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/list?tenantId=1&userId=1&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 23) 分页查询异步导出任务（按导出条件 success 筛选）
+GET http://127.0.0.1:48080/gateway/audit/export/tasks/list?success=1&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 24) 会员用户登录（APP 终端）
+POST http://127.0.0.1:48080/auth/login
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "username": "appuser",
+  "password": "123456",
+  "terminal": "APP"
+}
+
+### 25) APP 用户端接口（需 MEMBER + APP）
+GET http://127.0.0.1:48080/app/member/profile
+Authorization: Bearer {{appAccessToken}}
+
+### 26) 会员用户登录（WEB 终端）
+POST http://127.0.0.1:48080/auth/login
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "username": "appuser",
+  "password": "123456",
+  "terminal": "WEB"
+}
+
+### 27) WEB 用户端接口（需 MEMBER + WEB）
+GET http://127.0.0.1:48080/web/member/profile
+Authorization: Bearer {{webAccessToken}}
+
+### 28) 会员用户登录（MP 终端）
+POST http://127.0.0.1:48080/auth/login
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "username": "appuser",
+  "password": "123456",
+  "terminal": "MP"
+}
+
+### 29) 小程序端接口（需 MEMBER + MP）
+GET http://127.0.0.1:48080/mp/user/profile
+Authorization: Bearer {{mpAccessToken}}
+
+### 30) 第三方 OpenAPI（签名鉴权）
+# sign 计算：HMAC_SHA256(method + "\n" + path + "\n" + query + "\n" + timestamp + "\n" + nonce, appSecret)
+# 示例：method=GET path=/openapi/v1/ping query=
+# 响应头可观测：X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset
+GET http://127.0.0.1:48080/openapi/v1/ping
+X-App-Key: demo_app_key
+X-Timestamp: {{epochSeconds}}
+X-Nonce: {{nonce}}
+X-Sign: {{openapiSign}}
+
+### 31) 第三方 OpenAPI（会员摘要）
+# query 参与签名：memberId=3
+GET http://127.0.0.1:48080/openapi/v1/member/summary?memberId=3
+X-App-Key: demo_app_key
+X-Timestamp: {{epochSeconds}}
+X-Nonce: {{nonce}}
+X-Sign: {{openapiSignWithQuery}}
+
+### 32) Infra 模块：基础设施状态
+GET http://127.0.0.1:48080/infra/config/status
+Authorization: Bearer {{accessToken}}
+
+### 33) Product 模块：创建商品
+POST http://127.0.0.1:48080/product/spu/create
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "name": "测试商品A",
+  "salePrice": 199.00,
+  "stock": 50
+}
+
+### 34) Product 模块：商品分页
+GET http://127.0.0.1:48080/product/spu/list?tenantId=1&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 34.1) Product 模块：商品详情
+GET http://127.0.0.1:48080/product/spu/1
+Authorization: Bearer {{accessToken}}
+
+### 34.2) Product 模块：更新库存
+PUT http://127.0.0.1:48080/product/spu/stock
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "stock": 88
+}
+
+### 35) Trade 模块：创建订单
+POST http://127.0.0.1:48080/trade/order/create
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "orderNo": "T202603060001",
+  "userId": 3,
+  "totalAmount": 199.00,
+  "payAmount": 199.00,
+  "status": "CREATED"
+}
+
+### 36) Trade 模块：订单分页
+GET http://127.0.0.1:48080/trade/order/list?tenantId=1&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 36.1) Trade 模块：订单详情
+GET http://127.0.0.1:48080/trade/order/1
+Authorization: Bearer {{accessToken}}
+
+### 36.2) Trade 模块：更新订单状态
+PUT http://127.0.0.1:48080/trade/order/status
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "status": "PAID"
+}
+
+### 37) Pay 模块：创建支付单
+POST http://127.0.0.1:48080/pay/order/create
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "tenantId": 1,
+  "tradeOrderId": 1,
+  "payOrderNo": "P202603060001",
+  "channel": "ALIPAY",
+  "amount": 199.00,
+  "status": "WAITING"
+}
+
+### 38) Pay 模块：支付单分页
+GET http://127.0.0.1:48080/pay/order/list?tenantId=1&pageNo=1&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### 38.1) Pay 模块：支付单详情
+GET http://127.0.0.1:48080/pay/order/1
+Authorization: Bearer {{accessToken}}
+
+### 38.2) Pay 模块：更新支付单状态
+PUT http://127.0.0.1:48080/pay/order/status
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "status": "SUCCESS"
+}
+
+### 39) Promotion 模块：优惠试算
+GET http://127.0.0.1:48080/promotion/coupon/preview?amount=199.00&discountRate=0.88
+Authorization: Bearer {{accessToken}}
+
+### 40) Merchant 模块：商家档案
+GET http://127.0.0.1:48080/merchant/profile?merchantId=1
+Authorization: Bearer {{accessToken}}
+
+### 41) CRM 模块：客户漏斗
+GET http://127.0.0.1:48080/crm/customer/funnel
+Authorization: Bearer {{accessToken}}
+
+### 42) ERP 模块：库存汇总
+GET http://127.0.0.1:48080/erp/inventory/summary?warehouse=MAIN
+Authorization: Bearer {{accessToken}}
+
+### 43) BPM 模块：发起流程
+POST http://127.0.0.1:48080/bpm/process/start?processKey=order_approve&businessId=ORD-10001
+Authorization: Bearer {{accessToken}}
+
+### 44) BPM 模块：待办列表
+GET http://127.0.0.1:48080/bpm/task/todo
+Authorization: Bearer {{accessToken}}
+
+### 45) Report 模块：销售概览
+GET http://127.0.0.1:48080/report/sales/overview?date=2026-03-06
+Authorization: Bearer {{accessToken}}
