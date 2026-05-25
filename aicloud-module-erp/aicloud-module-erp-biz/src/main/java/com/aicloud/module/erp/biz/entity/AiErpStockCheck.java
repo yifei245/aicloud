@@ -1,6 +1,6 @@
 package com.aicloud.module.erp.biz.entity; import com.baomidou.mybatisplus.annotation.*; import java.time.LocalDateTime; @TableName("ai_erp_stock_check") /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AiErpStockCheck { @TableId(type=IdType.AUTO) private Long id; private Long tenantId; private String checkNo; private String warehouseCode; private String status; private String remark; private String createBy; private LocalDateTime createTime; private LocalDateTime updateTime; public Long getId(){return id;} public void setId(Long v){id=v;} public Long getTenantId(){return tenantId;} public void setTenantId(Long v){tenantId=v;} public String getCheckNo(){return checkNo;} public void setCheckNo(String v){checkNo=v;} public String getWarehouseCode(){return warehouseCode;} public void setWarehouseCode(String v){warehouseCode=v;} public String getStatus(){return status;} public void setStatus(String v){status=v;} public String getRemark(){return remark;} public void setRemark(String v){remark=v;} public String getCreateBy(){return createBy;} public void setCreateBy(String v){createBy=v;} public LocalDateTime getCreateTime(){return createTime;} public void setCreateTime(LocalDateTime v){createTime=v;} public LocalDateTime getUpdateTime(){return updateTime;} public void setUpdateTime(LocalDateTime v){updateTime=v;} }

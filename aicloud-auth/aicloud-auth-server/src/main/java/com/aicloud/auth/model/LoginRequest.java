@@ -3,7 +3,7 @@ package com.aicloud.auth.model;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class LoginRequest {
 

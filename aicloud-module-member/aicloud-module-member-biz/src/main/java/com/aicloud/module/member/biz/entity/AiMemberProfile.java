@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AiMemberProfile {
     @TableId(type = IdType.AUTO)

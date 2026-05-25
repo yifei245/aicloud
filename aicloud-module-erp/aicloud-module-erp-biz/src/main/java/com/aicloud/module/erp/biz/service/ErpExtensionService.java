@@ -4,6 +4,8 @@ import com.aicloud.module.erp.biz.entity.*;
 import com.aicloud.module.erp.biz.mapper.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -15,7 +17,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class ErpExtensionService {
@@ -40,13 +42,13 @@ public class ErpExtensionService {
         register("transfer", AiErpStockTransfer.class, erpStockTransferMapper, true, "transfer_no", "sku_code", "from_warehouse", "to_warehouse", "status", "create_by", "remark");
     }
 
-    public Map<String, Object> list(String resource, Long tenantId, String keyword) {
+    public Map<String, Object> list(String resource, Long tenantId, String keyword, long pageNo, long pageSize) {
         Resource<?> config = getResource(resource);
         QueryWrapper<?> wrapper = new QueryWrapper<>().eq("tenant_id", tenantId);
         applyKeyword(wrapper, config, keyword);
-        wrapper.orderByDesc("id").last("LIMIT 500");
-        List<?> rows = rawMapper(config.mapper()).selectList(raw(wrapper));
-        return Map.of("total", rows.size(), "list", rows);
+        wrapper.orderByDesc("id");
+        IPage<?> page = rawMapper(config.mapper()).selectPage(new Page<>(Math.max(pageNo, 1), Math.min(Math.max(pageSize, 1), 100)), raw(wrapper));
+        return Map.of("total", page.getTotal(), "pageNo", page.getCurrent(), "pageSize", page.getSize(), "list", page.getRecords());
     }
 
     public Object get(String resource, Long id, Long tenantId) {

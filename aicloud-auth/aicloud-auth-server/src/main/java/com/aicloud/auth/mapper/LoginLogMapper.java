@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Mapper
 public interface LoginLogMapper extends BaseMapper<AiLoginLog> {

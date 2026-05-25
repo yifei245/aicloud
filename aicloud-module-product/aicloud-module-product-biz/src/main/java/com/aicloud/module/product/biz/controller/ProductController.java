@@ -1,8 +1,8 @@
 package com.aicloud.module.product.biz.controller;
 
 import com.aicloud.module.product.biz.entity.AiProductSpu;
-import com.aicloud.module.product.biz.model.ApiResponse;
-import com.aicloud.module.product.biz.model.PageResponse;
+import com.aicloud.common.pojo.ApiResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.product.biz.model.ProductSaveRequest;
 import com.aicloud.module.product.biz.model.ProductStatusUpdateRequest;
 import com.aicloud.module.product.biz.model.ProductStockUpdateRequest;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class ProductController {
 

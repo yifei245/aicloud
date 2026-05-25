@@ -6,7 +6,7 @@ import com.aicloud.module.merchant.biz.mapper.MerchantAccountMapper;
 import com.aicloud.module.merchant.biz.mapper.MerchantProfileMapper;
 import com.aicloud.module.merchant.biz.model.MerchantAccountSaveRequest;
 import com.aicloud.module.merchant.biz.model.MerchantSaveRequest;
-import com.aicloud.module.merchant.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class MerchantService {

@@ -3,7 +3,7 @@ package com.aicloud.gateway.service.export;
 import com.aicloud.gateway.entity.AiAuditExportTask;
 import com.aicloud.gateway.mapper.AuditExportTaskMapper;
 import com.aicloud.gateway.model.AuditLogItemResponse;
-import com.aicloud.gateway.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.gateway.model.export.AuditExportCleanupResult;
 import com.aicloud.gateway.model.export.AuditExportTaskInfo;
 import com.aicloud.gateway.model.export.AuditExportTaskRequest;
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class AuditExportTaskService {

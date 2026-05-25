@@ -13,7 +13,7 @@ import com.aicloud.module.trade.biz.model.AppTradeOrderCreateRequest;
 import com.aicloud.module.trade.biz.model.CartAddRequest;
 import com.aicloud.module.trade.biz.model.CreateTradeOrderRequest;
 import com.aicloud.module.trade.biz.model.DeliveryShipRequest;
-import com.aicloud.module.trade.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.trade.biz.model.UpdateTradeOrderStatusRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class TradeOrderService {

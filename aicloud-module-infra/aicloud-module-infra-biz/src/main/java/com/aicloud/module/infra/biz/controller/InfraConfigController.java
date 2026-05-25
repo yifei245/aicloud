@@ -4,7 +4,7 @@ import com.aicloud.module.infra.biz.entity.AiInfraConfig;
 import com.aicloud.module.infra.biz.entity.AiInfraFile;
 import com.aicloud.module.infra.biz.entity.AiInfraJob;
 import com.aicloud.module.infra.biz.entity.AiInfraNotice;
-import com.aicloud.module.infra.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.infra.biz.model.InfraConfigSaveRequest;
 import com.aicloud.module.infra.biz.service.InfraConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class InfraConfigController {
 

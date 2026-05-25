@@ -1,6 +1,6 @@
 package com.aicloud.module.crm.biz.model; import jakarta.validation.constraints.NotBlank; import jakarta.validation.constraints.NotNull; /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class CrmFollowSaveRequest { @NotNull private Long tenantId; @NotNull private Long customerId; @NotBlank private String followType; @NotBlank private String content; private java.time.LocalDateTime nextFollowTime; private String createBy; public Long getTenantId(){return tenantId;} public void setTenantId(Long v){tenantId=v;} public Long getCustomerId(){return customerId;} public void setCustomerId(Long v){customerId=v;} public String getFollowType(){return followType;} public void setFollowType(String v){followType=v;} public String getContent(){return content;} public void setContent(String v){content=v;} public java.time.LocalDateTime getNextFollowTime(){return nextFollowTime;} public void setNextFollowTime(java.time.LocalDateTime v){nextFollowTime=v;} public String getCreateBy(){return createBy;} public void setCreateBy(String v){createBy=v;} }

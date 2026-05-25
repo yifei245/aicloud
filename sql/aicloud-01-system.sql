@@ -10,6 +10,13 @@ INSERT INTO ai_role(id, tenant_id, code, name, data_scope, sort, status) VALUES
 (3, 1, 'APP_USER', '终端用户', 'SELF', 3, 1)
 ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);
 
+INSERT INTO ai_role_dept(id, tenant_id, role_id, dept_id) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 2, 2),
+(4, 1, 2, 3)
+ON DUPLICATE KEY UPDATE dept_id=VALUES(dept_id);
+
 INSERT INTO ai_menu(id, tenant_id, parent_id, name, type, path, component, permission, icon, sort, status) VALUES
 (1, 1, 0, '系统管理', 1, '/system', NULL, NULL, 'setting', 1, 1),
 (2, 1, 1, '用户管理', 2, '/system/user', 'system/user/index', 'system:user:list', 'user', 1, 1),

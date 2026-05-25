@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class RoleResponse {
     private Long id;
@@ -17,6 +17,7 @@ public class RoleResponse {
     private Integer status;
     private Integer userCount;
     private List<Long> menuIds;
+    private List<Long> deptIds;
     private LocalDateTime createTime;
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -34,6 +35,8 @@ public class RoleResponse {
     public void setUserCount(Integer userCount) { this.userCount = userCount; }
     public List<Long> getMenuIds() { return menuIds; }
     public void setMenuIds(List<Long> menuIds) { this.menuIds = menuIds; }
+    public List<Long> getDeptIds() { return deptIds; }
+    public void setDeptIds(List<Long> deptIds) { this.deptIds = deptIds; }
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
 }

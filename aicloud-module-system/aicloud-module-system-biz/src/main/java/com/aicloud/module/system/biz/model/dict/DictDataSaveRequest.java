@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.dict;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class DictDataSaveRequest {
     private Long id;

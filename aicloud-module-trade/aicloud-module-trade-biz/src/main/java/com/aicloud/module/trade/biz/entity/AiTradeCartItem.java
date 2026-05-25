@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AiTradeCartItem {
     @TableId(type = IdType.AUTO)

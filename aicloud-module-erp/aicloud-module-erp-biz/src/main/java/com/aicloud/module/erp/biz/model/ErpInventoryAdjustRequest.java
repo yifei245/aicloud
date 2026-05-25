@@ -1,6 +1,6 @@
 package com.aicloud.module.erp.biz.model; import jakarta.validation.constraints.NotBlank; import jakarta.validation.constraints.NotNull; /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class ErpInventoryAdjustRequest { @NotNull private Long tenantId; @NotBlank private String skuCode; @NotBlank private String skuName; @NotBlank private String warehouseCode; @NotNull private Integer qtyDelta; @NotBlank private String bizType; private String remark; private String createBy; public Long getTenantId(){return tenantId;} public void setTenantId(Long v){tenantId=v;} public String getSkuCode(){return skuCode;} public void setSkuCode(String v){skuCode=v;} public String getSkuName(){return skuName;} public void setSkuName(String v){skuName=v;} public String getWarehouseCode(){return warehouseCode;} public void setWarehouseCode(String v){warehouseCode=v;} public Integer getQtyDelta(){return qtyDelta;} public void setQtyDelta(Integer v){qtyDelta=v;} public String getBizType(){return bizType;} public void setBizType(String v){bizType=v;} public String getRemark(){return remark;} public void setRemark(String v){remark=v;} public String getCreateBy(){return createBy;} public void setCreateBy(String v){createBy=v;} }

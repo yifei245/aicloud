@@ -13,7 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AsyncConfig {
 

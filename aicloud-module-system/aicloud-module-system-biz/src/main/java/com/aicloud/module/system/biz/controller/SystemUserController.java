@@ -1,8 +1,8 @@
 package com.aicloud.module.system.biz.controller;
 
-import com.aicloud.module.system.biz.annotation.RequirePermission;
-import com.aicloud.module.system.biz.model.ApiResponse;
-import com.aicloud.module.system.biz.model.common.PageResult;
+import com.aicloud.framework.rbac.annotation.RequirePermission;
+import com.aicloud.common.pojo.ApiResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.system.biz.model.user.UserPasswordRequest;
 import com.aicloud.module.system.biz.model.user.UserResponse;
 import com.aicloud.module.system.biz.model.user.UserSaveRequest;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class SystemUserController {
 
@@ -40,11 +40,13 @@ public class SystemUserController {
     @Operation(summary = "用户列表")
     @RequirePermission("system:user:query")
     @GetMapping("/list")
-    public ApiResponse<PageResult<UserResponse>> list(@RequestHeader(name = "X-Tenant-Id", required = false) String tenantIdHeader,
+    public ApiResponse<PageResponse<UserResponse>> list(@RequestHeader(name = "X-Tenant-Id", required = false) String tenantIdHeader,
                                                       @RequestParam(name = "keyword", required = false) String keyword,
                                                       @RequestParam(name = "status", required = false) Integer status,
-                                                      @RequestParam(name = "deptId", required = false) Long deptId) {
-        return ApiResponse.ok(userAdminService.list(parseTenantId(tenantIdHeader), keyword, status, deptId));
+                                                      @RequestParam(name = "deptId", required = false) Long deptId,
+                                                      @RequestParam(name = "pageNo", defaultValue = "1") long pageNo,
+                                                      @RequestParam(name = "pageSize", defaultValue = "20") long pageSize) {
+        return ApiResponse.ok(userAdminService.list(parseTenantId(tenantIdHeader), keyword, status, deptId, pageNo, pageSize));
     }
 
     @Operation(summary = "用户详情")

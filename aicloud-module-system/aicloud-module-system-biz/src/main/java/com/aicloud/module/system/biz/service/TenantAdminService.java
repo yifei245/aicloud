@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class TenantAdminService {

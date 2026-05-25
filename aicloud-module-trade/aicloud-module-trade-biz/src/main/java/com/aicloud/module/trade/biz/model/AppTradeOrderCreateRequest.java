@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AppTradeOrderCreateRequest {
     @NotNull

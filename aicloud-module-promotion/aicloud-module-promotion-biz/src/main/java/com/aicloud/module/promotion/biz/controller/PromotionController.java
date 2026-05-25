@@ -2,7 +2,7 @@ package com.aicloud.module.promotion.biz.controller;
 
 import com.aicloud.module.promotion.biz.entity.AiPromotionCouponTemplate;
 import com.aicloud.module.promotion.biz.entity.AiPromotionUserCoupon;
-import com.aicloud.module.promotion.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.promotion.biz.model.CouponClaimRequest;
 import com.aicloud.module.promotion.biz.model.CouponTemplateSaveRequest;
 import com.aicloud.module.promotion.biz.service.PromotionCouponService;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class PromotionController {
 

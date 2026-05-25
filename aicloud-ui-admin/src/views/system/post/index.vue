@@ -25,7 +25,7 @@
         </div>
       </template>
 
-      <el-table v-loading="loading" :data="posts" stripe border height="560" class="admin-data-table">
+      <el-table v-loading="loading" :data="pagedPosts" stripe border height="560" class="admin-data-table">
         <el-table-column prop="id" label="ID" width="90" fixed />
         <el-table-column prop="name" label="岗位名称" min-width="180" fixed />
         <el-table-column prop="code" label="岗位编码" min-width="160" />
@@ -42,6 +42,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="table-pagination">
+        <span class="pagination-total">共 {{ posts.length }} 条</span>
+        <el-pagination v-model:current-page="pagination.pageNo" v-model:page-size="pagination.pageSize" :page-sizes="[10, 20, 50, 100]" :total="posts.length" layout="sizes, prev, pager, next, jumper" background />
+      </div>
     </el-card>
 
     <el-dialog v-model="formVisible" :title="form.id ? '编辑岗位' : '新增岗位'" width="460px" destroy-on-close>
@@ -65,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { request } from '@/utils/request'
 
@@ -77,11 +81,15 @@ const formVisible = ref(false)
 const formRef = ref<FormInstance>()
 const posts = ref<PostRow[]>([])
 const query = reactive<{ keyword: string; status?: number }>({ keyword: '' })
+const pagination = reactive({ pageNo: 1, pageSize: 20 })
 const form = reactive<PostRow>(emptyForm())
+const pagedPosts = computed(() => posts.value.slice((pagination.pageNo - 1) * pagination.pageSize, pagination.pageNo * pagination.pageSize))
 const rules: FormRules<PostRow> = {
   name: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }],
   code: [{ required: true, message: '请输入岗位编码', trigger: 'blur' }]
 }
+
+watch(() => [query.keyword, query.status], () => { pagination.pageNo = 1 })
 
 onMounted(loadPosts)
 

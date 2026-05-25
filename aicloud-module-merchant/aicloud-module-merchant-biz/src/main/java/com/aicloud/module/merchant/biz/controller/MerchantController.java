@@ -2,10 +2,10 @@ package com.aicloud.module.merchant.biz.controller;
 
 import com.aicloud.module.merchant.biz.entity.AiMerchantAccount;
 import com.aicloud.module.merchant.biz.entity.AiMerchantProfile;
-import com.aicloud.module.merchant.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.merchant.biz.model.MerchantAccountSaveRequest;
 import com.aicloud.module.merchant.biz.model.MerchantSaveRequest;
-import com.aicloud.module.merchant.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.merchant.biz.service.MerchantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MerchantController {
 

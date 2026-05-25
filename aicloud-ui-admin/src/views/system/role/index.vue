@@ -28,7 +28,7 @@
         </div>
       </template>
 
-      <el-table v-loading="loading" :data="roles" stripe border height="560" class="admin-data-table">
+      <el-table v-loading="loading" :data="pagedRoles" stripe border height="560" class="admin-data-table">
         <el-table-column prop="id" label="ID" width="80" fixed />
         <el-table-column prop="name" label="角色名称" min-width="150" fixed />
         <el-table-column prop="code" label="角色编码" min-width="150" />
@@ -50,6 +50,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="table-pagination">
+        <span class="pagination-total">共 {{ roles.length }} 条</span>
+        <el-pagination v-model:current-page="pagination.pageNo" v-model:page-size="pagination.pageSize" :page-sizes="[10, 20, 50, 100]" :total="roles.length" layout="sizes, prev, pager, next, jumper" background />
+      </div>
     </el-card>
 
     <el-drawer v-model="formVisible" :title="form.id ? '编辑角色' : '新增角色'" size="560px" destroy-on-close>
@@ -60,6 +64,7 @@
           <el-select v-model="form.dataScope">
             <el-option label="全部数据" value="ALL" />
             <el-option label="本部门及以下" value="DEPT_AND_CHILD" />
+            <el-option label="自定义部门" value="CUSTOM" />
             <el-option label="本部门" value="DEPT" />
             <el-option label="仅本人" value="SELF" />
           </el-select>
@@ -70,6 +75,9 @@
             <el-radio-button :label="1">启用</el-radio-button>
             <el-radio-button :label="0">禁用</el-radio-button>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="form.dataScope === 'CUSTOM'" label="部门权限">
+          <el-tree ref="deptTreeRef" :data="depts" node-key="id" show-checkbox default-expand-all :props="treeProps" class="permission-tree" />
         </el-form-item>
         <el-form-item label="菜单权限">
           <el-tree ref="menuTreeRef" :data="menus" node-key="id" show-checkbox default-expand-all :props="treeProps" class="permission-tree" />
@@ -84,33 +92,39 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import type { ElTree } from 'element-plus'
 import { request } from '@/utils/request'
 import type { MenuNode } from '@/types/api'
 
-interface RoleRow { id: number; code: string; name: string; dataScope: string; sort: number; status: number; userCount: number; menuIds?: number[]; createTime?: string }
-interface RoleForm { id?: number; code: string; name: string; dataScope: string; sort: number; status: number; menuIds: number[] }
+interface RoleRow { id: number; code: string; name: string; dataScope: string; sort: number; status: number; userCount: number; menuIds?: number[]; deptIds?: number[]; createTime?: string }
+interface RoleForm { id?: number; code: string; name: string; dataScope: string; sort: number; status: number; menuIds: number[]; deptIds: number[] }
 
 const loading = ref(false)
 const saving = ref(false)
 const formVisible = ref(false)
 const formRef = ref<FormInstance>()
 const menuTreeRef = ref<InstanceType<typeof ElTree>>()
+const deptTreeRef = ref<InstanceType<typeof ElTree>>()
 const roles = ref<RoleRow[]>([])
 const menus = ref<MenuNode[]>([])
+const depts = ref<MenuNode[]>([])
 const query = reactive<{ keyword: string; status?: number }>({ keyword: '' })
+const pagination = reactive({ pageNo: 1, pageSize: 20 })
 const form = reactive<RoleForm>(emptyForm())
 const treeProps = { label: 'name', children: 'children' }
+const pagedRoles = computed(() => roles.value.slice((pagination.pageNo - 1) * pagination.pageSize, pagination.pageNo * pagination.pageSize))
 const rules: FormRules<RoleForm> = {
   name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
   code: [{ required: true, message: '请输入角色编码', trigger: 'blur' }],
   dataScope: [{ required: true, message: '请选择数据范围', trigger: 'change' }]
 }
 
+watch(() => [query.keyword, query.status], () => { pagination.pageNo = 1 })
+
 onMounted(async () => {
-  await Promise.all([loadRoles(), loadMenus()])
+  await Promise.all([loadRoles(), loadMenus(), loadDepts()])
 })
 
 async function loadRoles() {
@@ -126,17 +140,27 @@ async function loadMenus() {
   menus.value = await request<MenuNode[]>({ url: '/system/menu/tree', method: 'GET' })
 }
 
+async function loadDepts() {
+  depts.value = await request<MenuNode[]>({ url: '/system/dept/tree', method: 'GET' })
+}
+
 function openCreate() {
   Object.assign(form, emptyForm())
   formVisible.value = true
-  nextTick(() => menuTreeRef.value?.setCheckedKeys([]))
+  nextTick(() => {
+    menuTreeRef.value?.setCheckedKeys([])
+    deptTreeRef.value?.setCheckedKeys([])
+  })
 }
 
 async function openEdit(row: RoleRow) {
   const detail = await request<RoleRow>({ url: `/system/role/${row.id}`, method: 'GET' })
-  Object.assign(form, { id: detail.id, code: detail.code, name: detail.name, dataScope: detail.dataScope || 'ALL', sort: detail.sort || 0, status: detail.status ?? 1, menuIds: detail.menuIds || [] })
+  Object.assign(form, { id: detail.id, code: detail.code, name: detail.name, dataScope: detail.dataScope || 'ALL', sort: detail.sort || 0, status: detail.status ?? 1, menuIds: detail.menuIds || [], deptIds: detail.deptIds || [] })
   formVisible.value = true
-  nextTick(() => menuTreeRef.value?.setCheckedKeys(form.menuIds, false))
+  nextTick(() => {
+    menuTreeRef.value?.setCheckedKeys(form.menuIds, false)
+    deptTreeRef.value?.setCheckedKeys(form.deptIds, false)
+  })
 }
 
 async function submitForm() {
@@ -144,7 +168,8 @@ async function submitForm() {
   saving.value = true
   try {
     const menuIds = menuTreeRef.value?.getCheckedKeys(false).map(Number) || []
-    await request({ url: form.id ? '/system/role/update' : '/system/role/create', method: form.id ? 'PUT' : 'POST', data: { ...form, menuIds } })
+    const deptIds = deptTreeRef.value?.getCheckedKeys(false).map(Number) || []
+    await request({ url: form.id ? '/system/role/update' : '/system/role/create', method: form.id ? 'PUT' : 'POST', data: { ...form, menuIds, deptIds } })
     ElMessage.success(form.id ? '角色已更新' : '角色已创建')
     formVisible.value = false
     await loadRoles()
@@ -167,10 +192,10 @@ async function removeRole(row: RoleRow) {
 }
 
 function emptyForm(): RoleForm {
-  return { code: '', name: '', dataScope: 'ALL', sort: 0, status: 1, menuIds: [] }
+  return { code: '', name: '', dataScope: 'ALL', sort: 0, status: 1, menuIds: [], deptIds: [] }
 }
 
 function dataScopeLabel(value: string) {
-  return ({ ALL: '全部数据', DEPT_AND_CHILD: '本部门及以下', DEPT: '本部门', SELF: '仅本人' } as Record<string, string>)[value] || value
+  return ({ ALL: '全部数据', DEPT_AND_CHILD: '本部门及以下', CUSTOM: '自定义部门', DEPT: '本部门', SELF: '仅本人' } as Record<string, string>)[value] || value
 }
 </script>

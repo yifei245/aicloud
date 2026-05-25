@@ -3,7 +3,7 @@ package com.aicloud.module.member.biz.model.common;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class TerminalUserContext {
     private Long tenantId;

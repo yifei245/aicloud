@@ -1,0 +1,2 @@
+com.aicloud.framework.web.config.AicloudGlobalExceptionHandler
+com.aicloud.framework.web.config.AicloudWebAutoConfiguration

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class CartAddRequest {
     @NotNull(message = "商品ID不能为空")

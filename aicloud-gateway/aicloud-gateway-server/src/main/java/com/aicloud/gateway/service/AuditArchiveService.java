@@ -7,7 +7,7 @@ import com.aicloud.gateway.mapper.AuditLogMapper;
 import com.aicloud.gateway.model.AuditArchiveRunResponse;
 import com.aicloud.gateway.model.AuditArchiveStatsResponse;
 import com.aicloud.gateway.model.AuditLogItemResponse;
-import com.aicloud.gateway.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class AuditArchiveService {

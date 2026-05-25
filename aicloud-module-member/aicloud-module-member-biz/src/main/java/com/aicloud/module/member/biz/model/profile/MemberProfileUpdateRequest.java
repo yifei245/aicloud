@@ -3,7 +3,7 @@ package com.aicloud.module.member.biz.model.profile;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MemberProfileUpdateRequest {
     private String nickname;

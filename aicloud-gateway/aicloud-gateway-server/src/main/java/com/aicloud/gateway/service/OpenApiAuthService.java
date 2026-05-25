@@ -20,7 +20,7 @@ import org.springframework.web.server.ServerWebExchange;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class OpenApiAuthService {

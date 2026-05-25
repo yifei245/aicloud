@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.menu;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MenuSaveRequest {
     private Long id;

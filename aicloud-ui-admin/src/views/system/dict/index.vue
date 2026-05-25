@@ -25,12 +25,16 @@
             </div>
           </div>
         </template>
-        <el-table v-loading="typeLoading" :data="types" stripe border height="560" highlight-current-row @current-change="selectType">
+        <el-table v-loading="typeLoading" :data="pagedTypes" stripe border height="560" highlight-current-row @current-change="selectType">
           <el-table-column prop="dictName" label="名称" min-width="130" />
           <el-table-column prop="dictType" label="类型" min-width="170" show-overflow-tooltip />
           <el-table-column prop="status" label="状态" width="80"><template #default="{ row }"><el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '启用' : '禁用' }}</el-tag></template></el-table-column>
           <el-table-column label="操作" width="120"><template #default="{ row }"><el-button link type="primary" @click.stop="openType(row)">编辑</el-button><el-button link type="danger" @click.stop="removeType(row)">删除</el-button></template></el-table-column>
         </el-table>
+        <div class="table-pagination compact-pagination">
+          <span class="pagination-total">共 {{ types.length }} 条</span>
+          <el-pagination v-model:current-page="typePagination.pageNo" v-model:page-size="typePagination.pageSize" :page-sizes="[10, 20, 50]" :total="types.length" layout="prev, pager, next, sizes" background />
+        </div>
       </el-card>
 
       <el-card class="result-card" shadow="never">
@@ -48,13 +52,17 @@
           </div>
         </template>
         <el-empty v-if="!currentType" description="请先选择左侧字典类型" />
-        <el-table v-else v-loading="dataLoading" :data="dictData" stripe border height="560">
+        <el-table v-else v-loading="dataLoading" :data="pagedDictData" stripe border height="560">
           <el-table-column prop="dictLabel" label="标签" min-width="150" />
           <el-table-column prop="dictValue" label="值" min-width="150" />
           <el-table-column prop="sort" label="排序" width="80" />
           <el-table-column prop="status" label="状态" width="90"><template #default="{ row }"><el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '启用' : '禁用' }}</el-tag></template></el-table-column>
           <el-table-column label="操作" width="130"><template #default="{ row }"><el-button link type="primary" @click="openData(row)">编辑</el-button><el-button link type="danger" @click="removeData(row)">删除</el-button></template></el-table-column>
         </el-table>
+        <div v-if="currentType" class="table-pagination compact-pagination">
+          <span class="pagination-total">共 {{ dictData.length }} 条</span>
+          <el-pagination v-model:current-page="dataPagination.pageNo" v-model:page-size="dataPagination.pageSize" :page-sizes="[10, 20, 50]" :total="dictData.length" layout="prev, pager, next, sizes" background />
+        </div>
       </el-card>
     </div>
 
@@ -81,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { request } from '@/utils/request'
 
@@ -92,16 +100,23 @@ const typeVisible = ref(false), dataVisible = ref(false)
 const types = ref<DictType[]>([]), dictData = ref<DictData[]>([]), currentType = ref<DictType>()
 const typeRef = ref<FormInstance>(), dataRef = ref<FormInstance>()
 const typeQuery = reactive<{ keyword: string; status?: number }>({ keyword: '' })
+const typePagination = reactive({ pageNo: 1, pageSize: 20 })
+const dataPagination = reactive({ pageNo: 1, pageSize: 20 })
 const dataStatus = ref<number>()
 const typeForm = reactive<DictType>({ dictType: '', dictName: '', status: 1 })
 const dataForm = reactive<DictData>({ dictType: '', dictLabel: '', dictValue: '', sort: 0, status: 1 })
 const typeRules: FormRules<DictType> = { dictName: [{ required: true, message: '请输入字典名称', trigger: 'blur' }], dictType: [{ required: true, message: '请输入字典类型', trigger: 'blur' }] }
 const dataRules: FormRules<DictData> = { dictLabel: [{ required: true, message: '请输入数据标签', trigger: 'blur' }], dictValue: [{ required: true, message: '请输入数据值', trigger: 'blur' }] }
+const pagedTypes = computed(() => types.value.slice((typePagination.pageNo - 1) * typePagination.pageSize, typePagination.pageNo * typePagination.pageSize))
+const pagedDictData = computed(() => dictData.value.slice((dataPagination.pageNo - 1) * dataPagination.pageSize, dataPagination.pageNo * dataPagination.pageSize))
+
+watch(() => [typeQuery.keyword, typeQuery.status], () => { typePagination.pageNo = 1 })
+watch(dataStatus, () => { dataPagination.pageNo = 1 })
 
 onMounted(loadTypes)
 async function loadTypes() { typeLoading.value = true; try { types.value = await request<DictType[]>({ url: '/system/dict/type/list', method: 'GET', params: { keyword: typeQuery.keyword || undefined, status: typeQuery.status } }); if (!currentType.value && types.value[0]) selectType(types.value[0]) } finally { typeLoading.value = false } }
 async function loadData() { if (!currentType.value) return; dataLoading.value = true; try { dictData.value = await request<DictData[]>({ url: '/system/dict/data/list', method: 'GET', params: { dictType: currentType.value.dictType, status: dataStatus.value } }) } finally { dataLoading.value = false } }
-function selectType(row?: DictType) { if (!row) return; currentType.value = row; loadData() }
+function selectType(row?: DictType) { if (!row) return; currentType.value = row; dataPagination.pageNo = 1; loadData() }
 function openType(row?: DictType) { Object.assign(typeForm, row || { id: undefined, dictType: '', dictName: '', status: 1 }); typeVisible.value = true }
 function openData(row?: DictData) { if (!currentType.value) return; Object.assign(dataForm, row || { id: undefined, dictType: currentType.value.dictType, dictLabel: '', dictValue: '', sort: 0, status: 1 }); dataVisible.value = true }
 async function submitType() { await typeRef.value?.validate(); saving.value = true; try { await request({ url: '/system/dict/type/save', method: 'POST', data: typeForm }); ElMessage.success('字典类型已保存'); typeVisible.value = false; await loadTypes() } finally { saving.value = false } }

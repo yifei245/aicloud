@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.dept;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class DeptSaveRequest {
     private Long id;

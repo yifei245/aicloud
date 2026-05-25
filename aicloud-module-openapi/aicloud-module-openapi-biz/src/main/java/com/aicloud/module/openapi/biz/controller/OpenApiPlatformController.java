@@ -3,7 +3,7 @@ package com.aicloud.module.openapi.biz.controller;
 import com.aicloud.module.openapi.biz.entity.AiOpenApiApp;
 import com.aicloud.module.openapi.biz.entity.AiOpenApiCallLog;
 import com.aicloud.module.openapi.biz.entity.AiOpenApiWebhook;
-import com.aicloud.module.openapi.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.openapi.biz.service.OpenApiPlatformService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class OpenApiPlatformController {
 

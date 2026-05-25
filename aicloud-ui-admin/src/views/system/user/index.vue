@@ -38,13 +38,13 @@
       </template>
 
       <div class="metric-grid compact user-metrics">
-        <DataMetric label="用户总数" :value="users.length" hint="当前返回记录" />
+        <DataMetric label="用户总数" :value="userTotal" hint="当前筛选记录" />
         <DataMetric label="启用用户" :value="enabledCount" hint="status = 1" />
         <DataMetric label="管理员" :value="adminCount" hint="userType = ADMIN" />
         <DataMetric label="会员用户" :value="memberCount" hint="userType = MEMBER" />
       </div>
 
-      <el-table v-loading="loading" :data="users" stripe border height="560" class="admin-data-table">
+      <el-table v-loading="loading" :data="pagedUsers" stripe border height="560" class="admin-data-table">
         <el-table-column prop="id" label="ID" width="76" fixed />
         <el-table-column prop="tenantId" label="租户" width="86" />
         <el-table-column prop="username" label="用户名" min-width="130" fixed />
@@ -78,6 +78,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="table-pagination">
+        <span class="pagination-total">共 {{ userTotal }} 条</span>
+        <el-pagination v-model:current-page="pagination.pageNo" v-model:page-size="pagination.pageSize" :page-sizes="[10, 20, 50, 100]" :total="userTotal" layout="sizes, prev, pager, next, jumper" background @size-change="handlePageSizeChange" @current-change="loadUsers" />
+      </div>
     </el-card>
 
     <el-drawer v-model="formVisible" :title="form.id ? '编辑用户' : '新增用户'" size="520px" destroy-on-close>
@@ -161,7 +165,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import DataMetric from '@/components/DataMetric.vue'
 import { request } from '@/utils/request'
@@ -216,6 +220,7 @@ const roleOptions = ref<RoleOption[]>([])
 const postOptions = ref<PostOption[]>([])
 const deptOptions = ref<DeptOption[]>([])
 const query = reactive<{ keyword: string; status?: number }>({ keyword: '' })
+const pagination = reactive({ pageNo: 1, pageSize: 20 })
 const form = reactive<UserForm>(emptyForm())
 const passwordForm = reactive({ id: 0, username: '', password: '123456' })
 
@@ -227,6 +232,8 @@ const rules: FormRules<UserForm> = {
   status: [{ required: true, message: '请选择状态', trigger: 'change' }]
 }
 
+const userTotal = ref(0)
+const pagedUsers = computed(() => users.value)
 const enabledCount = computed(() => users.value.filter(item => item.status === 1).length)
 const adminCount = computed(() => users.value.filter(item => item.userType === 'ADMIN').length)
 const memberCount = computed(() => users.value.filter(item => item.userType === 'MEMBER').length)
@@ -234,6 +241,8 @@ const selectedTenantId = computed({
   get: () => auth.tenantId,
   set: value => auth.setActiveTenant(Number(value))
 })
+
+watch(() => [query.keyword, query.status], () => { pagination.pageNo = 1 })
 
 onMounted(async () => {
   await loadTenants()
@@ -257,8 +266,13 @@ async function changeTenantContext() {
 async function loadUsers() {
   loading.value = true
   try {
-    const data = await request<{ list: UserRow[] }>({ url: '/system/user/list', method: 'GET', params: { keyword: query.keyword || undefined, status: query.status } })
+    const data = await request<{ total: number; list: UserRow[] }>({
+      url: '/system/user/list',
+      method: 'GET',
+      params: { keyword: query.keyword || undefined, status: query.status, pageNo: pagination.pageNo, pageSize: pagination.pageSize }
+    })
     users.value = data.list || []
+    userTotal.value = data.total || users.value.length
   } finally {
     loading.value = false
   }
@@ -273,6 +287,11 @@ async function loadOptions() {
   roleOptions.value = roles || []
   postOptions.value = posts || []
   deptOptions.value = flattenDept(depts || [])
+}
+
+function handlePageSizeChange() {
+  pagination.pageNo = 1
+  loadUsers()
 }
 
 function openCreate() {

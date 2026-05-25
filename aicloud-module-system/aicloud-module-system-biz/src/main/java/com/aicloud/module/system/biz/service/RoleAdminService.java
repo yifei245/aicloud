@@ -1,7 +1,9 @@
 package com.aicloud.module.system.biz.service;
 
 import com.aicloud.module.system.biz.entity.AiRole;
+import com.aicloud.module.system.biz.entity.AiRoleDept;
 import com.aicloud.module.system.biz.entity.AiRoleMenu;
+import com.aicloud.module.system.biz.mapper.RoleDeptMapper;
 import com.aicloud.module.system.biz.mapper.RoleMapper;
 import com.aicloud.module.system.biz.mapper.RoleMenuMapper;
 import com.aicloud.module.system.biz.model.role.RoleResponse;
@@ -19,17 +21,19 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class RoleAdminService {
 
     private final RoleMapper roleMapper;
     private final RoleMenuMapper roleMenuMapper;
+    private final RoleDeptMapper roleDeptMapper;
 
-    public RoleAdminService(RoleMapper roleMapper, RoleMenuMapper roleMenuMapper) {
+    public RoleAdminService(RoleMapper roleMapper, RoleMenuMapper roleMenuMapper, RoleDeptMapper roleDeptMapper) {
         this.roleMapper = roleMapper;
         this.roleMenuMapper = roleMenuMapper;
+        this.roleDeptMapper = roleDeptMapper;
     }
 
     public List<RoleResponse> list(Long tenantId, String keyword, Integer status) {
@@ -46,6 +50,7 @@ public class RoleAdminService {
             item.setUserCount(((Number) row.get("user_count")).intValue());
             item.setCreateTime((LocalDateTime) row.get("create_time"));
             item.setMenuIds(roleMapper.listMenuIds(tenantId, item.getId()));
+            item.setDeptIds(listDeptIds(tenantId, item.getId()));
             list.add(item);
         }
         return list;
@@ -66,6 +71,7 @@ public class RoleAdminService {
         response.setSort(role.getSort());
         response.setStatus(role.getStatus());
         response.setMenuIds(roleMapper.listMenuIds(tenantId, id));
+        response.setDeptIds(listDeptIds(tenantId, id));
         response.setCreateTime(role.getCreateTime());
         return response;
     }
@@ -84,6 +90,7 @@ public class RoleAdminService {
         role.setUpdateTime(LocalDateTime.now());
         roleMapper.insert(role);
         saveMenus(tenantId, role.getId(), request.getMenuIds());
+        saveDepts(tenantId, role.getId(), request.getDeptIds());
         return get(tenantId, role.getId());
     }
 
@@ -107,6 +114,7 @@ public class RoleAdminService {
         role.setUpdateTime(LocalDateTime.now());
         roleMapper.updateById(role);
         saveMenus(tenantId, role.getId(), request.getMenuIds());
+        saveDepts(tenantId, role.getId(), request.getDeptIds());
         return get(tenantId, role.getId());
     }
 
@@ -123,6 +131,9 @@ public class RoleAdminService {
         roleMenuMapper.delete(new LambdaQueryWrapper<AiRoleMenu>()
                 .eq(AiRoleMenu::getTenantId, tenantId)
                 .eq(AiRoleMenu::getRoleId, id));
+        roleDeptMapper.delete(new LambdaQueryWrapper<AiRoleDept>()
+                .eq(AiRoleDept::getTenantId, tenantId)
+                .eq(AiRoleDept::getRoleId, id));
         roleMapper.delete(new LambdaQueryWrapper<AiRole>()
                 .eq(AiRole::getTenantId, tenantId)
                 .eq(AiRole::getId, id));
@@ -145,6 +156,35 @@ public class RoleAdminService {
             relation.setMenuId(menuId);
             roleMenuMapper.insert(relation);
         }
+    }
+
+    private void saveDepts(Long tenantId, Long roleId, List<Long> deptIds) {
+        roleDeptMapper.delete(new LambdaQueryWrapper<AiRoleDept>()
+                .eq(AiRoleDept::getTenantId, tenantId)
+                .eq(AiRoleDept::getRoleId, roleId));
+        if (deptIds == null) {
+            return;
+        }
+        for (Long deptId : deptIds) {
+            if (deptId == null) {
+                continue;
+            }
+            AiRoleDept relation = new AiRoleDept();
+            relation.setTenantId(tenantId);
+            relation.setRoleId(roleId);
+            relation.setDeptId(deptId);
+            roleDeptMapper.insert(relation);
+        }
+    }
+
+    private List<Long> listDeptIds(Long tenantId, Long roleId) {
+        return roleDeptMapper.selectList(new LambdaQueryWrapper<AiRoleDept>()
+                .eq(AiRoleDept::getTenantId, tenantId)
+                .eq(AiRoleDept::getRoleId, roleId)
+                .orderByAsc(AiRoleDept::getDeptId))
+                .stream()
+                .map(AiRoleDept::getDeptId)
+                .toList();
     }
 
     private void validate(Long tenantId, RoleSaveRequest request, Long excludeId) {

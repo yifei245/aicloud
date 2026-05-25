@@ -3,10 +3,10 @@ package com.aicloud.module.pay.biz.controller;
 import com.aicloud.module.pay.biz.entity.AiPayChannel;
 import com.aicloud.module.pay.biz.entity.AiPayOrder;
 import com.aicloud.module.pay.biz.entity.AiPayRefund;
-import com.aicloud.module.pay.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.pay.biz.model.AppPayOrderCreateRequest;
 import com.aicloud.module.pay.biz.model.CreatePayOrderRequest;
-import com.aicloud.module.pay.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.pay.biz.model.PayChannelSaveRequest;
 import com.aicloud.module.pay.biz.model.PayRefundCreateRequest;
 import com.aicloud.module.pay.biz.model.PaySuccessNotifyRequest;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Tag(name = "支付中心")
 @RestController

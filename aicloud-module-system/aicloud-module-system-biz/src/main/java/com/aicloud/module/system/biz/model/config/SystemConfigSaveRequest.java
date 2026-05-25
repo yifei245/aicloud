@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.config;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class SystemConfigSaveRequest {
     private Long id;

@@ -32,7 +32,7 @@ import reactor.core.scheduler.Schedulers;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 

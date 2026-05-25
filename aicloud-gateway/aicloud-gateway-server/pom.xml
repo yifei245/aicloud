@@ -9,6 +9,11 @@
     <artifactId>aicloud-gateway-server</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>

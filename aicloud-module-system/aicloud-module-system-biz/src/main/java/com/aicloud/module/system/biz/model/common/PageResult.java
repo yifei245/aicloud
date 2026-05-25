@@ -1,38 +1,24 @@
 package com.aicloud.module.system.biz.model.common;
 
+import com.aicloud.common.pojo.PageResponse;
 import java.util.List;
 
 /**
- * AICloud generated source.
+ * Compatibility wrapper for old system page result.
  *
- * @author AICloud
+ * @author yifei
  */
-public class PageResult<T> {
-
-    private long total;
-    private List<T> list;
+@Deprecated
+public class PageResult<T> extends PageResponse<T> {
 
     public PageResult() {
     }
 
     public PageResult(long total, List<T> list) {
-        this.total = total;
-        this.list = list;
+        super(total, 1, total, list);
     }
 
-    public long getTotal() {
-        return total;
-    }
-
-    public void setTotal(long total) {
-        this.total = total;
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
+    public PageResult(long total, long pageNo, long pageSize, List<T> list) {
+        super(total, pageNo, pageSize, list);
     }
 }

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class PayRefundCreateRequest {
     @NotNull(message = "支付单ID不能为空")

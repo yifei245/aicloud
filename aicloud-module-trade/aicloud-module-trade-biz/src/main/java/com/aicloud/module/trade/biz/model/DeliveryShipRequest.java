@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class DeliveryShipRequest {
     @NotNull(message = "订单ID不能为空")

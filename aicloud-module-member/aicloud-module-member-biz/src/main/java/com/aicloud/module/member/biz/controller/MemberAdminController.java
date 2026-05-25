@@ -4,7 +4,7 @@ import com.aicloud.module.member.biz.entity.AiMemberAccountLog;
 import com.aicloud.module.member.biz.entity.AiMemberAddress;
 import com.aicloud.module.member.biz.entity.AiMemberLevel;
 import com.aicloud.module.member.biz.entity.AiMemberProfile;
-import com.aicloud.module.member.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.member.biz.service.MemberProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MemberAdminController {
     private final MemberProfileService memberProfileService;

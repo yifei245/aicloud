@@ -1,7 +1,7 @@
 package com.aicloud.module.product.biz.controller;
 
 import com.aicloud.module.product.biz.entity.AiProductCategory;
-import com.aicloud.module.product.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.product.biz.model.CategorySaveRequest;
 import com.aicloud.module.product.biz.service.ProductCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class ProductCategoryController {
 

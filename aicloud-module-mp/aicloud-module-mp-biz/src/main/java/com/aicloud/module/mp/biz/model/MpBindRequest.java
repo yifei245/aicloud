@@ -3,7 +3,7 @@ package com.aicloud.module.mp.biz.model;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MpBindRequest {
     private String openId;

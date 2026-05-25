@@ -1,9 +1,9 @@
 package com.aicloud.module.system.biz.controller;
 
-import com.aicloud.module.system.biz.annotation.RequirePermission;
+import com.aicloud.framework.rbac.annotation.RequirePermission;
 import com.aicloud.module.system.biz.entity.AiDictData;
 import com.aicloud.module.system.biz.entity.AiDictType;
-import com.aicloud.module.system.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.system.biz.model.dict.DictDataSaveRequest;
 import com.aicloud.module.system.biz.model.dict.DictTypeSaveRequest;
 import com.aicloud.module.system.biz.service.DictAdminService;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class DictController {
 

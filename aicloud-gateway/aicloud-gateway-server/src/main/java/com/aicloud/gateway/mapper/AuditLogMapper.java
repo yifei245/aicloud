@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Delete;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Mapper
 public interface AuditLogMapper extends BaseMapper<AiAuditLog> {

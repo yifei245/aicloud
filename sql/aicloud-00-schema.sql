@@ -76,6 +76,14 @@ CREATE TABLE IF NOT EXISTS ai_role_menu (
   UNIQUE KEY uk_role_menu (tenant_id, role_id, menu_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS ai_role_dept (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
+  dept_id BIGINT NOT NULL,
+  UNIQUE KEY uk_role_dept (tenant_id, role_id, dept_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS ai_dept (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   tenant_id BIGINT NOT NULL,

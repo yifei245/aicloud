@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Mapper
 public interface SsoSessionMapper extends BaseMapper<AiSsoSession> {

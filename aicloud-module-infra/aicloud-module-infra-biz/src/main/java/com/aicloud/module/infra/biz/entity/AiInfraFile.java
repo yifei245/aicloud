@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AiInfraFile {
     @TableId(type = IdType.AUTO)

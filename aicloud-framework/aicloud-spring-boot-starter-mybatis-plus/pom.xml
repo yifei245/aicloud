@@ -8,4 +8,15 @@
     </parent>
     <artifactId>aicloud-spring-boot-starter-mybatis-plus</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-spring-boot-starter-biz-tenant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+    </dependencies>
 </project>

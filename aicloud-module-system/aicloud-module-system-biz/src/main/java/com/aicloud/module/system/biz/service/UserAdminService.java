@@ -6,7 +6,7 @@ import com.aicloud.module.system.biz.entity.AiUserRole;
 import com.aicloud.module.system.biz.mapper.UserDeptPostMapper;
 import com.aicloud.module.system.biz.mapper.UserMapper;
 import com.aicloud.module.system.biz.mapper.UserRoleMapper;
-import com.aicloud.module.system.biz.model.common.PageResult;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.system.biz.model.user.UserResponse;
 import com.aicloud.module.system.biz.model.user.UserSaveRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class UserAdminService {
@@ -40,7 +40,7 @@ public class UserAdminService {
         this.userDeptPostMapper = userDeptPostMapper;
     }
 
-    public PageResult<UserResponse> list(Long tenantId, String keyword, Integer status, Long deptId) {
+    public PageResponse<UserResponse> list(Long tenantId, String keyword, Integer status, Long deptId, long pageNo, long pageSize) {
         List<Map<String, Object>> rows = userMapper.listUserRows(tenantId, keyword, status, deptId);
         List<UserResponse> list = new ArrayList<>();
         for (Map<String, Object> row : rows) {
@@ -63,7 +63,11 @@ public class UserAdminService {
             item.setPostNames(userMapper.listPostNames(tenantId, item.getId()));
             list.add(item);
         }
-        return new PageResult<>(list.size(), list);
+        long safePageNo = Math.max(pageNo, 1);
+        long safePageSize = Math.min(Math.max(pageSize, 1), 100);
+        int fromIndex = (int) Math.min((safePageNo - 1) * safePageSize, list.size());
+        int toIndex = (int) Math.min(fromIndex + safePageSize, list.size());
+        return new PageResponse<>(list.size(), safePageNo, safePageSize, list.subList(fromIndex, toIndex));
     }
 
     public UserResponse get(Long tenantId, Long id) {

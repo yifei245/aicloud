@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class OpenApiSecurityProperties {
 

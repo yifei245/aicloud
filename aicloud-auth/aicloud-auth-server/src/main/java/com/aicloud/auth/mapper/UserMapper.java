@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Mapper
 public interface UserMapper extends BaseMapper<AiUser> {

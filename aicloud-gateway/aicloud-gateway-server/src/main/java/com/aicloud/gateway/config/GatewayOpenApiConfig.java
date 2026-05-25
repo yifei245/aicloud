@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class GatewayOpenApiConfig {
 

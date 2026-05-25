@@ -3,7 +3,7 @@ package com.aicloud.module.member.biz.model.address;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MemberAddressSaveRequest {
     private Long id;

@@ -9,7 +9,7 @@ import com.aicloud.module.crm.biz.mapper.CrmOpportunityMapper;
 import com.aicloud.module.crm.biz.model.CrmCustomerSaveRequest;
 import com.aicloud.module.crm.biz.model.CrmFollowSaveRequest;
 import com.aicloud.module.crm.biz.model.CrmOpportunitySaveRequest;
-import com.aicloud.module.crm.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class CrmService {

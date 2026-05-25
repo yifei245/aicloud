@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class RoleSaveRequest {
     private Long id;
@@ -15,6 +15,7 @@ public class RoleSaveRequest {
     private Integer sort;
     private Integer status;
     private List<Long> menuIds;
+    private List<Long> deptIds;
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getCode() { return code; }
@@ -29,4 +30,6 @@ public class RoleSaveRequest {
     public void setStatus(Integer status) { this.status = status; }
     public List<Long> getMenuIds() { return menuIds; }
     public void setMenuIds(List<Long> menuIds) { this.menuIds = menuIds; }
+    public List<Long> getDeptIds() { return deptIds; }
+    public void setDeptIds(List<Long> deptIds) { this.deptIds = deptIds; }
 }

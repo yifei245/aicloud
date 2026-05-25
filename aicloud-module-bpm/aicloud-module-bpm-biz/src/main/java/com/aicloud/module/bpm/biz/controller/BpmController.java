@@ -3,7 +3,7 @@ package com.aicloud.module.bpm.biz.controller;
 import com.aicloud.module.bpm.biz.entity.AiBpmProcessDefinition;
 import com.aicloud.module.bpm.biz.entity.AiBpmProcessInstance;
 import com.aicloud.module.bpm.biz.entity.AiBpmTask;
-import com.aicloud.module.bpm.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.bpm.biz.model.BpmDefinitionSaveRequest;
 import com.aicloud.module.bpm.biz.model.BpmInstanceStartRequest;
 import com.aicloud.module.bpm.biz.model.BpmTaskCompleteRequest;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class BpmController {
 

@@ -8,4 +8,11 @@
     </parent>
     <artifactId>aicloud-spring-boot-starter-security</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-spring-boot-starter-biz-tenant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

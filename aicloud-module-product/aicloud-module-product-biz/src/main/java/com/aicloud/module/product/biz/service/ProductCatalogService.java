@@ -5,7 +5,7 @@ import com.aicloud.module.product.biz.entity.AiProductSpu;
 import com.aicloud.module.product.biz.mapper.ProductCategoryMapper;
 import com.aicloud.module.product.biz.mapper.ProductSpuMapper;
 import com.aicloud.module.product.biz.model.CategorySaveRequest;
-import com.aicloud.module.product.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.product.biz.model.ProductSaveRequest;
 import com.aicloud.module.product.biz.model.ProductStatusUpdateRequest;
 import com.aicloud.module.product.biz.model.ProductStockUpdateRequest;
@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class ProductCatalogService {

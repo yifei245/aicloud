@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public interface MemberAddressMapper extends BaseMapper<AiMemberAddress> {
 }

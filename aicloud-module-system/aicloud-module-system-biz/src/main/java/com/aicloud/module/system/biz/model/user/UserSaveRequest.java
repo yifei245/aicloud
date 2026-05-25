@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class UserSaveRequest {
     private Long id;

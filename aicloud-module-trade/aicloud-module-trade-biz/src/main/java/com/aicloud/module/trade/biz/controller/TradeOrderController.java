@@ -5,12 +5,12 @@ import com.aicloud.module.trade.biz.entity.AiTradeCartItem;
 import com.aicloud.module.trade.biz.entity.AiTradeDelivery;
 import com.aicloud.module.trade.biz.entity.AiTradeOrder;
 import com.aicloud.module.trade.biz.model.AfterSaleApplyRequest;
-import com.aicloud.module.trade.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.trade.biz.model.AppTradeOrderCreateRequest;
 import com.aicloud.module.trade.biz.model.CartAddRequest;
 import com.aicloud.module.trade.biz.model.CreateTradeOrderRequest;
 import com.aicloud.module.trade.biz.model.DeliveryShipRequest;
-import com.aicloud.module.trade.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.trade.biz.model.UpdateTradeOrderStatusRequest;
 import com.aicloud.module.trade.biz.service.TradeOrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Tag(name = "交易中心")
 @RestController

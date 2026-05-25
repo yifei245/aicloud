@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.post;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class PostSaveRequest {
     private Long id;

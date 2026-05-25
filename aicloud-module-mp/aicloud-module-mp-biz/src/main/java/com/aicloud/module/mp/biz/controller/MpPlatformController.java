@@ -4,7 +4,7 @@ import com.aicloud.module.mp.biz.entity.AiMpMaterial;
 import com.aicloud.module.mp.biz.entity.AiMpMenu;
 import com.aicloud.module.mp.biz.entity.AiMpMessageLog;
 import com.aicloud.module.mp.biz.entity.AiMpMessageTemplate;
-import com.aicloud.module.mp.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.mp.biz.service.MpPlatformService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MpPlatformController {
 

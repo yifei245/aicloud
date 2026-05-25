@@ -10,7 +10,7 @@ import com.aicloud.module.pay.biz.mapper.PayRefundMapper;
 import com.aicloud.module.pay.biz.mapper.TradeOrderRefMapper;
 import com.aicloud.module.pay.biz.model.AppPayOrderCreateRequest;
 import com.aicloud.module.pay.biz.model.CreatePayOrderRequest;
-import com.aicloud.module.pay.biz.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.module.pay.biz.model.PayChannelSaveRequest;
 import com.aicloud.module.pay.biz.model.PayRefundCreateRequest;
 import com.aicloud.module.pay.biz.model.UpdatePayOrderStatusRequest;
@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Service
 public class PayOrderService {

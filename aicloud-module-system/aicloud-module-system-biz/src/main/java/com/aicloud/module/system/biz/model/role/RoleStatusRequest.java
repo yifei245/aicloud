@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.role;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class RoleStatusRequest {
     private Long id;

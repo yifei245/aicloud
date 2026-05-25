@@ -1,8 +1,8 @@
 package com.aicloud.module.system.biz.controller;
 
-import com.aicloud.module.system.biz.annotation.RequirePermission;
+import com.aicloud.framework.rbac.annotation.RequirePermission;
 import com.aicloud.module.system.biz.entity.AiPost;
-import com.aicloud.module.system.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.system.biz.model.post.PostSaveRequest;
 import com.aicloud.module.system.biz.service.PostAdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class PostController {
 

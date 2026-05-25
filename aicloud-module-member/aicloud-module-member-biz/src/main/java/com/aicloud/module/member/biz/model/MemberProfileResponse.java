@@ -3,7 +3,7 @@ package com.aicloud.module.member.biz.model;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class MemberProfileResponse {
 

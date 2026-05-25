@@ -9,7 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class SecurityConfig {
 

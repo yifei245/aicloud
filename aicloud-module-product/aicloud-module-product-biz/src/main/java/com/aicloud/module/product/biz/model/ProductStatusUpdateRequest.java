@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class ProductStatusUpdateRequest {
     @NotNull

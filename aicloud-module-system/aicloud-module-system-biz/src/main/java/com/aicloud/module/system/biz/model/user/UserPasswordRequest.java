@@ -3,7 +3,7 @@ package com.aicloud.module.system.biz.model.user;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class UserPasswordRequest {
     private Long id;

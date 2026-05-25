@@ -1,6 +1,6 @@
 package com.aicloud.auth.controller;
 
-import com.aicloud.auth.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.auth.model.LoginRequest;
 import com.aicloud.auth.model.OnlineSessionResponse;
 import com.aicloud.auth.model.RefreshTokenRequest;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Tag(name = "认证中心")
 @RestController

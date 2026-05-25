@@ -202,3 +202,28 @@ pre { margin: 0; white-space: pre-wrap; word-break: break-word; max-height: 520p
 .business-header .el-input {
   width: 240px;
 }
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 18px 4px 2px;
+}
+
+.pagination-total {
+  color: #64748b;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.compact-pagination {
+  padding-top: 12px;
+}
+
+@media (max-width: 720px) {
+  .table-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

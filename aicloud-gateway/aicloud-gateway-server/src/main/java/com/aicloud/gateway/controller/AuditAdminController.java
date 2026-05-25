@@ -1,10 +1,10 @@
 package com.aicloud.gateway.controller;
 
-import com.aicloud.gateway.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.gateway.model.AuditArchiveRunResponse;
 import com.aicloud.gateway.model.AuditArchiveStatsResponse;
 import com.aicloud.gateway.model.AuditLogItemResponse;
-import com.aicloud.gateway.model.PageResponse;
+import com.aicloud.common.pojo.PageResponse;
 import com.aicloud.gateway.model.export.AuditExportTaskStatus;
 import com.aicloud.gateway.model.export.AuditExportTaskInfo;
 import com.aicloud.gateway.model.export.AuditExportTaskRequest;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AuditAdminController {
 

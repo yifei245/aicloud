@@ -41,7 +41,7 @@
       <el-skeleton v-if="loading" :rows="8" animated />
       <template v-else>
         <el-empty v-if="!rows.length" description="暂无列表数据，已保留原始返回可查看" />
-        <el-table v-else :data="filteredRows" stripe border height="460" class="admin-data-table">
+        <el-table v-else :data="pagedRows" stripe border height="460" class="admin-data-table">
           <el-table-column type="index" width="64" label="#" fixed />
           <el-table-column v-for="column in columns" :key="column" :prop="column" :label="columnLabel(column)" min-width="150" show-overflow-tooltip>
             <template #default="scope">
@@ -50,6 +50,10 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="table-pagination">
+          <span class="pagination-total">共 {{ filteredRows.length }} 条</span>
+          <el-pagination v-model:current-page="pagination.pageNo" v-model:page-size="pagination.pageSize" :page-sizes="[10, 20, 50, 100]" :total="filteredRows.length" layout="sizes, prev, pager, next, jumper" background />
+        </div>
         <el-collapse-transition>
           <pre v-if="showRaw" class="raw-block">{{ formattedResult }}</pre>
         </el-collapse-transition>
@@ -59,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import DataMetric from '@/components/DataMetric.vue'
 import { callEndpoint, type EndpointAction, type ModuleCard } from '@/api/modules'
@@ -74,6 +78,7 @@ const result = ref<unknown>({ tip: '数据加载中' })
 const lastAction = ref<EndpointAction>()
 const activePath = ref(props.module.endpoints[0]?.path || '')
 const lastLoadedAt = ref('')
+const pagination = reactive({ pageNo: 1, pageSize: 20 })
 
 const actionOptions = computed(() => props.module.endpoints.map(item => ({ label: item.label, value: item.path })))
 const activeAction = computed(() => props.module.endpoints.find(item => item.path === activePath.value) || props.module.endpoints[0])
@@ -85,15 +90,20 @@ const filteredRows = computed(() => {
   if (!word) return rows.value
   return rows.value.filter(row => JSON.stringify(row).toLowerCase().includes(word))
 })
+const pagedRows = computed(() => filteredRows.value.slice((pagination.pageNo - 1) * pagination.pageSize, pagination.pageNo * pagination.pageSize))
 
 watch(() => props.module.key, () => {
   activePath.value = props.module.endpoints[0]?.path || ''
+  pagination.pageNo = 1
   run(activeAction.value)
 })
+
+watch(keyword, () => { pagination.pageNo = 1 })
 
 onMounted(() => run(activeAction.value))
 
 function selectAction() {
+  pagination.pageNo = 1
   run(activeAction.value)
 }
 

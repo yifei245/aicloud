@@ -1,6 +1,6 @@
 package com.aicloud.module.erp.biz.controller;
 
-import com.aicloud.module.erp.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.erp.biz.service.ErpExtensionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class ErpExtensionController {
 
@@ -34,8 +34,10 @@ public class ErpExtensionController {
     @GetMapping("/{resource}/list")
     public ApiResponse<Map<String, Object>> list(@PathVariable("resource") String resource,
             @RequestParam(name = "tenantId", defaultValue = "1") Long tenantId,
-            @RequestParam(name = "keyword", required = false) String keyword) {
-        return ApiResponse.ok(extensionService.list(resource, tenantId, keyword));
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "pageNo", defaultValue = "1") long pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "20") long pageSize) {
+        return ApiResponse.ok(extensionService.list(resource, tenantId, keyword, pageNo, pageSize));
     }
 
     @Operation(summary = "扩展资源详情")

@@ -9,7 +9,7 @@
       <el-icon class="hero-icon"><component :is="config.icon || 'Grid'" /></el-icon>
     </div>
 
-    <el-tabs v-model="activeKey" class="business-tabs" @tab-change="loadActive">
+    <el-tabs v-model="activeKey" class="business-tabs" @tab-change="switchResource">
       <el-tab-pane v-for="resource in config.resources" :key="resource.key" :label="resource.title" :name="resource.key" />
     </el-tabs>
 
@@ -28,7 +28,7 @@
         </div>
       </template>
 
-      <el-table v-loading="loading" :data="filteredRows" stripe border class="admin-data-table" height="520">
+      <el-table v-loading="loading" :data="tableRows" stripe border class="admin-data-table" height="520">
         <el-table-column type="index" width="58" label="#" fixed />
         <el-table-column v-for="column in visibleColumns" :key="column.prop" :prop="column.prop" :label="column.label" :min-width="column.width || 140" show-overflow-tooltip>
           <template #default="{ row }">
@@ -44,6 +44,20 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <div class="table-pagination">
+        <span class="pagination-total">共 {{ pagination.total }} 条</span>
+        <el-pagination
+          v-model:current-page="pagination.pageNo"
+          v-model:page-size="pagination.pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          :total="pagination.total"
+          layout="sizes, prev, pager, next, jumper"
+          background
+          @size-change="handlePageSizeChange"
+          @current-change="handlePageChange"
+        />
+      </div>
     </el-card>
 
     <el-dialog v-model="formVisible" :title="`${form.id ? '编辑' : '新增'}${active.entityName || active.title}`" width="680px" destroy-on-close>
@@ -101,9 +115,11 @@ export interface BusinessConfig { title: string; summary: string; icon?: string;
 const props = defineProps<{ config: BusinessConfig }>()
 const activeKey = ref(props.config.resources[0]?.key || '')
 const rows = ref<Record<string, unknown>[]>([])
+const serverPaged = ref(false)
 const loading = ref(false)
 const saving = ref(false)
 const keyword = ref('')
+const pagination = reactive({ pageNo: 1, pageSize: 20, total: 0 })
 const formVisible = ref(false)
 const actionVisible = ref(false)
 const form = reactive<Record<string, any>>({})
@@ -115,23 +131,51 @@ const active = computed(() => props.config.resources.find(item => item.key === a
 const visibleColumns = computed(() => active.value.columns)
 const filteredRows = computed(() => {
   const word = keyword.value.trim().toLowerCase()
-  if (!word) return rows.value
+  if (!word || serverPaged.value) return rows.value
   return rows.value.filter(row => JSON.stringify(row).toLowerCase().includes(word))
+})
+const tableRows = computed(() => {
+  if (serverPaged.value) return rows.value
+  const start = (pagination.pageNo - 1) * pagination.pageSize
+  return filteredRows.value.slice(start, start + pagination.pageSize)
 })
 
 watch(() => props.config.title, () => {
   activeKey.value = props.config.resources[0]?.key || ''
+  resetPagination()
   loadActive()
 })
 
+watch(keyword, () => {
+  pagination.pageNo = 1
+  if (serverPaged.value) loadActive()
+})
+
 onMounted(loadActive)
+
+function switchResource() {
+  resetPagination()
+  keyword.value = ''
+  loadActive()
+}
 
 async function loadActive() {
   if (!active.value) return
   loading.value = true
   try {
-    const data = await request<unknown>({ url: active.value.listUrl, method: 'GET' })
-    rows.value = extractRows(data)
+    const data = await request<unknown>({
+      url: active.value.listUrl,
+      method: 'GET',
+      params: {
+        keyword: keyword.value.trim() || undefined,
+        pageNo: pagination.pageNo,
+        pageSize: pagination.pageSize
+      }
+    })
+    const page = extractPage(data)
+    rows.value = page.list
+    serverPaged.value = page.serverPaged
+    pagination.total = page.serverPaged ? page.total : filteredRows.value.length
   } finally {
     loading.value = false
   }
@@ -209,14 +253,36 @@ function buildPayload(action: RowAction, row: Record<string, unknown>, payload: 
   return cleanPayload(result)
 }
 
-function extractRows(input: unknown): Record<string, unknown>[] {
-  if (Array.isArray(input)) return input as Record<string, unknown>[]
+function handlePageChange(pageNo: number) {
+  pagination.pageNo = pageNo
+  if (serverPaged.value) loadActive()
+}
+
+function handlePageSizeChange(pageSize: number) {
+  pagination.pageSize = pageSize
+  pagination.pageNo = 1
+  loadActive()
+}
+
+function resetPagination() {
+  pagination.pageNo = 1
+  pagination.pageSize = 20
+  pagination.total = 0
+}
+
+function extractPage(input: unknown): { list: Record<string, unknown>[]; total: number; serverPaged: boolean } {
+  if (Array.isArray(input)) return { list: input as Record<string, unknown>[], total: input.length, serverPaged: false }
   if (input && typeof input === 'object') {
     const obj = input as Record<string, unknown>
-    for (const key of ['list', 'records', 'rows', 'items', 'data']) if (Array.isArray(obj[key])) return obj[key] as Record<string, unknown>[]
-    return [obj]
+    for (const key of ['list', 'records', 'rows', 'items', 'data']) {
+      if (Array.isArray(obj[key])) {
+        const total = Number(obj.total ?? obj.count ?? (obj[key] as unknown[]).length)
+        return { list: obj[key] as Record<string, unknown>[], total, serverPaged: obj.total !== undefined || obj.pageNo !== undefined || obj.pageSize !== undefined }
+      }
+    }
+    return { list: [obj], total: 1, serverPaged: false }
   }
-  return []
+  return { list: [], total: 0, serverPaged: false }
 }
 
 function cleanPayload(source: Record<string, any>) {
@@ -243,3 +309,23 @@ function statusType(value: unknown) {
   return 'warning'
 }
 </script>
+
+<style scoped>
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 18px 4px 2px;
+}
+.pagination-total {
+  color: #64748b;
+  font-size: 13px;
+}
+@media (max-width: 720px) {
+  .table-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>

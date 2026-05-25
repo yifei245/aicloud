@@ -13,10 +13,10 @@
         <module>aicloud-common</module>
         <module>aicloud-spring-boot-starter-biz-tenant</module>
         <module>aicloud-spring-boot-starter-biz-auth</module>
+        <module>aicloud-spring-boot-starter-security</module>
         <module>aicloud-spring-boot-starter-biz-rbac</module>
         <module>aicloud-spring-boot-starter-web</module>
         <module>aicloud-spring-boot-starter-mybatis-plus</module>
-        <module>aicloud-spring-boot-starter-security</module>
         <module>aicloud-spring-boot-starter-redis</module>
         <module>aicloud-spring-boot-starter-job</module>
         <module>aicloud-spring-boot-starter-mq</module>

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 public class AiCrmContract {
 

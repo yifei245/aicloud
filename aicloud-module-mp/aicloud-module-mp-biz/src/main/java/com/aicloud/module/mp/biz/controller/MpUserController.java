@@ -1,7 +1,7 @@
 package com.aicloud.module.mp.biz.controller;
 
 import com.aicloud.module.mp.biz.entity.AiMpUserBind;
-import com.aicloud.module.mp.biz.model.ApiResponse;
+import com.aicloud.common.pojo.ApiResponse;
 import com.aicloud.module.mp.biz.model.MpBindRequest;
 import com.aicloud.module.mp.biz.service.MpUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Tag(name = "小程序用户")
 @RestController

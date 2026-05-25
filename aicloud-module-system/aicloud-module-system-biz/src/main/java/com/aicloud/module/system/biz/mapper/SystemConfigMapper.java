@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 /**
  * AICloud generated source.
  *
- * @author AICloud
+ * @author yifei
  */
 @Mapper
 public interface SystemConfigMapper extends BaseMapper<AiSystemConfig> {
