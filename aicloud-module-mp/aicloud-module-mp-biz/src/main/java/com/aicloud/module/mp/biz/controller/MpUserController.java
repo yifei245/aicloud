@@ -14,9 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Tag(name = "小程序用户")
 @RestController
 public class MpUserController {
+
+    private static final String USER_TYPE_MEMBER = "MEMBER";
+    private static final String LOGIN_TERMINAL_MP = "MP";
 
     private final MpUserService mpUserService;
 
@@ -61,10 +69,10 @@ public class MpUserController {
     }
 
     private void validate(String userType, String terminal) {
-        if (!"MEMBER".equalsIgnoreCase(userType)) {
+        if (!USER_TYPE_MEMBER.equalsIgnoreCase(userType)) {
             throw new IllegalArgumentException("仅会员用户可访问");
         }
-        if (!"MP".equalsIgnoreCase(terminal)) {
+        if (!LOGIN_TERMINAL_MP.equalsIgnoreCase(terminal)) {
             throw new IllegalArgumentException("仅 MP 终端可访问");
         }
     }

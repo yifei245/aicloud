@@ -1,10 +1,5 @@
-<template>
-  <ModuleWorkbench :module="module" />
-</template>
-
+<template><BusinessManager :config="crmConfig" /></template>
 <script setup lang="ts">
-import ModuleWorkbench from '@/components/ModuleWorkbench.vue'
-import { useModule } from '@/composables/useModule'
-
-const module = useModule('crm')
+import BusinessManager from '@/components/BusinessManager.vue'
+import { crmConfig } from '@/config/business'
 </script>

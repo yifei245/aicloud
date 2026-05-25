@@ -8,10 +8,21 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Mapper
 public interface DeptMapper extends BaseMapper<AiDept> {
 
-    @Select("""
+        /**
+     * Lists department rows.
+     *
+     * @param tenantId tenant id
+     * @return department rows
+     */
+@Select("""
             SELECT d.id, d.parent_id, d.name, d.leader_user_id, d.sort, d.status,
                    u.nickname AS leader_nickname
             FROM ai_dept d
@@ -21,9 +32,23 @@ public interface DeptMapper extends BaseMapper<AiDept> {
             """)
     List<Map<String, Object>> listDeptRows(@Param("tenantId") Long tenantId);
 
-    @Select("SELECT COUNT(1) FROM ai_dept WHERE tenant_id = #{tenantId} AND parent_id = #{deptId}")
+        /**
+     * Counts child departments.
+     *
+     * @param tenantId tenant id
+     * @param deptId department id
+     * @return child count
+     */
+@Select("SELECT COUNT(1) FROM ai_dept WHERE tenant_id = #{tenantId} AND parent_id = #{deptId}")
     long countChildren(@Param("tenantId") Long tenantId, @Param("deptId") Long deptId);
 
-    @Select("SELECT COUNT(1) FROM ai_user_dept_post WHERE tenant_id = #{tenantId} AND dept_id = #{deptId}")
+        /**
+     * Counts users in department.
+     *
+     * @param tenantId tenant id
+     * @param deptId department id
+     * @return user count
+     */
+@Select("SELECT COUNT(1) FROM ai_user_dept_post WHERE tenant_id = #{tenantId} AND dept_id = #{deptId}")
     long countUsers(@Param("tenantId") Long tenantId, @Param("deptId") Long deptId);
 }

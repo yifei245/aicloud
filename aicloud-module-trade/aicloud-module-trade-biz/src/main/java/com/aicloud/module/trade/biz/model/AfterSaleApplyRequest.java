@@ -5,6 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AfterSaleApplyRequest {
     @NotNull(message = "订单ID不能为空")
     private Long orderId;

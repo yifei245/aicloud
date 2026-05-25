@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "报表中心")
 @RestController
 @RequestMapping("/report")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class ReportController {
 
     private final ReportService reportService;

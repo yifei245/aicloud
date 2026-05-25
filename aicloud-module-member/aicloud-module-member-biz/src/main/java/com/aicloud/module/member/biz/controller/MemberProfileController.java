@@ -26,7 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "会员中心")
 @RestController
 @RequestMapping
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MemberProfileController {
+
+    private static final String USER_TYPE_MEMBER = "MEMBER";
 
     private final MemberProfileService memberProfileService;
     private final MemberAccountService memberAccountService;
@@ -139,7 +146,7 @@ public class MemberProfileController {
 
     private TerminalUserContext parseAndValidate(String tenantIdHeader, String userIdHeader, String username,
                                                  String userType, String terminal, String expectedTerminal) {
-        if (!"MEMBER".equalsIgnoreCase(userType)) {
+        if (!USER_TYPE_MEMBER.equalsIgnoreCase(userType)) {
             throw new IllegalArgumentException("仅会员用户可访问");
         }
         if (expectedTerminal != null && !expectedTerminal.equalsIgnoreCase(terminal)) {

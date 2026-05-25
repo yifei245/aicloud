@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统部门")
 @RestController
 @RequestMapping("/system/dept")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DeptController {
 
     private final DeptAdminService deptAdminService;

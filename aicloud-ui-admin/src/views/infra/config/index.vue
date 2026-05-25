@@ -1,10 +1,6 @@
-<template>
-  <ModuleWorkbench :module="module" />
-</template>
+<template><BusinessManager :config="infraConfig" /></template>
 
 <script setup lang="ts">
-import ModuleWorkbench from '@/components/ModuleWorkbench.vue'
-import { useModule } from '@/composables/useModule'
-
-const module = useModule('infra')
+import BusinessManager from '@/components/BusinessManager.vue'
+import { infraConfig } from '@/config/business'
 </script>

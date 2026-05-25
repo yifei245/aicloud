@@ -3,12 +3,19 @@ package com.aicloud.auth.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class TokenResponse {
 
     private String tokenType;
     private String accessToken;
     private String refreshToken;
     private LocalDateTime expireAt;
+    private LocalDateTime refreshExpireAt;
+    private Long expiresIn;
     private Long tenantId;
     private Long userId;
     private String username;
@@ -46,6 +53,22 @@ public class TokenResponse {
 
     public void setExpireAt(LocalDateTime expireAt) {
         this.expireAt = expireAt;
+    }
+
+    public LocalDateTime getRefreshExpireAt() {
+        return refreshExpireAt;
+    }
+
+    public void setRefreshExpireAt(LocalDateTime refreshExpireAt) {
+        this.refreshExpireAt = refreshExpireAt;
+    }
+
+    public Long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(Long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 
     public Long getTenantId() {

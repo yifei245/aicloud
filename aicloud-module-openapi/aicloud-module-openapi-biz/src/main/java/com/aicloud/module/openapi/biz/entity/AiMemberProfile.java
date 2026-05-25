@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @TableName("ai_member_profile")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiMemberProfile {
     @TableId(type = IdType.AUTO)
     private Long id;

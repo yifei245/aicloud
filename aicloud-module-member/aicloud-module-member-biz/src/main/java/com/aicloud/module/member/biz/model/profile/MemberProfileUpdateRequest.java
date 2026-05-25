@@ -1,5 +1,10 @@
 package com.aicloud.module.member.biz.model.profile;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MemberProfileUpdateRequest {
     private String nickname;
     private String mobile;

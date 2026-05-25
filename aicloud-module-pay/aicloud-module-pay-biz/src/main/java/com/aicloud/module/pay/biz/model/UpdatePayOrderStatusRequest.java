@@ -3,6 +3,11 @@ package com.aicloud.module.pay.biz.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class UpdatePayOrderStatusRequest {
     @NotNull
     private Long id;

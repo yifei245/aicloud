@@ -5,6 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("ai_api_app")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiApiApp {
 
     @TableId(type = IdType.AUTO)

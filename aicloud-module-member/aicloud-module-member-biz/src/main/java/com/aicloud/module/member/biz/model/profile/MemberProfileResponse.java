@@ -2,6 +2,11 @@ package com.aicloud.module.member.biz.model.profile;
 
 import java.math.BigDecimal;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MemberProfileResponse {
     private Long tenantId;
     private Long userId;

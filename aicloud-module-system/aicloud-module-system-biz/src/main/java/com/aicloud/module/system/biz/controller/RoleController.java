@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统角色")
 @RestController
 @RequestMapping("/system/role")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class RoleController {
 
     private final RoleAdminService roleAdminService;

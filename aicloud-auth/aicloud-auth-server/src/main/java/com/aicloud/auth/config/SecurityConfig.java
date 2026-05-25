@@ -6,6 +6,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class SecurityConfig {
 
     @Bean

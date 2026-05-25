@@ -2,6 +2,11 @@ package com.aicloud.module.system.biz.model.user;
 
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class UserSaveRequest {
     private Long id;
     private String username;

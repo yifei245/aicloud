@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统用户")
 @RestController
 @RequestMapping("/system/user")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class SystemUserController {
 
     private final UserAdminService userAdminService;

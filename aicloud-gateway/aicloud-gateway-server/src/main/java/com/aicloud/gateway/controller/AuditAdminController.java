@@ -33,7 +33,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "网关审计管理")
 @RestController
 @RequestMapping("/gateway/audit")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuditAdminController {
+
+    private static final String EXPORT_STATUS_SUCCESS = "SUCCESS";
 
     private final AuditArchiveService auditArchiveService;
     private final AuditExportTaskService auditExportTaskService;
@@ -198,7 +205,7 @@ public class AuditAdminController {
             byte[] body = "{\"code\":404,\"msg\":\"任务不存在\",\"data\":null}".getBytes(StandardCharsets.UTF_8);
             return ResponseEntity.status(404).contentType(MediaType.APPLICATION_JSON).body(body);
         }
-        if (info.getStatus() != null && !"SUCCESS".equals(info.getStatus().name())) {
+        if (info.getStatus() != null && !EXPORT_STATUS_SUCCESS.equals(info.getStatus().name())) {
             byte[] body = ("{\"code\":409,\"msg\":\"任务状态: " + info.getStatus().name() + "\",\"data\":null}")
                     .getBytes(StandardCharsets.UTF_8);
             return ResponseEntity.status(409).contentType(MediaType.APPLICATION_JSON).body(body);
@@ -214,8 +221,7 @@ public class AuditAdminController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + info.getFilename())
                     .body(file);
         } catch (Exception ex) {
-            byte[] body = ("{\"code\":500,\"msg\":\"下载失败: " + ex.getMessage() + "\",\"data\":null}")
-                    .getBytes(StandardCharsets.UTF_8);
+            byte[] body = "{\"code\":500,\"msg\":\"下载失败，请稍后再试\",\"data\":null}".getBytes(StandardCharsets.UTF_8);
             return ResponseEntity.status(500).contentType(MediaType.APPLICATION_JSON).body(body);
         }
     }

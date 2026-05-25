@@ -7,6 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_sso_session")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiSsoSession {
 
     @TableId(type = IdType.AUTO)
@@ -32,6 +37,9 @@ public class AiSsoSession {
 
     @TableField("expire_time")
     private LocalDateTime expireTime;
+
+    @TableField("refresh_expire_time")
+    private LocalDateTime refreshExpireTime;
 
     @TableField("create_time")
     private LocalDateTime createTime;
@@ -98,6 +106,14 @@ public class AiSsoSession {
 
     public void setExpireTime(LocalDateTime expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public LocalDateTime getRefreshExpireTime() {
+        return refreshExpireTime;
+    }
+
+    public void setRefreshExpireTime(LocalDateTime refreshExpireTime) {
+        this.refreshExpireTime = refreshExpireTime;
     }
 
     public LocalDateTime getCreateTime() {

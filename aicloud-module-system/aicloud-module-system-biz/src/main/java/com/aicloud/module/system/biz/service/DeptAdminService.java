@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class DeptAdminService {
 
@@ -37,7 +42,7 @@ public class DeptAdminService {
             item.setStatus(((Number) row.get("status")).intValue());
             all.add(item);
         }
-        Map<Long, DeptResponse> map = new HashMap<>();
+        Map<Long, DeptResponse> map = new HashMap<>(all.size());
         for (DeptResponse item : all) {
             map.put(item.getId(), item);
         }
@@ -52,7 +57,7 @@ public class DeptAdminService {
         return roots;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DeptResponse save(Long tenantId, DeptSaveRequest request) {
         if (!StringUtils.hasText(request.getName())) {
             throw new IllegalArgumentException("部门名称不能为空");
@@ -79,7 +84,7 @@ public class DeptAdminService {
         return findOne(tenantId, dept.getId());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long tenantId, Long id) {
         if (deptMapper.countChildren(tenantId, id) > 0) {
             throw new IllegalArgumentException("请先删除子部门");

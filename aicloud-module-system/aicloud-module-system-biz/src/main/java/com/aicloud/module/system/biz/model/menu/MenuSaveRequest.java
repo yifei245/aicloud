@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.menu;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MenuSaveRequest {
     private Long id;
     private Long parentId;

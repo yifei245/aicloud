@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.dict;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DictTypeSaveRequest {
     private Long id;
     private String dictType;

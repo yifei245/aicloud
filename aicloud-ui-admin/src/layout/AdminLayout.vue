@@ -30,6 +30,17 @@
           </div>
         </div>
         <div class="topbar-actions">
+          <el-select
+            v-if="auth.isSuperAdmin"
+            v-model="activeTenantId"
+            class="tenant-switch"
+            size="default"
+            placeholder="切换租户"
+            @change="changeTenant"
+          >
+            <el-option v-for="tenant in tenants" :key="tenant.id" :label="`${tenant.name}（${tenant.id}）`" :value="tenant.id" />
+          </el-select>
+          <span v-else class="tenant-badge">租户 {{ auth.tenantId }}</span>
           <el-button @click="openKnife4j"><el-icon><Link /></el-icon>Knife4j</el-button>
           <el-dropdown @command="handleCommand">
             <button class="user-chip">
@@ -52,12 +63,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useMenuStore } from '@/stores/menu'
 import MenuTree from './MenuTree.vue'
+import { request } from '@/utils/request'
+import type { TenantOption } from '@/types/api'
 
 const collapsed = ref(false)
 const route = useRoute()
@@ -65,8 +78,26 @@ const router = useRouter()
 const auth = useAuthStore()
 const menuStore = useMenuStore()
 const { menus } = storeToRefs(menuStore)
+const tenants = ref<TenantOption[]>([])
+const activeTenantId = computed({
+  get: () => auth.tenantId,
+  set: value => auth.setActiveTenant(Number(value))
+})
 
 const pageTitle = computed(() => String(route.meta.title || 'AICloud 管理平台'))
+
+onMounted(loadTenants)
+
+async function loadTenants() {
+  if (!auth.isSuperAdmin) return
+  tenants.value = await request<TenantOption[]>({ url: '/system/tenant/list', method: 'GET' })
+}
+
+async function changeTenant(value: number) {
+  auth.setActiveTenant(Number(value))
+  menuStore.reset()
+  await menuStore.loadMenus()
+}
 
 function openKnife4j() {
   window.open(import.meta.env.VITE_KNIFE4J_URL || 'http://127.0.0.1:48080/doc.html', '_blank')

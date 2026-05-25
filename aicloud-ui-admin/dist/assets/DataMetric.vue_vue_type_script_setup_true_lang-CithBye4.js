@@ -1,1 +1,0 @@
-import{i as l,f as n,b as a,v as t,l as s}from"./index-D6PmJrwQ.js";const c={class:"metric-card"},m=l({__name:"DataMetric",props:{label:{},value:{},hint:{}},setup(e){return(o,r)=>(s(),n("div",c,[a("span",null,t(e.label),1),a("strong",null,t(e.value),1),a("small",null,t(e.hint),1)]))}});export{m as _};

@@ -17,8 +17,15 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class MerchantService {
+
+    private static final int OVERVIEW_MAP_SIZE = 5;
 
     private final MerchantProfileMapper profileMapper;
     private final MerchantAccountMapper accountMapper;
@@ -33,7 +40,7 @@ public class MerchantService {
                 .eq(AiMerchantProfile::getTenantId, tenantId));
         List<AiMerchantAccount> accounts = accountMapper.selectList(new LambdaQueryWrapper<AiMerchantAccount>()
                 .eq(AiMerchantAccount::getTenantId, tenantId));
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(OVERVIEW_MAP_SIZE);
         data.put("merchantCount", merchants.size());
         data.put("enabledMerchantCount", merchants.stream().filter(item -> "ENABLED".equals(item.getStatus())).count());
         data.put("pendingAuditCount", merchants.stream().filter(item -> "PENDING".equals(item.getAuditStatus())).count());

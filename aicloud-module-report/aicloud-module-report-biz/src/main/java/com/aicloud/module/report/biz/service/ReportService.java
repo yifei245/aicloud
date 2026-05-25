@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class ReportService {
 
@@ -16,7 +21,7 @@ public class ReportService {
     }
 
     public Map<String, Object> operationDashboard(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.putAll(mapper.orderStats(tenantId));
         data.putAll(mapper.payStats(tenantId));
         data.putAll(mapper.memberStats(tenantId));
@@ -28,7 +33,7 @@ public class ReportService {
     }
 
     public Map<String, Object> salesOverview(Long tenantId, String date) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("date", date == null ? "today" : date);
         data.putAll(mapper.orderStats(tenantId));
         data.putAll(mapper.payStats(tenantId));
@@ -41,21 +46,21 @@ public class ReportService {
     }
 
     public Map<String, Object> payOverview(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(4);
         data.putAll(mapper.payStats(tenantId));
         data.put("payStatusDistribution", mapper.payStatusStats(tenantId));
         return data;
     }
 
     public Map<String, Object> memberOverview(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(4);
         data.putAll(mapper.memberStats(tenantId));
         data.put("levelDistribution", mapper.memberLevelStats(tenantId));
         return data;
     }
 
     public Map<String, Object> crmOverview(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(4);
         data.putAll(mapper.customerStats(tenantId));
         data.put("opportunityStageDistribution", mapper.opportunityStageStats(tenantId));
         return data;
@@ -70,7 +75,7 @@ public class ReportService {
     }
 
     public Map<String, Object> businessFunnel(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("member", mapper.memberStats(tenantId));
         data.put("product", mapper.productStats(tenantId));
         data.put("order", mapper.orderStats(tenantId));

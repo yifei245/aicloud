@@ -1,5 +1,10 @@
 package com.aicloud.auth.model;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class RefreshTokenRequest {
 
     private String refreshToken;

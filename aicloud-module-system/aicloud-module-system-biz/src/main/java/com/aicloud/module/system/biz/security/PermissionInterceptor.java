@@ -13,6 +13,11 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PermissionInterceptor implements HandlerInterceptor {
 
     private static final String HEADER_PERMISSIONS = "X-User-Permissions";

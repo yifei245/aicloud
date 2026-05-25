@@ -1,1 +1,0 @@
-import{_ as o,u as s}from"./useModule-D3jS84CU.js";import{i as t,d as m,w as n,l as r}from"./index-D6PmJrwQ.js";import"./DataMetric.vue_vue_type_script_setup_true_lang-CithBye4.js";import"./modules-DRVBA_NT.js";const d=t({__name:"index",setup(a){const e=s("system");return(u,_)=>(r(),m(o,{module:n(e)},null,8,["module"]))}});export{d as default};

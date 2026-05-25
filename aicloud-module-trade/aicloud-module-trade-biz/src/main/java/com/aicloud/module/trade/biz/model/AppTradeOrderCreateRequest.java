@@ -4,6 +4,11 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AppTradeOrderCreateRequest {
     @NotNull
     @DecimalMin(value = "0.00")

@@ -2,6 +2,11 @@ package com.aicloud.auth.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class OnlineSessionResponse {
 
     private String sessionId;

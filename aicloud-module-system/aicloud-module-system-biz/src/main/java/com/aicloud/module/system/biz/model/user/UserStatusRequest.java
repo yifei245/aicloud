@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.user;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class UserStatusRequest {
     private Long id;
     private Integer status;

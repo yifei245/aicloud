@@ -1,4 +1,5 @@
 USE aicloud;
+SET NAMES utf8mb4;
 
 INSERT INTO ai_user(id, tenant_id, username, password, nickname, mobile, email, user_type, status)
 VALUES
@@ -71,3 +72,64 @@ ON DUPLICATE KEY UPDATE client_id=VALUES(client_id), status=VALUES(status);
 INSERT INTO ai_api_app(id, tenant_id, app_key, app_secret, app_name, sign_type, ip_whitelist, status) VALUES
 (1, 1, 'demo_app_key', 'demo_app_secret', '默认第三方应用', 'HMAC_SHA256', NULL, 1)
 ON DUPLICATE KEY UPDATE app_secret=VALUES(app_secret), status=VALUES(status);
+
+
+SET @aicloud_add_refresh_expire_time := (
+  SELECT IF(COUNT(*) = 0,
+    'ALTER TABLE ai_sso_session ADD COLUMN refresh_expire_time DATETIME NULL AFTER expire_time',
+    'SELECT 1')
+  FROM information_schema.COLUMNS
+  WHERE TABLE_SCHEMA = 'aicloud' AND TABLE_NAME = 'ai_sso_session' AND COLUMN_NAME = 'refresh_expire_time'
+);
+PREPARE aicloud_stmt FROM @aicloud_add_refresh_expire_time;
+EXECUTE aicloud_stmt;
+DEALLOCATE PREPARE aicloud_stmt;
+UPDATE ai_sso_session SET refresh_expire_time = DATE_ADD(expire_time, INTERVAL 30 DAY) WHERE refresh_expire_time IS NULL;
+USE aicloud;
+INSERT INTO ai_tenant(id, name, code, status) VALUES (2, '演示租户2', 'tenant2', 1)
+ON DUPLICATE KEY UPDATE name=VALUES(name), code=VALUES(code), status=VALUES(status);
+
+INSERT INTO ai_role(id, tenant_id, code, name, data_scope, sort, status)
+SELECT id + 2000, 2, code, CONCAT(name, '-租户2'), data_scope, sort, status FROM ai_role WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);
+
+INSERT INTO ai_menu(id, tenant_id, parent_id, name, type, path, component, permission, icon, visible, sort, status)
+SELECT id + 2000, 2, IF(parent_id = 0, 0, parent_id + 2000), name, type, path, component, permission, icon, visible, sort, status
+FROM ai_menu WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), path=VALUES(path), component=VALUES(component), permission=VALUES(permission), icon=VALUES(icon), visible=VALUES(visible), sort=VALUES(sort), status=VALUES(status);
+
+INSERT INTO ai_dept(id, tenant_id, parent_id, name, leader_user_id, sort, status)
+SELECT id + 2000, 2, IF(parent_id = 0, 0, parent_id + 2000), CONCAT(name, '-T2'), NULL, sort, status FROM ai_dept WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);
+
+INSERT INTO ai_post(id, tenant_id, code, name, sort, status)
+SELECT id + 2000, 2, code, CONCAT(name, '-T2'), sort, status FROM ai_post WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);
+
+INSERT INTO ai_user(id, tenant_id, username, password, nickname, mobile, email, user_type, status)
+VALUES
+(2001, 2, 'admin', '123456', '租户2超级管理员', '13900002001', 'admin-t2@aicloud.com', 'ADMIN', 1),
+(2002, 2, 'ops', '123456', '租户2运维管理员', '13900002002', 'ops-t2@aicloud.com', 'ADMIN', 1)
+ON DUPLICATE KEY UPDATE nickname=VALUES(nickname), mobile=VALUES(mobile), email=VALUES(email), status=VALUES(status);
+
+INSERT INTO ai_user_role(id, tenant_id, user_id, role_id) VALUES
+(2001, 2, 2001, 2001),
+(2002, 2, 2002, 2002)
+ON DUPLICATE KEY UPDATE role_id=VALUES(role_id);
+
+INSERT INTO ai_user_dept_post(id, tenant_id, user_id, dept_id, post_id) VALUES
+(2001, 2, 2001, 2001, 2001),
+(2002, 2, 2002, 2003, 2003)
+ON DUPLICATE KEY UPDATE dept_id=VALUES(dept_id), post_id=VALUES(post_id);
+
+INSERT INTO ai_role_menu(tenant_id, role_id, menu_id)
+SELECT 2, rm.role_id + 2000, rm.menu_id + 2000 FROM ai_role_menu rm WHERE rm.tenant_id = 1
+ON DUPLICATE KEY UPDATE menu_id=VALUES(menu_id);
+
+INSERT INTO ai_oauth2_client(id, tenant_id, client_id, client_secret, grant_types, scopes, redirect_uris, access_token_validity, refresh_token_validity, status)
+SELECT id + 2000, 2, client_id, client_secret, grant_types, scopes, redirect_uris, access_token_validity, refresh_token_validity, status FROM ai_oauth2_client WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE client_secret=VALUES(client_secret), status=VALUES(status);
+
+INSERT INTO ai_terminal_client(id, tenant_id, terminal_code, client_id, status)
+SELECT id + 2000, 2, terminal_code, client_id, status FROM ai_terminal_client WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE client_id=VALUES(client_id), status=VALUES(status);

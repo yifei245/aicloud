@@ -1,1 +1,6 @@
-package com.aicloud.module.bpm.biz.mapper; import com.aicloud.module.bpm.biz.entity.AiBpmTask; import com.baomidou.mybatisplus.core.mapper.BaseMapper; import org.apache.ibatis.annotations.Mapper; @Mapper public interface BpmTaskMapper extends BaseMapper<AiBpmTask> {}
+package com.aicloud.module.bpm.biz.mapper; import com.aicloud.module.bpm.biz.entity.AiBpmTask; import com.baomidou.mybatisplus.core.mapper.BaseMapper; import org.apache.ibatis.annotations.Mapper; @Mapper /**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
+public interface BpmTaskMapper extends BaseMapper<AiBpmTask> {}

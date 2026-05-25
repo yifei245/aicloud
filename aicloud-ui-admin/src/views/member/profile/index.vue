@@ -1,10 +1,5 @@
-<template>
-  <ModuleWorkbench :module="module" />
-</template>
-
+<template><BusinessManager :config="memberConfig" /></template>
 <script setup lang="ts">
-import ModuleWorkbench from '@/components/ModuleWorkbench.vue'
-import { useModule } from '@/composables/useModule'
-
-const module = useModule('member')
+import BusinessManager from '@/components/BusinessManager.vue'
+import { memberConfig } from '@/config/business'
 </script>

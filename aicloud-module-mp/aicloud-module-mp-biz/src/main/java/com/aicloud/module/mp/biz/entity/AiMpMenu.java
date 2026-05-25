@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_mp_menu")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiMpMenu {
     @TableId(type = IdType.AUTO)
     private Long id;

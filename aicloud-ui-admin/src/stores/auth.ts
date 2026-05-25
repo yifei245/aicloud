@@ -9,6 +9,7 @@ interface AuthState {
   user: Partial<LoginResult>
   permissions: string[]
   roles: string[]
+  activeTenantId: number
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -17,11 +18,14 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: storage.get('refresh_token', ''),
     user: storage.get('user', {}),
     permissions: storage.get('permissions', []),
-    roles: storage.get('roles', [])
+    roles: storage.get('roles', []),
+    activeTenantId: storage.get('active_tenant_id', storage.get<Partial<LoginResult>>('user', {}).tenantId || 1)
   }),
   getters: {
     isLogin: state => Boolean(state.accessToken),
-    username: state => state.user.nickname || state.user.username || '管理员'
+    username: state => state.user.nickname || state.user.username || '管理员',
+    tenantId: state => state.activeTenantId || state.user.tenantId || 1,
+    isSuperAdmin: state => state.roles.includes('SUPER_ADMIN')
   },
   actions: {
     async login(payload: LoginRequest) {
@@ -35,11 +39,17 @@ export const useAuthStore = defineStore('auth', {
       this.user = data
       this.permissions = data.permissions || []
       this.roles = data.roles || []
+      this.activeTenantId = data.tenantId || this.activeTenantId || 1
       storage.set('access_token', this.accessToken)
       storage.set('refresh_token', this.refreshToken)
       storage.set('user', this.user)
       storage.set('permissions', this.permissions)
       storage.set('roles', this.roles)
+      storage.set('active_tenant_id', this.activeTenantId)
+    },
+    setActiveTenant(tenantId: number) {
+      this.activeTenantId = tenantId || this.user.tenantId || 1
+      storage.set('active_tenant_id', this.activeTenantId)
     },
     setPermissions(permissions: string[]) {
       this.permissions = permissions
@@ -55,6 +65,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = {}
       this.permissions = []
       this.roles = []
+      this.activeTenantId = 1
       storage.clear()
     }
   }

@@ -2,6 +2,11 @@ package com.aicloud.module.pay.biz.model;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PaySuccessNotifyRequest {
     @NotNull
     private Long payOrderId;

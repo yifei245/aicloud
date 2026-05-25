@@ -36,6 +36,9 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.5.0</spring-boot.version>
+        <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
+        <p3c-pmd.version>2.1.1</p3c-pmd.version>
+        <pmd.target-jdk>17</pmd.target-jdk>
     </properties>
 
     <dependencyManagement>
@@ -59,6 +62,7 @@
                     <version>3.13.0</version>
                     <configuration>
                         <release>${maven.compiler.release}</release>
+                        <parameters>true</parameters>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -69,4 +73,46 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>coding-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven-pmd-plugin.version}</version>
+                        <configuration>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <targetJdk>${pmd.target-jdk}</targetJdk>
+                            <printFailingErrors>true</printFailingErrors>
+                            <failOnViolation>true</failOnViolation>
+                            <linkXRef>false</linkXRef>
+                            <rulesets>
+                                <ruleset>rulesets/java/ali-comment.xml</ruleset>
+                                <ruleset>rulesets/java/ali-concurrent.xml</ruleset>
+                                <ruleset>rulesets/java/ali-constant.xml</ruleset>
+                                <ruleset>rulesets/java/ali-exception.xml</ruleset>
+                                <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>
+                                <ruleset>rulesets/java/ali-naming.xml</ruleset>
+                                <ruleset>rulesets/java/ali-oop.xml</ruleset>
+                                <ruleset>rulesets/java/ali-orm.xml</ruleset>
+                                <ruleset>rulesets/java/ali-other.xml</ruleset>
+                                <ruleset>rulesets/java/ali-set.xml</ruleset>
+                            </rulesets>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.alibaba.p3c</groupId>
+                                <artifactId>p3c-pmd</artifactId>
+                                <version>${p3c-pmd.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 @Component
 @ConfigurationProperties(prefix = "aicloud.gateway.openapi")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class OpenApiSecurityProperties {
 
     private boolean enabled = true;

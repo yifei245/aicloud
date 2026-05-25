@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class OpenApiAuthService {
 

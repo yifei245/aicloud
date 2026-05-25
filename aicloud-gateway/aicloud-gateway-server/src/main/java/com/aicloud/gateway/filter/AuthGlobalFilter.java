@@ -6,6 +6,7 @@ import com.aicloud.gateway.service.OpenApiClusterGuardService;
 import com.aicloud.gateway.service.OpenApiAuthService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.slf4j.Logger;
@@ -21,12 +22,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Component
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     private static final Logger SECURITY_AUDIT_LOG = LoggerFactory.getLogger("GatewaySecurityAudit");
@@ -146,30 +153,46 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                         String userId = data.path("userId").asText("");
                         String username = data.path("username").asText("");
                         String requestTenantId = exchange.getRequest().getHeaders().getFirst("X-Tenant-Id");
-                        if (requestTenantId != null && !requestTenantId.isBlank() && !requestTenantId.equals(tokenTenantId)) {
-                            audit(exchange, "DENY", "TENANT_MISMATCH", tokenTenantId, userId, username, null);
+                        String queryTenantId = exchange.getRequest().getQueryParams().getFirst("tenantId");
+                        boolean superAdmin = hasRole(data.path("roles"), "SUPER_ADMIN");
+                        if (StringUtils.hasText(requestTenantId) && StringUtils.hasText(queryTenantId)
+                                && !requestTenantId.equals(queryTenantId)) {
+                            audit(exchange, "DENY", "TENANT_HEADER_QUERY_MISMATCH", tokenTenantId, userId, username, null);
+                            return forbidden(exchange, "Cross-tenant request is forbidden");
+                        }
+                        String effectiveTenantId = superAdmin
+                                ? firstText(queryTenantId, requestTenantId, tokenTenantId)
+                                : tokenTenantId;
+                        if (!superAdmin && StringUtils.hasText(requestTenantId) && !requestTenantId.equals(tokenTenantId)) {
+                            audit(exchange, "DENY", "TENANT_HEADER_MISMATCH", tokenTenantId, userId, username, null);
+                            return forbidden(exchange, "Cross-tenant request is forbidden");
+                        }
+                        if (!superAdmin && StringUtils.hasText(queryTenantId) && !queryTenantId.equals(tokenTenantId)) {
+                            audit(exchange, "DENY", "TENANT_QUERY_MISMATCH", tokenTenantId, userId, username, null);
                             return forbidden(exchange, "Cross-tenant request is forbidden");
                         }
                         String loginTerminal = data.path("loginTerminal").asText("");
                         String userType = data.path("userType").asText("");
                         MatchedRule matchedRule = findMatchedRule(method, path, loginTerminal, userType);
                         if (matchedRule != null && "DENY".equalsIgnoreCase(matchedRule.effect())) {
-                            audit(exchange, "DENY", "RULE_DENY", tokenTenantId, userId, username, matchedRule);
+                            audit(exchange, "DENY", "RULE_DENY", effectiveTenantId, userId, username, matchedRule);
                             return forbidden(exchange, "Access denied by gateway rule");
                         }
                         if (matchedRule != null
                                 && StringUtils.hasText(matchedRule.permission())
                                 && !hasPermission(data.path("permissions"), matchedRule.permission())) {
-                            audit(exchange, "DENY", "PERMISSION_MISSING", tokenTenantId, userId, username, matchedRule);
+                            audit(exchange, "DENY", "PERMISSION_MISSING", effectiveTenantId, userId, username, matchedRule);
                             return forbidden(exchange, "Permission denied: " + matchedRule.permission());
                         }
                         if (matchedRule != null) {
-                            audit(exchange, "ALLOW", "RULE_ALLOW", tokenTenantId, userId, username, matchedRule);
+                            audit(exchange, "ALLOW", "RULE_ALLOW", effectiveTenantId, userId, username, matchedRule);
                         }
 
+                        URI tenantAwareUri = withTenantQuery(exchange, effectiveTenantId);
                         ServerWebExchange mutatedExchange = exchange.mutate()
                                 .request(builder -> builder
-                                        .header("X-Tenant-Id", tokenTenantId)
+                                        .uri(tenantAwareUri)
+                                        .header("X-Tenant-Id", effectiveTenantId)
                                         .header("X-User-Id", data.path("userId").asText(""))
                                         .header("X-Username", data.path("username").asText(""))
                                         .header("X-User-Type", data.path("userType").asText(""))
@@ -187,6 +210,16 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                     audit(exchange, "DENY", "AUTH_SERVICE_UNAVAILABLE", null, null, null, null);
                     return unauthorized(exchange, "Auth service unavailable");
                 });
+    }
+
+    private URI withTenantQuery(ServerWebExchange exchange, String tenantId) {
+        if (!StringUtils.hasText(tenantId) || exchange.getRequest().getQueryParams().containsKey("tenantId")) {
+            return exchange.getRequest().getURI();
+        }
+        return UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
+                .queryParam("tenantId", tenantId)
+                .build(true)
+                .toUri();
     }
 
     private boolean isWhitelisted(String path) {
@@ -267,6 +300,28 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             }
         }
         return false;
+    }
+
+
+    private boolean hasRole(JsonNode rolesNode, String role) {
+        if (rolesNode == null || !rolesNode.isArray()) {
+            return false;
+        }
+        for (JsonNode node : rolesNode) {
+            if (role.equalsIgnoreCase(node.asText())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String firstText(String... values) {
+        for (String value : values) {
+            if (StringUtils.hasText(value)) {
+                return value;
+            }
+        }
+        return "";
     }
 
     private boolean isRuleEnabled(RoutePermissionProperties.Rule rule) {

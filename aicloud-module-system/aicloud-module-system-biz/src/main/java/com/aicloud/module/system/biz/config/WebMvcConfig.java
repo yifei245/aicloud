@@ -6,6 +6,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final PermissionInterceptor permissionInterceptor;

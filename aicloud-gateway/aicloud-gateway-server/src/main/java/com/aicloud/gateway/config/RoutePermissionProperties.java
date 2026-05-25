@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RefreshScope
 @ConfigurationProperties(prefix = "aicloud.gateway")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class RoutePermissionProperties {
 
     private List<Rule> permissionRules = new ArrayList<>();

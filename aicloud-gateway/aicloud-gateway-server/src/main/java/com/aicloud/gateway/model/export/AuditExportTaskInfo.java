@@ -2,6 +2,11 @@ package com.aicloud.gateway.model.export;
 
 import java.time.LocalDateTime;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuditExportTaskInfo {
 
     private String taskId;

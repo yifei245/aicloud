@@ -10,6 +10,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @EnableAsync
 @EnableScheduling
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AsyncConfig {
 
     @Bean(name = "auditTaskExecutor")

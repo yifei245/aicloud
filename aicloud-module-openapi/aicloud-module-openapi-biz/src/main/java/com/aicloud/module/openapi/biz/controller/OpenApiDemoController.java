@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Tag(name = "第三方开放接口")
 @RestController
 public class OpenApiDemoController {
@@ -29,7 +34,7 @@ public class OpenApiDemoController {
     public ApiResponse<Map<String, Object>> ping(
             @RequestHeader(name = "X-Tenant-Id", required = false) String tenantId,
             @RequestHeader(name = "X-App-Key", required = false) String appKey) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("tenantId", tenantId);
         data.put("appKey", appKey);
         data.put("serverTime", LocalDateTime.now());

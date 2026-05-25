@@ -17,6 +17,15 @@
             <small>GET /system/user/list</small>
           </div>
           <div class="result-actions user-actions">
+            <el-select
+              v-if="auth.isSuperAdmin"
+              v-model="selectedTenantId"
+              class="tenant-filter"
+              placeholder="租户"
+              @change="changeTenantContext"
+            >
+              <el-option v-for="tenant in tenants" :key="tenant.id" :label="`${tenant.name}（${tenant.id}）`" :value="tenant.id" />
+            </el-select>
             <el-input v-model="query.keyword" clearable placeholder="用户名 / 昵称 / 手机号" prefix-icon="Search" @keyup.enter="loadUsers" />
             <el-select v-model="query.status" clearable placeholder="状态" class="status-filter">
               <el-option label="启用" :value="1" />
@@ -37,6 +46,7 @@
 
       <el-table v-loading="loading" :data="users" stripe border height="560" class="admin-data-table">
         <el-table-column prop="id" label="ID" width="76" fixed />
+        <el-table-column prop="tenantId" label="租户" width="86" />
         <el-table-column prop="username" label="用户名" min-width="130" fixed />
         <el-table-column prop="nickname" label="昵称" min-width="130" />
         <el-table-column prop="mobile" label="手机号" min-width="145" />
@@ -72,6 +82,18 @@
 
     <el-drawer v-model="formVisible" :title="form.id ? '编辑用户' : '新增用户'" size="520px" destroy-on-close>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="94px" class="admin-form">
+        <el-form-item label="归属租户">
+          <el-select
+            v-if="auth.isSuperAdmin"
+            v-model="selectedTenantId"
+            :disabled="Boolean(form.id)"
+            placeholder="选择新增用户归属租户"
+            @change="changeTenantContext"
+          >
+            <el-option v-for="tenant in tenants" :key="tenant.id" :label="`${tenant.name}（${tenant.id}）`" :value="tenant.id" />
+          </el-select>
+          <el-tag v-else>租户 {{ auth.tenantId }}</el-tag>
+        </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" :disabled="Boolean(form.id)" placeholder="请输入用户名" />
         </el-form-item>
@@ -143,9 +165,12 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import DataMetric from '@/components/DataMetric.vue'
 import { request } from '@/utils/request'
+import { useAuthStore } from '@/stores/auth'
+import type { TenantOption } from '@/types/api'
 
 interface UserRow {
   id: number
+  tenantId: number
   username: string
   nickname: string
   mobile: string
@@ -166,6 +191,7 @@ interface PostOption { id: number; name: string; code: string; status: number }
 interface DeptOption { id: number; name: string; children?: DeptOption[] }
 interface UserForm {
   id?: number
+  tenantId?: number
   username: string
   password?: string
   nickname: string
@@ -183,7 +209,9 @@ const saving = ref(false)
 const formVisible = ref(false)
 const passwordVisible = ref(false)
 const formRef = ref<FormInstance>()
+const auth = useAuthStore()
 const users = ref<UserRow[]>([])
+const tenants = ref<TenantOption[]>([])
 const roleOptions = ref<RoleOption[]>([])
 const postOptions = ref<PostOption[]>([])
 const deptOptions = ref<DeptOption[]>([])
@@ -202,10 +230,29 @@ const rules: FormRules<UserForm> = {
 const enabledCount = computed(() => users.value.filter(item => item.status === 1).length)
 const adminCount = computed(() => users.value.filter(item => item.userType === 'ADMIN').length)
 const memberCount = computed(() => users.value.filter(item => item.userType === 'MEMBER').length)
+const selectedTenantId = computed({
+  get: () => auth.tenantId,
+  set: value => auth.setActiveTenant(Number(value))
+})
 
 onMounted(async () => {
+  await loadTenants()
   await Promise.all([loadOptions(), loadUsers()])
 })
+
+async function loadTenants() {
+  if (!auth.isSuperAdmin) {
+    tenants.value = [{ id: auth.tenantId, name: `租户 ${auth.tenantId}`, code: String(auth.tenantId), status: 1 }]
+    return
+  }
+  tenants.value = await request<TenantOption[]>({ url: '/system/tenant/list', method: 'GET' })
+}
+
+async function changeTenantContext() {
+  if (!auth.isSuperAdmin) return
+  if (!form.id) Object.assign(form, emptyForm())
+  await Promise.all([loadOptions(), loadUsers()])
+}
 
 async function loadUsers() {
   loading.value = true
@@ -237,6 +284,7 @@ async function openEdit(row: UserRow) {
   const detail = await request<UserRow>({ url: `/system/user/${row.id}`, method: 'GET' })
   Object.assign(form, {
     id: detail.id,
+    tenantId: detail.tenantId,
     username: detail.username,
     nickname: detail.nickname,
     mobile: detail.mobile,
@@ -298,7 +346,7 @@ async function removeUser(row: UserRow) {
 }
 
 function emptyForm(): UserForm {
-  return { username: '', password: '123456', nickname: '', mobile: '', email: '', userType: 'ADMIN', status: 1, postIds: [], roleIds: [] }
+  return { tenantId: auth.tenantId, username: '', password: '123456', nickname: '', mobile: '', email: '', userType: 'ADMIN', status: 1, postIds: [], roleIds: [] }
 }
 
 function flattenDept(nodes: DeptOption[], prefix = ''): DeptOption[] {

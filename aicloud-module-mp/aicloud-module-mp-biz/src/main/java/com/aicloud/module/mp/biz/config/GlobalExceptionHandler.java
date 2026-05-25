@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -14,6 +19,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ApiResponse<Void> handleException(Exception ex) {
-        return ApiResponse.fail(500, ex.getMessage());
+        return ApiResponse.fail(500, "系统繁忙，请稍后再试");
     }
 }

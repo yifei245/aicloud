@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.dept;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DeptSaveRequest {
     private Long id;
     private Long parentId;

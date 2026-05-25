@@ -3,6 +3,11 @@ package com.aicloud.module.system.biz.model.dept;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DeptResponse {
     private Long id;
     private Long parentId;

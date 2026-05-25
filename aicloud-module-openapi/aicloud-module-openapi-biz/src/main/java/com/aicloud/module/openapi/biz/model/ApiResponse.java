@@ -1,5 +1,10 @@
 package com.aicloud.module.openapi.biz.model;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class ApiResponse<T> {
 
     private int code;

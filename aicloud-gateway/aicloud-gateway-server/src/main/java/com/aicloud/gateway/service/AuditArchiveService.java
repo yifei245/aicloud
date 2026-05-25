@@ -16,6 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class AuditArchiveService {
 

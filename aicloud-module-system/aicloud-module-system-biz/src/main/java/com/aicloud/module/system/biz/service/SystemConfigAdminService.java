@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class SystemConfigAdminService {
 
@@ -27,7 +32,7 @@ public class SystemConfigAdminService {
                 .orderByAsc(AiSystemConfig::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiSystemConfig save(Long tenantId, SystemConfigSaveRequest request) {
         if (!StringUtils.hasText(request.getConfigKey()) || !StringUtils.hasText(request.getConfigName())) {
             throw new IllegalArgumentException("参数键和值名称不能为空");

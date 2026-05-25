@@ -25,6 +25,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class AuditExportTaskService {
 
@@ -190,7 +195,7 @@ public class AuditExportTaskService {
 
             updateStatus(taskId, AuditExportTaskStatus.SUCCESS, "完成", filename, (long) csv.length, LocalDateTime.now());
         } catch (Exception ex) {
-            updateStatus(taskId, AuditExportTaskStatus.FAILED, "失败: " + ex.getMessage(), null, null, LocalDateTime.now());
+            updateStatus(taskId, AuditExportTaskStatus.FAILED, "导出失败，请稍后重试", null, null, LocalDateTime.now());
         }
     }
 

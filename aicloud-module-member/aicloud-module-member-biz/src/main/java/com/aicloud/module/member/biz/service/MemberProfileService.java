@@ -4,6 +4,7 @@ import com.aicloud.module.member.biz.entity.AiMemberAddress;
 import com.aicloud.module.member.biz.entity.AiMemberLevel;
 import com.aicloud.module.member.biz.entity.AiMemberProfile;
 import com.aicloud.module.member.biz.mapper.MemberAddressMapper;
+import com.aicloud.module.member.biz.mapper.MemberAccountLogMapper;
 import com.aicloud.module.member.biz.mapper.MemberLevelMapper;
 import com.aicloud.module.member.biz.mapper.MemberProfileMapper;
 import com.aicloud.module.member.biz.model.address.MemberAddressSaveRequest;
@@ -19,18 +20,89 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class MemberProfileService {
 
     private final MemberProfileMapper memberProfileMapper;
     private final MemberLevelMapper memberLevelMapper;
     private final MemberAddressMapper memberAddressMapper;
+    private final MemberAccountLogMapper memberAccountLogMapper;
 
     public MemberProfileService(MemberProfileMapper memberProfileMapper, MemberLevelMapper memberLevelMapper,
-                                MemberAddressMapper memberAddressMapper) {
+                                MemberAddressMapper memberAddressMapper, MemberAccountLogMapper memberAccountLogMapper) {
         this.memberProfileMapper = memberProfileMapper;
         this.memberLevelMapper = memberLevelMapper;
         this.memberAddressMapper = memberAddressMapper;
+        this.memberAccountLogMapper = memberAccountLogMapper;
+    }
+
+
+    public List<AiMemberProfile> adminListProfiles(Long tenantId, String keyword, Integer status) {
+        LambdaQueryWrapper<AiMemberProfile> query = new LambdaQueryWrapper<AiMemberProfile>()
+                .eq(AiMemberProfile::getTenantId, tenantId)
+                .orderByDesc(AiMemberProfile::getId);
+        if (StringUtils.hasText(keyword)) {
+            query.and(wrapper -> wrapper.like(AiMemberProfile::getNickname, keyword)
+                    .or().like(AiMemberProfile::getMobile, keyword)
+                    .or().like(AiMemberProfile::getEmail, keyword));
+        }
+        if (status != null) {
+            query.eq(AiMemberProfile::getStatus, status);
+        }
+        return memberProfileMapper.selectList(query);
+    }
+
+    @Transactional
+    public AiMemberProfile adminSaveProfile(AiMemberProfile request) {
+        if (request.getTenantId() == null || request.getUserId() == null) {
+            throw new IllegalArgumentException("租户和用户ID不能为空");
+        }
+        if (!StringUtils.hasText(request.getNickname())) {
+            request.setNickname("会员" + request.getUserId());
+        }
+        request.setUpdateTime(LocalDateTime.now());
+        if (request.getId() == null) {
+            request.setCreateTime(LocalDateTime.now());
+            if (request.getStatus() == null) request.setStatus(1);
+            if (!StringUtils.hasText(request.getLevel())) request.setLevel("NORMAL");
+            if (request.getPoints() == null) request.setPoints(0L);
+            if (request.getBalance() == null) request.setBalance(java.math.BigDecimal.ZERO);
+            memberProfileMapper.insert(request);
+        } else {
+            memberProfileMapper.updateById(request);
+        }
+        return memberProfileMapper.selectById(request.getId());
+    }
+
+    public AiMemberProfile adminUpdateStatus(Long id, Integer status) {
+        AiMemberProfile profile = memberProfileMapper.selectById(id);
+        if (profile == null) throw new IllegalArgumentException("会员不存在");
+        profile.setStatus(status);
+        profile.setUpdateTime(LocalDateTime.now());
+        memberProfileMapper.updateById(profile);
+        return profile;
+    }
+
+    public List<AiMemberAddress> adminListAddresses(Long tenantId, Long userId) {
+        LambdaQueryWrapper<AiMemberAddress> query = new LambdaQueryWrapper<AiMemberAddress>()
+                .eq(AiMemberAddress::getTenantId, tenantId)
+                .orderByDesc(AiMemberAddress::getDefaultStatus)
+                .orderByDesc(AiMemberAddress::getId);
+        if (userId != null) query.eq(AiMemberAddress::getUserId, userId);
+        return memberAddressMapper.selectList(query);
+    }
+
+    public List<com.aicloud.module.member.biz.entity.AiMemberAccountLog> adminListAccountLogs(Long tenantId, Long userId) {
+        LambdaQueryWrapper<com.aicloud.module.member.biz.entity.AiMemberAccountLog> query = new LambdaQueryWrapper<com.aicloud.module.member.biz.entity.AiMemberAccountLog>()
+                .eq(com.aicloud.module.member.biz.entity.AiMemberAccountLog::getTenantId, tenantId)
+                .orderByDesc(com.aicloud.module.member.biz.entity.AiMemberAccountLog::getId);
+        if (userId != null) query.eq(com.aicloud.module.member.biz.entity.AiMemberAccountLog::getUserId, userId);
+        return memberAccountLogMapper.selectList(query);
     }
 
     public MemberProfileResponse getProfile(TerminalUserContext context) {

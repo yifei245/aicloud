@@ -5,6 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class CreatePayOrderRequest {
     @NotNull
     private Long tenantId;

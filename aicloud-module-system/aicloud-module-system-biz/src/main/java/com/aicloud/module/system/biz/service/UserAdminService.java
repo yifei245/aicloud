@@ -21,6 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class UserAdminService {
 
@@ -41,6 +46,7 @@ public class UserAdminService {
         for (Map<String, Object> row : rows) {
             UserResponse item = new UserResponse();
             item.setId(getLong(row.get("id")));
+            item.setTenantId(getLong(row.get("tenant_id")));
             item.setUsername((String) row.get("username"));
             item.setNickname((String) row.get("nickname"));
             item.setMobile((String) row.get("mobile"));
@@ -69,6 +75,7 @@ public class UserAdminService {
         }
         UserResponse response = new UserResponse();
         response.setId(user.getId());
+        response.setTenantId(user.getTenantId());
         response.setUsername(user.getUsername());
         response.setNickname(user.getNickname());
         response.setMobile(user.getMobile());
@@ -85,7 +92,7 @@ public class UserAdminService {
         return response;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserResponse create(Long tenantId, UserSaveRequest request) {
         validateSaveRequest(tenantId, request, null);
         AiUser user = new AiUser();
@@ -104,7 +111,7 @@ public class UserAdminService {
         return get(tenantId, user.getId());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserResponse update(Long tenantId, UserSaveRequest request) {
         if (request.getId() == null) {
             throw new IllegalArgumentException("用户ID不能为空");
@@ -143,7 +150,7 @@ public class UserAdminService {
                 .set(AiUser::getUpdateTime, LocalDateTime.now()));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long tenantId, Long id) {
         userRoleMapper.delete(new LambdaQueryWrapper<AiUserRole>()
                 .eq(AiUserRole::getTenantId, tenantId)
@@ -195,7 +202,7 @@ public class UserAdminService {
             AiUserDeptPost relation = new AiUserDeptPost();
             relation.setTenantId(tenantId);
             relation.setUserId(userId);
-            relation.setDeptId(deptId == null ? 1L : deptId);
+            relation.setDeptId(deptId == null ? tenantId : deptId);
             relation.setPostId(postId);
             userDeptPostMapper.insert(relation);
         }

@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "ERP 库存供应链")
 @RestController
 @RequestMapping("/erp")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class ErpController {
 
     private final ErpService erpService;

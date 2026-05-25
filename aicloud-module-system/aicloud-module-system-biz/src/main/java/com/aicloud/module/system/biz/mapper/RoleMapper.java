@@ -8,10 +8,23 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Mapper
 public interface RoleMapper extends BaseMapper<AiRole> {
 
-    @Select("""
+        /**
+     * Lists role rows with user count.
+     *
+     * @param tenantId tenant id
+     * @param keyword search keyword
+     * @param status role status
+     * @return role rows
+     */
+@Select("""
             SELECT r.id, r.code, r.name, r.data_scope, r.sort, r.status, r.create_time,
                    COUNT(ur.id) AS user_count
             FROM ai_role r
@@ -26,9 +39,24 @@ public interface RoleMapper extends BaseMapper<AiRole> {
                                            @Param("keyword") String keyword,
                                            @Param("status") Integer status);
 
-    @Select("SELECT menu_id FROM ai_role_menu WHERE tenant_id = #{tenantId} AND role_id = #{roleId} ORDER BY menu_id")
+        /**
+     * Lists menu ids assigned to a role.
+     *
+     * @param tenantId tenant id
+     * @param roleId role id
+     * @return menu ids
+     */
+@Select("SELECT menu_id FROM ai_role_menu WHERE tenant_id = #{tenantId} AND role_id = #{roleId} ORDER BY menu_id")
     List<Long> listMenuIds(@Param("tenantId") Long tenantId, @Param("roleId") Long roleId);
 
-    @Select("SELECT COUNT(1) FROM ai_role WHERE tenant_id = #{tenantId} AND code = #{code} AND (#{excludeId} IS NULL OR id != #{excludeId})")
+        /**
+     * Counts roles by code.
+     *
+     * @param tenantId tenant id
+     * @param code role code
+     * @param excludeId excluded id
+     * @return matched count
+     */
+@Select("SELECT COUNT(1) FROM ai_role WHERE tenant_id = #{tenantId} AND code = #{code} AND (#{excludeId} IS NULL OR id != #{excludeId})")
     long countByCode(@Param("tenantId") Long tenantId, @Param("code") String code, @Param("excludeId") Long excludeId);
 }

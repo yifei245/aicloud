@@ -7,9 +7,21 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Mapper
 public interface UserMapper extends BaseMapper<AiUser> {
 
+    /**
+     * Mapper operation.
+     *
+     * @param tenantId tenantId
+     * @param username username
+     * @return operation result
+     */
     @Select("""
             SELECT id, tenant_id, username, password, user_type, status
             FROM ai_user
@@ -18,6 +30,13 @@ public interface UserMapper extends BaseMapper<AiUser> {
             """)
     AiUser findByUsername(@Param("tenantId") Long tenantId, @Param("username") String username);
 
+    /**
+     * Mapper operation.
+     *
+     * @param tenantId tenantId
+     * @param userId userId
+     * @return operation result
+     */
     @Select("""
             SELECT r.code
             FROM ai_role r
@@ -27,6 +46,13 @@ public interface UserMapper extends BaseMapper<AiUser> {
             """)
     List<String> listRoleCodes(@Param("tenantId") Long tenantId, @Param("userId") Long userId);
 
+    /**
+     * Mapper operation.
+     *
+     * @param tenantId tenantId
+     * @param userId userId
+     * @return operation result
+     */
     @Select("""
             SELECT DISTINCT m.permission
             FROM ai_menu m

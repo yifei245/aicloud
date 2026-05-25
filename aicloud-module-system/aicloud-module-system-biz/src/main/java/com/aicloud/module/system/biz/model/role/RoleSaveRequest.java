@@ -2,6 +2,11 @@ package com.aicloud.module.system.biz.model.role;
 
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class RoleSaveRequest {
     private Long id;
     private String code;

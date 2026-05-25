@@ -1,4 +1,5 @@
 USE aicloud;
+SET NAMES utf8mb4;
 
 INSERT INTO ai_tenant(id, name, code, status) VALUES (1, '默认租户', 'default', 1)
 ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);

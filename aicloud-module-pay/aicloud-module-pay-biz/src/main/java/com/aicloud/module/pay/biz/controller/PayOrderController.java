@@ -26,10 +26,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Tag(name = "支付中心")
 @RestController
 @RequestMapping("/pay")
 public class PayOrderController {
+
+    private static final String USER_TYPE_MEMBER = "MEMBER";
+
     private final PayOrderService payOrderService;
 
     public PayOrderController(PayOrderService payOrderService) {
@@ -122,7 +130,7 @@ public class PayOrderController {
     }
 
     private void validateMember(String userType, String userId) {
-        if (!"MEMBER".equalsIgnoreCase(userType)) {
+        if (!USER_TYPE_MEMBER.equalsIgnoreCase(userType)) {
             throw new IllegalArgumentException("仅会员用户可访问");
         }
         if (parseLong(userId, null) == null) {
@@ -131,7 +139,13 @@ public class PayOrderController {
     }
 
     private Long parseLong(String value, Long defaultValue) {
-        if (value == null || value.isBlank()) return defaultValue;
-        try { return Long.parseLong(value); } catch (NumberFormatException ex) { return defaultValue; }
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
     }
 }

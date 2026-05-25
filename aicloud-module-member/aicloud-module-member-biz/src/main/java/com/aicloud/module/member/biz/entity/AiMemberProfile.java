@@ -8,6 +8,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @TableName("ai_member_profile")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiMemberProfile {
     @TableId(type = IdType.AUTO)
     private Long id;

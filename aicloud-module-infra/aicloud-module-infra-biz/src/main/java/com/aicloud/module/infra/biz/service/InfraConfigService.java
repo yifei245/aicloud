@@ -17,8 +17,24 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class InfraConfigService {
+
+    private static final int STATUS_ENABLED = 1;
+    private static final int STATUS_MAP_SIZE = 8;
+    private static final String CONFIG_NOT_FOUND = "配置不存在";
+    private static final String FILE_NOT_FOUND = "文件不存在";
+    private static final String JOB_NOT_FOUND = "任务不存在";
+    private static final String NOTICE_NOT_FOUND = "通知不存在";
+    private static final String DEFAULT_STORAGE = "LOCAL";
+    private static final String NOTICE_STATUS_DRAFT = "DRAFT";
+    private static final String NOTICE_STATUS_PUBLISHED = "PUBLISHED";
+    private static final String RECEIVER_TYPE_ALL = "ALL";
 
     private final InfraConfigMapper infraConfigMapper;
     private final InfraFileMapper infraFileMapper;
@@ -34,7 +50,7 @@ public class InfraConfigService {
     }
 
     public Map<String, Object> status(Long tenantId) {
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(STATUS_MAP_SIZE);
         data.put("module", "infra");
         data.put("status", "UP");
         data.put("tenantId", tenantId);
@@ -56,7 +72,9 @@ public class InfraConfigService {
 
     public AiInfraConfig get(Long id) {
         AiInfraConfig config = infraConfigMapper.selectById(id);
-        if (config == null) throw new IllegalArgumentException("配置不存在");
+        if (config == null) {
+            throw new IllegalArgumentException(CONFIG_NOT_FOUND);
+        }
         return config;
     }
 
@@ -80,7 +98,9 @@ public class InfraConfigService {
     }
 
     public void delete(Long id) {
-        if (infraConfigMapper.deleteById(id) == 0) throw new IllegalArgumentException("配置不存在");
+        if (infraConfigMapper.deleteById(id) == 0) {
+            throw new IllegalArgumentException(CONFIG_NOT_FOUND);
+        }
     }
 
     public List<AiInfraFile> fileList(Long tenantId, String keyword) {
@@ -92,8 +112,12 @@ public class InfraConfigService {
 
     public AiInfraFile saveFile(AiInfraFile file) {
         file.setUpdateTime(LocalDateTime.now());
-        if (file.getStatus() == null) file.setStatus(1);
-        if (!StringUtils.hasText(file.getStorage())) file.setStorage("LOCAL");
+        if (file.getStatus() == null) {
+            file.setStatus(STATUS_ENABLED);
+        }
+        if (!StringUtils.hasText(file.getStorage())) {
+            file.setStorage(DEFAULT_STORAGE);
+        }
         if (file.getId() == null) {
             file.setCreateTime(LocalDateTime.now());
             infraFileMapper.insert(file);
@@ -104,7 +128,9 @@ public class InfraConfigService {
     }
 
     public void deleteFile(Long id) {
-        if (infraFileMapper.deleteById(id) == 0) throw new IllegalArgumentException("文件不存在");
+        if (infraFileMapper.deleteById(id) == 0) {
+            throw new IllegalArgumentException(FILE_NOT_FOUND);
+        }
     }
 
     public List<AiInfraJob> jobList(Long tenantId, Integer status) {
@@ -116,7 +142,9 @@ public class InfraConfigService {
 
     public AiInfraJob saveJob(AiInfraJob job) {
         job.setUpdateTime(LocalDateTime.now());
-        if (job.getStatus() == null) job.setStatus(1);
+        if (job.getStatus() == null) {
+            job.setStatus(STATUS_ENABLED);
+        }
         if (job.getId() == null) {
             job.setCreateTime(LocalDateTime.now());
             infraJobMapper.insert(job);
@@ -128,7 +156,9 @@ public class InfraConfigService {
 
     public AiInfraJob runJob(Long id) {
         AiInfraJob job = infraJobMapper.selectById(id);
-        if (job == null) throw new IllegalArgumentException("任务不存在");
+        if (job == null) {
+            throw new IllegalArgumentException(JOB_NOT_FOUND);
+        }
         job.setLastRunTime(LocalDateTime.now());
         job.setNextRunTime(LocalDateTime.now().plusMinutes(5));
         job.setUpdateTime(LocalDateTime.now());
@@ -145,8 +175,12 @@ public class InfraConfigService {
 
     public AiInfraNotice saveNotice(AiInfraNotice notice) {
         notice.setUpdateTime(LocalDateTime.now());
-        if (!StringUtils.hasText(notice.getStatus())) notice.setStatus("DRAFT");
-        if (!StringUtils.hasText(notice.getReceiverType())) notice.setReceiverType("ALL");
+        if (!StringUtils.hasText(notice.getStatus())) {
+            notice.setStatus(NOTICE_STATUS_DRAFT);
+        }
+        if (!StringUtils.hasText(notice.getReceiverType())) {
+            notice.setReceiverType(RECEIVER_TYPE_ALL);
+        }
         if (notice.getId() == null) {
             notice.setCreateTime(LocalDateTime.now());
             infraNoticeMapper.insert(notice);
@@ -158,8 +192,10 @@ public class InfraConfigService {
 
     public AiInfraNotice publishNotice(Long id) {
         AiInfraNotice notice = infraNoticeMapper.selectById(id);
-        if (notice == null) throw new IllegalArgumentException("通知不存在");
-        notice.setStatus("PUBLISHED");
+        if (notice == null) {
+            throw new IllegalArgumentException(NOTICE_NOT_FOUND);
+        }
+        notice.setStatus(NOTICE_STATUS_PUBLISHED);
         notice.setPublishTime(LocalDateTime.now());
         notice.setUpdateTime(LocalDateTime.now());
         infraNoticeMapper.updateById(notice);

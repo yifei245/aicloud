@@ -1,5 +1,10 @@
 package com.aicloud.module.member.biz.model.address;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MemberAddressSaveRequest {
     private Long id;
     private String receiverName;

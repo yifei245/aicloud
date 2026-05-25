@@ -16,6 +16,8 @@ export interface LoginResult {
   refreshToken: string
   tokenType?: string
   expiresIn?: number
+  expireAt?: string
+  refreshExpireAt?: string
   tenantId?: number
   userId?: number
   username?: string
@@ -34,4 +36,12 @@ export interface MenuNode {
   component: string
   permission?: string
   children?: MenuNode[]
+}
+
+export interface TenantOption {
+  id: number
+  name: string
+  code: string
+  status: number
+  expireTime?: string
 }

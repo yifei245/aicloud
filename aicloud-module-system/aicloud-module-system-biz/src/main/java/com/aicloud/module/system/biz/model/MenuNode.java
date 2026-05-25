@@ -3,6 +3,11 @@ package com.aicloud.module.system.biz.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MenuNode {
 
     private Long id;

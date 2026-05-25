@@ -15,8 +15,19 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class BpmService {
+
+    private static final String STATUS_ACTIVE = "ACTIVE";
+    private static final String STATUS_RUNNING = "RUNNING";
+    private static final String STATUS_TODO = "TODO";
+    private static final String STATUS_DONE = "DONE";
+    private static final String STATUS_FINISHED = "FINISHED";
 
     private final BpmProcessDefinitionMapper definitionMapper;
     private final BpmProcessInstanceMapper instanceMapper;
@@ -49,7 +60,7 @@ public class BpmService {
         definition.setProcessKey(request.getProcessKey());
         definition.setProcessName(request.getProcessName());
         definition.setVersionNo(request.getVersionNo());
-        definition.setStatus(StringUtils.hasText(request.getStatus()) ? request.getStatus() : "ACTIVE");
+        definition.setStatus(StringUtils.hasText(request.getStatus()) ? request.getStatus() : STATUS_ACTIVE);
         definition.setCategory(request.getCategory());
         definition.setCreateBy(request.getCreateBy());
         definition.setUpdateTime(LocalDateTime.now());
@@ -67,7 +78,7 @@ public class BpmService {
         AiBpmProcessDefinition definition = definitionMapper.selectOne(new LambdaQueryWrapper<AiBpmProcessDefinition>()
                 .eq(AiBpmProcessDefinition::getTenantId, request.getTenantId())
                 .eq(AiBpmProcessDefinition::getProcessKey, request.getProcessKey())
-                .eq(AiBpmProcessDefinition::getStatus, "ACTIVE")
+                .eq(AiBpmProcessDefinition::getStatus, STATUS_ACTIVE)
                 .orderByDesc(AiBpmProcessDefinition::getVersionNo)
                 .last("limit 1"));
         if (definition == null) {
@@ -82,7 +93,7 @@ public class BpmService {
         instance.setBusinessId(request.getBusinessId());
         instance.setStarter(request.getStarter());
         instance.setCurrentAssignee(request.getCurrentAssignee());
-        instance.setStatus("RUNNING");
+        instance.setStatus(STATUS_RUNNING);
         instance.setStartTime(LocalDateTime.now());
         instance.setCreateTime(LocalDateTime.now());
         instance.setUpdateTime(LocalDateTime.now());
@@ -94,7 +105,7 @@ public class BpmService {
         task.setInstanceId(instance.getId());
         task.setTaskName(definition.getProcessName() + "审批");
         task.setAssignee(request.getCurrentAssignee());
-        task.setStatus("TODO");
+        task.setStatus(STATUS_TODO);
         task.setCreateTime(LocalDateTime.now());
         task.setUpdateTime(LocalDateTime.now());
         taskMapper.insert(task);
@@ -112,7 +123,7 @@ public class BpmService {
         return taskMapper.selectList(new LambdaQueryWrapper<AiBpmTask>()
                 .eq(AiBpmTask::getTenantId, tenantId)
                 .eq(StringUtils.hasText(assignee), AiBpmTask::getAssignee, assignee)
-                .eq(AiBpmTask::getStatus, "TODO")
+                .eq(AiBpmTask::getStatus, STATUS_TODO)
                 .orderByDesc(AiBpmTask::getId));
     }
 
@@ -121,18 +132,18 @@ public class BpmService {
         if (task == null) {
             throw new IllegalArgumentException("任务不存在");
         }
-        if (!"TODO".equals(task.getStatus())) {
+        if (!STATUS_TODO.equals(task.getStatus())) {
             throw new IllegalArgumentException("任务不是待办状态");
         }
 
-        task.setStatus("DONE");
+        task.setStatus(STATUS_DONE);
         task.setCompleteTime(LocalDateTime.now());
         task.setUpdateTime(LocalDateTime.now());
         taskMapper.updateById(task);
 
         AiBpmProcessInstance instance = instanceMapper.selectById(task.getInstanceId());
         if (instance != null) {
-            instance.setStatus("FINISHED");
+            instance.setStatus(STATUS_FINISHED);
             instance.setEndTime(LocalDateTime.now());
             instance.setUpdateTime(LocalDateTime.now());
             instanceMapper.updateById(instance);

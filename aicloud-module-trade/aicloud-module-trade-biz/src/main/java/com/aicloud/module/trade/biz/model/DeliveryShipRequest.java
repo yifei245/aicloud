@@ -3,6 +3,11 @@ package com.aicloud.module.trade.biz.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DeliveryShipRequest {
     @NotNull(message = "订单ID不能为空")
     private Long orderId;

@@ -19,6 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class MpPlatformService {
 
@@ -46,7 +51,7 @@ public class MpPlatformService {
                 .orderByAsc(AiMpMenu::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMpMenu saveMenu(Long tenantId, AiMpMenu menu) {
         LocalDateTime now = LocalDateTime.now();
         menu.setTenantId(tenantId);
@@ -73,7 +78,7 @@ public class MpPlatformService {
         List<AiMpMenu> menus = listMenus(tenantId).stream()
                 .filter(menu -> menu.getStatus() != null && menu.getStatus() == 1)
                 .toList();
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("tenantId", tenantId);
         data.put("menuCount", menus.size());
         data.put("menus", menus);
@@ -89,7 +94,7 @@ public class MpPlatformService {
                 .orderByDesc(AiMpMaterial::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMpMaterial saveMaterial(Long tenantId, AiMpMaterial material) {
         LocalDateTime now = LocalDateTime.now();
         material.setTenantId(tenantId);
@@ -112,7 +117,7 @@ public class MpPlatformService {
                 .orderByDesc(AiMpMessageTemplate::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMpMessageTemplate saveTemplate(Long tenantId, AiMpMessageTemplate template) {
         LocalDateTime now = LocalDateTime.now();
         template.setTenantId(tenantId);
@@ -129,7 +134,7 @@ public class MpPlatformService {
         return template;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMpMessageLog sendMessage(Long tenantId, Long userId, String templateCode, String content) {
         AiMpMessageTemplate template = templateMapper.selectOne(new LambdaQueryWrapper<AiMpMessageTemplate>()
                 .eq(AiMpMessageTemplate::getTenantId, tenantId)

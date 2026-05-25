@@ -1,10 +1,5 @@
-<template>
-  <ModuleWorkbench :module="module" />
-</template>
-
+<template><BusinessManager :config="merchantConfig" /></template>
 <script setup lang="ts">
-import ModuleWorkbench from '@/components/ModuleWorkbench.vue'
-import { useModule } from '@/composables/useModule'
-
-const module = useModule('merchant')
+import BusinessManager from '@/components/BusinessManager.vue'
+import { merchantConfig } from '@/config/business'
 </script>

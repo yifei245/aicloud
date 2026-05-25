@@ -6,9 +6,21 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Mapper
 public interface Oauth2ClientMapper extends BaseMapper<AiOauth2Client> {
 
+    /**
+     * Mapper operation.
+     *
+     * @param clientId clientId
+     * @param tenantId tenantId
+     * @return operation result
+     */
     @Select("""
             SELECT id, tenant_id, client_id, client_secret, status
             FROM ai_oauth2_client

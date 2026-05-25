@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统字典")
 @RestController
 @RequestMapping("/system/dict")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class DictController {
 
     private final DictAdminService dictAdminService;

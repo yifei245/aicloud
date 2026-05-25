@@ -2,6 +2,11 @@ package com.aicloud.module.system.biz.model.common;
 
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PageResult<T> {
 
     private long total;

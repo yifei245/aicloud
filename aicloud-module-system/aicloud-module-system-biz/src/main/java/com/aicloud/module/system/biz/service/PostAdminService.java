@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class PostAdminService {
 
@@ -27,7 +32,7 @@ public class PostAdminService {
                 .orderByAsc(AiPost::getSort, AiPost::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiPost save(Long tenantId, PostSaveRequest request) {
         if (!StringUtils.hasText(request.getCode()) || !StringUtils.hasText(request.getName())) {
             throw new IllegalArgumentException("岗位编码和名称不能为空");
@@ -56,7 +61,7 @@ public class PostAdminService {
         return post;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long tenantId, Long id) {
         if (postMapper.countUsers(tenantId, id) > 0) {
             throw new IllegalArgumentException("岗位下存在用户，不能删除");

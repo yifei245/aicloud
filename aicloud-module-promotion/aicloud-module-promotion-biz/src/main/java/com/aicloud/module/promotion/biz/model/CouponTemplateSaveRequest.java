@@ -7,6 +7,11 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class CouponTemplateSaveRequest {
     private Long id;
     @NotNull

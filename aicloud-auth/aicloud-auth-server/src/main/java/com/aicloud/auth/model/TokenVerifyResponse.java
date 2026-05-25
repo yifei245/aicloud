@@ -3,6 +3,11 @@ package com.aicloud.auth.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class TokenVerifyResponse {
 
     private boolean valid;

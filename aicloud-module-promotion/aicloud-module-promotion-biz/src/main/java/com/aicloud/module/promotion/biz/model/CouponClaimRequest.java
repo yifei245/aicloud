@@ -2,6 +2,11 @@ package com.aicloud.module.promotion.biz.model;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class CouponClaimRequest {
     @NotNull
     private Long templateId;

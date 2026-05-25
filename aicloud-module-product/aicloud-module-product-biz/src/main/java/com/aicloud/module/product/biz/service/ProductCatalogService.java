@@ -17,6 +17,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class ProductCatalogService {
 

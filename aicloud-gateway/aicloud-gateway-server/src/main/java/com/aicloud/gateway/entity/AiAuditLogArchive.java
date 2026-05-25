@@ -7,6 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_audit_log_archive")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiAuditLogArchive {
 
     @TableId(type = IdType.AUTO)

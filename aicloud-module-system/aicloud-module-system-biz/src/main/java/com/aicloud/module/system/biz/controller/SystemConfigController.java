@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统参数")
 @RestController
 @RequestMapping("/system/config")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class SystemConfigController {
 
     private final SystemConfigAdminService systemConfigAdminService;

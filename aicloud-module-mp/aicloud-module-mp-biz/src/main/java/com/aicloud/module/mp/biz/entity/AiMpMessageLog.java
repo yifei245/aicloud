@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_mp_message_log")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiMpMessageLog {
     @TableId(type = IdType.AUTO)
     private Long id;

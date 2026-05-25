@@ -5,5 +5,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @MapperScan("com.aicloud.module.infra.biz.mapper")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MybatisPlusConfig {
 }

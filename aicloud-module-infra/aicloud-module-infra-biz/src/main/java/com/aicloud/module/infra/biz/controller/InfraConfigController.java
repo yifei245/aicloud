@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "基础设施")
 @RestController
 @RequestMapping("/infra")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class InfraConfigController {
 
     private final InfraConfigService infraConfigService;

@@ -5,6 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("ai_user_dept_post")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiUserDeptPost {
     @TableId(type = IdType.AUTO)
     private Long id;

@@ -27,10 +27,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Tag(name = "交易中心")
 @RestController
 @RequestMapping("/trade")
 public class TradeOrderController {
+
+    private static final String USER_TYPE_MEMBER = "MEMBER";
+
     private final TradeOrderService tradeOrderService;
 
     public TradeOrderController(TradeOrderService tradeOrderService) {
@@ -190,7 +198,7 @@ public class TradeOrderController {
     }
 
     private void validateMember(String userType, String userId) {
-        if (!"MEMBER".equalsIgnoreCase(userType)) {
+        if (!USER_TYPE_MEMBER.equalsIgnoreCase(userType)) {
             throw new IllegalArgumentException("仅会员用户可访问");
         }
         if (parseLong(userId, null) == null) {

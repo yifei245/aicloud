@@ -15,8 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class MenuService {
+
+    private static final int MENU_TYPE_DIR = 1;
+    private static final int MENU_TYPE_BUTTON = 3;
 
     private final MenuMapper menuMapper;
     private final RoleMenuMapper roleMenuMapper;
@@ -38,17 +46,18 @@ public class MenuService {
         return buildTree(toNodes(menuMapper.listAllMenus(tenantId)));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMenu save(Long tenantId, MenuSaveRequest request) {
         if (!StringUtils.hasText(request.getName())) {
             throw new IllegalArgumentException("菜单名称不能为空");
         }
         Integer type = request.getType() == null ? 2 : request.getType();
-        if (type < 1 || type > 3) {
+        if (type < MENU_TYPE_DIR || type > MENU_TYPE_BUTTON) {
             throw new IllegalArgumentException("菜单类型非法");
         }
         AiMenu menu = request.getId() == null ? new AiMenu() : menuMapper.selectById(request.getId());
-        if (menu == null || (menu.getTenantId() != null && !tenantId.equals(menu.getTenantId()))) {
+        boolean tenantMismatch = menu != null && menu.getTenantId() != null && !tenantId.equals(menu.getTenantId());
+        if (menu == null || tenantMismatch) {
             throw new IllegalArgumentException("菜单不存在");
         }
         if (request.getId() == null) {
@@ -72,7 +81,7 @@ public class MenuService {
         return menu;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long tenantId, Long id) {
         if (menuMapper.countChildren(tenantId, id) > 0) {
             throw new IllegalArgumentException("存在子菜单，不能删除");
@@ -95,7 +104,7 @@ public class MenuService {
     }
 
     private List<MenuNode> buildTree(List<MenuNode> list) {
-        Map<Long, MenuNode> idMap = new HashMap<>();
+        Map<Long, MenuNode> idMap = new HashMap<>(list.size());
         for (MenuNode node : list) {
             idMap.put(node.getId(), node);
         }

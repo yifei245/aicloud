@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "小程序平台管理")
 @RestController
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MpPlatformController {
 
     private final MpPlatformService mpPlatformService;

@@ -1,5 +1,10 @@
 package com.aicloud.module.mp.biz.model;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MpBindRequest {
     private String openId;
     private String unionId;

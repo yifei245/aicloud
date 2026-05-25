@@ -2,6 +2,11 @@ package com.aicloud.gateway.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuditArchiveRunResponse {
 
     private LocalDateTime cutoffTime;

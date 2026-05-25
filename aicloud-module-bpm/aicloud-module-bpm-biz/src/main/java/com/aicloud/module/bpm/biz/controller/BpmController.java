@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "工作流")
 @RestController
 @RequestMapping("/bpm")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class BpmController {
 
     private final BpmService bpmService;

@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统岗位")
 @RestController
 @RequestMapping("/system/post")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PostController {
 
     private final PostAdminService postAdminService;

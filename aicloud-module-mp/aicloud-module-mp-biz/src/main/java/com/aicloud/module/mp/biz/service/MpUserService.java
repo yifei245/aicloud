@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class MpUserService {
 
@@ -32,7 +37,7 @@ public class MpUserService {
         AiMpUserBind bind = mpUserBindMapper.selectOne(new LambdaQueryWrapper<AiMpUserBind>()
                 .eq(AiMpUserBind::getTenantId, tenantId)
                 .eq(AiMpUserBind::getUserId, userId));
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("tenantId", tenantId);
         data.put("userId", userId);
         data.put("username", username);
@@ -44,7 +49,7 @@ public class MpUserService {
         return data;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiMpUserBind bind(Long tenantId, Long userId, MpBindRequest request) {
         if (!StringUtils.hasText(request.getOpenId())) {
             throw new IllegalArgumentException("openId 不能为空");

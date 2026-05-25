@@ -5,6 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("ai_role_menu")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiRoleMenu {
     @TableId(type = IdType.AUTO)
     private Long id;

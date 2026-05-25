@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class RoleAdminService {
 
@@ -65,7 +70,7 @@ public class RoleAdminService {
         return response;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RoleResponse create(Long tenantId, RoleSaveRequest request) {
         validate(tenantId, request, null);
         AiRole role = new AiRole();
@@ -82,7 +87,7 @@ public class RoleAdminService {
         return get(tenantId, role.getId());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RoleResponse update(Long tenantId, RoleSaveRequest request) {
         if (request.getId() == null) {
             throw new IllegalArgumentException("角色ID不能为空");
@@ -113,7 +118,7 @@ public class RoleAdminService {
                 .set(AiRole::getUpdateTime, LocalDateTime.now()));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long tenantId, Long id) {
         roleMenuMapper.delete(new LambdaQueryWrapper<AiRoleMenu>()
                 .eq(AiRoleMenu::getTenantId, tenantId)

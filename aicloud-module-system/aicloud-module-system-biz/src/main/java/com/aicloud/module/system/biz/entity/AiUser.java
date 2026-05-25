@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_user")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiUser {
 
     @TableId(type = IdType.AUTO)

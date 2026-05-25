@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "商品中心")
 @RestController
 @RequestMapping
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class ProductController {
 
     private final ProductCatalogService productCatalogService;

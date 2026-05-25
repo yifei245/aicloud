@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_openapi_call_log")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiOpenApiCallLog {
     @TableId(type = IdType.AUTO)
     private Long id;

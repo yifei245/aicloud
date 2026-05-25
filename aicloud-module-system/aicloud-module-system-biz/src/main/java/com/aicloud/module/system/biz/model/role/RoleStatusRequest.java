@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.role;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class RoleStatusRequest {
     private Long id;
     private Integer status;

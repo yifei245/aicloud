@@ -2,6 +2,11 @@ package com.aicloud.gateway.model;
 
 import java.util.List;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PageResponse<T> {
 
     private long total;

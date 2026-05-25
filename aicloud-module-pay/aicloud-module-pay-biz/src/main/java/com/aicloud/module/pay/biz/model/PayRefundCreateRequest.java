@@ -4,6 +4,11 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PayRefundCreateRequest {
     @NotNull(message = "支付单ID不能为空")
     private Long payOrderId;

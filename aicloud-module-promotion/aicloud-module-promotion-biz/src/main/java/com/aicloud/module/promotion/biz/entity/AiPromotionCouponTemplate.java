@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @TableName("ai_promotion_coupon_template")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiPromotionCouponTemplate {
     @TableId(type = IdType.AUTO)
     private Long id;

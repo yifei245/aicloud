@@ -23,8 +23,24 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class PayOrderService {
+
+    private static final String PAY_STATUS_WAITING = "WAITING";
+    private static final String PAY_STATUS_SUCCESS = "SUCCESS";
+    private static final String TRADE_STATUS_PAID = "PAID";
+    private static final String TRADE_STATUS_PAYING = "PAYING";
+    private static final String TRADE_STATUS_REFUNDED = "REFUNDED";
+    private static final String PAY_ORDER_NOT_FOUND = "支付单不存在";
+    private static final String PAY_CHANNEL_NOT_FOUND = "支付渠道不存在";
+    private static final String PAY_REFUND_NOT_FOUND = "退款单不存在";
+    private static final String TRADE_ORDER_NOT_FOUND = "关联订单不存在";
+
     private final PayOrderMapper payOrderMapper;
     private final TradeOrderRefMapper tradeOrderRefMapper;
     private final PayChannelMapper payChannelMapper;
@@ -58,7 +74,9 @@ public class PayOrderService {
                 .eq(AiTradeOrderRef::getTenantId, tenantId)
                 .eq(AiTradeOrderRef::getUserId, userId))
                 .stream().map(AiTradeOrderRef::getId).collect(Collectors.toList());
-        if (tradeIds.isEmpty()) return List.of();
+        if (tradeIds.isEmpty()) {
+            return List.of();
+        }
         return payOrderMapper.selectList(new LambdaQueryWrapper<AiPayOrder>()
                 .eq(AiPayOrder::getTenantId, tenantId)
                 .in(AiPayOrder::getTradeOrderId, tradeIds)
@@ -72,11 +90,11 @@ public class PayOrderService {
         order.setPayOrderNo(StringUtils.hasText(body.getPayOrderNo()) ? body.getPayOrderNo() : defaultPayOrderNo());
         order.setChannel(body.getChannel());
         order.setAmount(body.getAmount());
-        order.setStatus(StringUtils.hasText(body.getStatus()) ? body.getStatus() : "WAITING");
+        order.setStatus(StringUtils.hasText(body.getStatus()) ? body.getStatus() : PAY_STATUS_WAITING);
         order.setCreateTime(LocalDateTime.now());
-        if ("SUCCESS".equalsIgnoreCase(order.getStatus())) {
+        if (PAY_STATUS_SUCCESS.equalsIgnoreCase(order.getStatus())) {
             order.setSuccessTime(LocalDateTime.now());
-            markTradeStatus(order.getTradeOrderId(), "PAID");
+            markTradeStatus(order.getTradeOrderId(), TRADE_STATUS_PAID);
         }
         payOrderMapper.insert(order);
         return order;
@@ -93,10 +111,10 @@ public class PayOrderService {
         order.setPayOrderNo(defaultPayOrderNo());
         order.setChannel(body.getChannel());
         order.setAmount(trade.getPayAmount());
-        order.setStatus("WAITING");
+        order.setStatus(PAY_STATUS_WAITING);
         order.setCreateTime(LocalDateTime.now());
         payOrderMapper.insert(order);
-        trade.setStatus("PAYING");
+        trade.setStatus(TRADE_STATUS_PAYING);
         trade.setUpdateTime(LocalDateTime.now());
         tradeOrderRefMapper.updateById(trade);
         return order;
@@ -104,16 +122,18 @@ public class PayOrderService {
 
     public AiPayOrder get(Long id) {
         AiPayOrder order = payOrderMapper.selectById(id);
-        if (order == null) throw new IllegalArgumentException("支付单不存在");
+        if (order == null) {
+            throw new IllegalArgumentException(PAY_ORDER_NOT_FOUND);
+        }
         return order;
     }
 
     public AiPayOrder updateStatus(UpdatePayOrderStatusRequest body) {
         AiPayOrder order = get(body.getId());
         order.setStatus(body.getStatus());
-        if ("SUCCESS".equalsIgnoreCase(body.getStatus())) {
+        if (PAY_STATUS_SUCCESS.equalsIgnoreCase(body.getStatus())) {
             order.setSuccessTime(LocalDateTime.now());
-            markTradeStatus(order.getTradeOrderId(), "PAID");
+            markTradeStatus(order.getTradeOrderId(), TRADE_STATUS_PAID);
         }
         payOrderMapper.updateById(order);
         return order;
@@ -121,10 +141,10 @@ public class PayOrderService {
 
     public AiPayOrder notifySuccess(Long payOrderId) {
         AiPayOrder order = get(payOrderId);
-        order.setStatus("SUCCESS");
+        order.setStatus(PAY_STATUS_SUCCESS);
         order.setSuccessTime(LocalDateTime.now());
         payOrderMapper.updateById(order);
-        markTradeStatus(order.getTradeOrderId(), "PAID");
+        markTradeStatus(order.getTradeOrderId(), TRADE_STATUS_PAID);
         return order;
     }
 
@@ -167,7 +187,7 @@ public class PayOrderService {
         if (!tenantId.equals(payOrder.getTenantId())) {
             throw new IllegalArgumentException("租户不匹配");
         }
-        if (!"SUCCESS".equals(payOrder.getStatus())) {
+        if (!PAY_STATUS_SUCCESS.equals(payOrder.getStatus())) {
             throw new IllegalArgumentException("只有支付成功的订单可以退款");
         }
         if (body.getAmount().compareTo(payOrder.getAmount()) > 0) {
@@ -181,7 +201,7 @@ public class PayOrderService {
         refund.setChannel(payOrder.getChannel());
         refund.setAmount(body.getAmount());
         refund.setReason(body.getReason());
-        refund.setStatus("WAITING");
+        refund.setStatus(PAY_STATUS_WAITING);
         refund.setCreateTime(LocalDateTime.now());
         refund.setUpdateTime(LocalDateTime.now());
         payRefundMapper.insert(refund);
@@ -190,29 +210,35 @@ public class PayOrderService {
 
     public AiPayRefund notifyRefundSuccess(Long id) {
         AiPayRefund refund = getRefund(id);
-        refund.setStatus("SUCCESS");
+        refund.setStatus(PAY_STATUS_SUCCESS);
         refund.setSuccessTime(LocalDateTime.now());
         refund.setUpdateTime(LocalDateTime.now());
         payRefundMapper.updateById(refund);
-        markTradeStatus(refund.getTradeOrderId(), "REFUNDED");
+        markTradeStatus(refund.getTradeOrderId(), TRADE_STATUS_REFUNDED);
         return refund;
     }
 
     private AiPayChannel getChannel(Long id) {
         AiPayChannel channel = payChannelMapper.selectById(id);
-        if (channel == null) throw new IllegalArgumentException("支付渠道不存在");
+        if (channel == null) {
+            throw new IllegalArgumentException(PAY_CHANNEL_NOT_FOUND);
+        }
         return channel;
     }
 
     private AiPayRefund getRefund(Long id) {
         AiPayRefund refund = payRefundMapper.selectById(id);
-        if (refund == null) throw new IllegalArgumentException("退款单不存在");
+        if (refund == null) {
+            throw new IllegalArgumentException(PAY_REFUND_NOT_FOUND);
+        }
         return refund;
     }
 
     private AiTradeOrderRef getTrade(Long id) {
         AiTradeOrderRef trade = tradeOrderRefMapper.selectById(id);
-        if (trade == null) throw new IllegalArgumentException("关联订单不存在");
+        if (trade == null) {
+            throw new IllegalArgumentException(TRADE_ORDER_NOT_FOUND);
+        }
         return trade;
     }
 

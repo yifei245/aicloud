@@ -1,5 +1,10 @@
 package com.aicloud.gateway.model.export;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuditExportCleanupResult {
 
     private int scanned;

@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "开放平台管理")
 @RestController
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class OpenApiPlatformController {
 
     private final OpenApiPlatformService platformService;

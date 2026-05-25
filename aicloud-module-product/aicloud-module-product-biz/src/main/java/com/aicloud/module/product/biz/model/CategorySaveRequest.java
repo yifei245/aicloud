@@ -3,6 +3,11 @@ package com.aicloud.module.product.biz.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class CategorySaveRequest {
     private Long id;
     @NotNull

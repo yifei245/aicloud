@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, BindException.class, MethodArgumentNotValidException.class})

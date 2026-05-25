@@ -20,10 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Tag(name = "认证中心")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenStoreService tokenStoreService;
 
@@ -78,7 +85,7 @@ public class AuthController {
     @Operation(summary = "退出登录")
     @PostMapping("/logout")
     public ApiResponse<Boolean> logout(@RequestHeader(name = "Authorization", required = false) String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
             tokenStoreService.logout(authHeader.substring(7));
         }
         return ApiResponse.ok(true);
@@ -88,7 +95,7 @@ public class AuthController {
     @GetMapping("/me")
     public ApiResponse<TokenVerifyResponse> me(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             return ApiResponse.fail(4004, "缺少 Authorization");
         }
         return ApiResponse.ok(tokenStoreService.verify(authHeader.substring(7)));
@@ -136,7 +143,7 @@ public class AuthController {
     public ApiResponse<Boolean> checkPermission(
             @RequestHeader(name = "Authorization", required = false) String authHeader,
             @RequestParam("permission") String permission) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             return ApiResponse.fail(4004, "缺少 Authorization");
         }
         TokenVerifyResponse verifyResponse = tokenStoreService.verify(authHeader.substring(7));
@@ -159,7 +166,7 @@ public class AuthController {
     }
 
     private boolean isAdmin(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             return false;
         }
         TokenVerifyResponse verifyResponse = tokenStoreService.verify(authHeader.substring(7));

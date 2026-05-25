@@ -1,5 +1,10 @@
 package com.aicloud.module.member.biz.model.common;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class TerminalUserContext {
     private Long tenantId;
     private Long userId;

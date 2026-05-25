@@ -1,4 +1,5 @@
 USE aicloud;
+SET NAMES utf8mb4;
 
 INSERT INTO ai_member_level(id, tenant_id, level_code, level_name, threshold_points, discount_rate, status)
 VALUES
@@ -208,3 +209,113 @@ INSERT INTO ai_mp_message_log(id, tenant_id, user_id, template_code, open_id, co
 VALUES
 (1, 1, 3, 'ORDER_PAID', 'mp_openid_demo_001', '您的订单已支付成功，请关注发货进度。', 1)
 ON DUPLICATE KEY UPDATE content = VALUES(content), status = VALUES(status);
+
+-- 租户 2 商品演示数据：商品表在 business 脚本创建后再复制，避免 fresh init 顺序错误。
+INSERT INTO ai_product_category(id, tenant_id, parent_id, name, sort, status)
+SELECT id + 2000, 2, IF(parent_id = 0, 0, parent_id + 2000), CONCAT(name, '-T2'), sort, status FROM ai_product_category WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status);
+
+INSERT INTO ai_product_spu(id, tenant_id, spu_no, name, sub_title, category_id, brand_name, unit_name, cover_url, sort, status, sale_price, stock)
+SELECT id + 2000, 2, CONCAT(spu_no, '-T2'), CONCAT(name, '-租户2'), sub_title, category_id + 2000, brand_name, unit_name, cover_url, sort, status, sale_price, stock FROM ai_product_spu WHERE tenant_id = 1
+ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status), stock=VALUES(stock);
+
+
+-- ===== AICloud 大而全基线补齐：扩展演示数据 =====
+INSERT INTO ai_product_brand(id, tenant_id, brand_code, brand_name, logo_url, sort, status, remark) VALUES
+(1,1,'AICLOUD','AICloud','https://static.aicloud.local/brand/aicloud.png',10,1,'自营云品牌')
+ON DUPLICATE KEY UPDATE brand_name=VALUES(brand_name), status=VALUES(status);
+INSERT INTO ai_product_sku(id, tenant_id, spu_id, sku_code, sku_name, spec_json, sale_price, market_price, cost_price, stock, weight, status) VALUES
+(1,1,1,'SKU-10001-1C2G','AI 云主机 1C2G','{"cpu":"1C","memory":"2G"}',99.00,129.00,66.00,1000,0.000,1),
+(2,1,1,'SKU-10001-2C4G','AI 云主机 2C4G','{"cpu":"2C","memory":"4G"}',199.00,259.00,120.00,500,0.000,1)
+ON DUPLICATE KEY UPDATE sku_name=VALUES(sku_name), stock=VALUES(stock), status=VALUES(status);
+INSERT INTO ai_product_property(id, tenant_id, property_code, property_name, input_type, sort, status) VALUES
+(1,1,'cpu','CPU','SELECT',10,1),(2,1,'memory','内存','SELECT',20,1)
+ON DUPLICATE KEY UPDATE property_name=VALUES(property_name), status=VALUES(status);
+INSERT INTO ai_product_property_value(id, tenant_id, property_id, value_code, value_name, sort, status) VALUES
+(1,1,1,'1C','1核',10,1),(2,1,1,'2C','2核',20,1),(3,1,2,'2G','2GB',10,1),(4,1,2,'4G','4GB',20,1)
+ON DUPLICATE KEY UPDATE value_name=VALUES(value_name), status=VALUES(status);
+
+INSERT INTO ai_promotion_activity(id, tenant_id, activity_no, activity_name, activity_type, start_time, end_time, status, remark) VALUES
+(1,1,'ACT-10001','618 云资源钜惠','FULL_REDUCTION','2026-06-01 00:00:00','2026-06-18 23:59:59',1,'满减活动')
+ON DUPLICATE KEY UPDATE activity_name=VALUES(activity_name), status=VALUES(status);
+INSERT INTO ai_promotion_discount_rule(id, tenant_id, activity_id, rule_name, rule_type, threshold_amount, discount_amount, discount_rate, status) VALUES
+(1,1,1,'满200减30','AMOUNT',200.00,30.00,100.00,1)
+ON DUPLICATE KEY UPDATE rule_name=VALUES(rule_name), status=VALUES(status);
+INSERT INTO ai_promotion_seckill(id, tenant_id, activity_id, spu_id, sku_id, seckill_price, stock, limit_count, start_time, end_time, status) VALUES
+(1,1,1,1,1,79.00,100,1,'2026-06-18 10:00:00','2026-06-18 12:00:00',1)
+ON DUPLICATE KEY UPDATE seckill_price=VALUES(seckill_price), stock=VALUES(stock), status=VALUES(status);
+
+INSERT INTO ai_crm_contact(id, tenant_id, customer_id, contact_name, mobile, email, position_name, primary_status, status, remark) VALUES
+(1,1,1,'李总','13900000011','boss@zhisuan.com','CEO',1,1,'关键决策人')
+ON DUPLICATE KEY UPDATE contact_name=VALUES(contact_name), status=VALUES(status);
+INSERT INTO ai_crm_contract(id, tenant_id, customer_id, opportunity_id, contract_no, contract_name, amount, sign_date, start_date, end_date, status, owner_user, remark) VALUES
+(1,1,1,1,'HT-10001','智算云主机采购合同',120000.00,'2026-06-01','2026-06-01','2027-05-31','SIGNED','admin','年度合同')
+ON DUPLICATE KEY UPDATE contract_name=VALUES(contract_name), amount=VALUES(amount), status=VALUES(status);
+INSERT INTO ai_crm_receivable(id, tenant_id, contract_id, receivable_no, amount, received_amount, plan_date, receive_date, status, owner_user, remark) VALUES
+(1,1,1,'AR-10001',60000.00,30000.00,'2026-06-30','2026-06-20','PARTIAL','admin','首期款')
+ON DUPLICATE KEY UPDATE amount=VALUES(amount), received_amount=VALUES(received_amount), status=VALUES(status);
+INSERT INTO ai_crm_customer_pool(id, tenant_id, customer_id, pool_reason, enter_time, claim_user, claim_time, status) VALUES
+(1,1,2,'超过30天未跟进','2026-05-20 10:00:00',NULL,NULL,'IN_POOL')
+ON DUPLICATE KEY UPDATE pool_reason=VALUES(pool_reason), status=VALUES(status);
+
+INSERT INTO ai_erp_warehouse(id, tenant_id, warehouse_code, warehouse_name, contact_name, contact_mobile, address, status, remark) VALUES
+(1,1,'MAIN','默认主仓','仓库管理员','13800003001','深圳南山云仓',1,'默认仓')
+ON DUPLICATE KEY UPDATE warehouse_name=VALUES(warehouse_name), status=VALUES(status);
+INSERT INTO ai_erp_supplier(id, tenant_id, supplier_code, supplier_name, contact_name, contact_mobile, contact_email, address, status, remark) VALUES
+(1,1,'SUP-10001','深圳算力供应商','王经理','13800003002','sup@aicloud.local','深圳市南山区',1,'云资源供应商')
+ON DUPLICATE KEY UPDATE supplier_name=VALUES(supplier_name), status=VALUES(status);
+INSERT INTO ai_erp_purchase_order(id, tenant_id, purchase_no, supplier_id, warehouse_code, total_amount, status, create_by, audit_by, remark) VALUES
+(1,1,'PO-10001',1,'MAIN',66000.00,'APPROVED','admin','admin','云主机资源采购')
+ON DUPLICATE KEY UPDATE total_amount=VALUES(total_amount), status=VALUES(status);
+INSERT INTO ai_erp_stock_transfer(id, tenant_id, transfer_no, sku_code, from_warehouse, to_warehouse, qty, status, create_by, remark) VALUES
+(1,1,'TR-10001','SKU-10001-1C2G','MAIN','BACKUP',10,'DRAFT','admin','备用仓调拨')
+ON DUPLICATE KEY UPDATE qty=VALUES(qty), status=VALUES(status);
+
+INSERT INTO ai_merchant_shop(id, tenant_id, merchant_id, shop_no, shop_name, contact_name, contact_mobile, address, status, remark) VALUES
+(1,1,1,'SHOP-10001','AICloud 深圳旗舰店','张店长','13800001004','深圳市南山区','ACTIVE','默认门店')
+ON DUPLICATE KEY UPDATE shop_name=VALUES(shop_name), status=VALUES(status);
+INSERT INTO ai_merchant_fee_rate(id, tenant_id, merchant_id, channel, fee_rate, settle_cycle, status, remark) VALUES
+(1,1,1,'MOCK',0.0060,'T+1','ACTIVE','模拟渠道费率')
+ON DUPLICATE KEY UPDATE fee_rate=VALUES(fee_rate), status=VALUES(status);
+INSERT INTO ai_merchant_settlement(id, tenant_id, merchant_id, settlement_no, amount, fee_amount, settle_amount, status, settle_time, remark) VALUES
+(1,1,1,'ST-10001',10000.00,60.00,9940.00,'WAITING',NULL,'待结算')
+ON DUPLICATE KEY UPDATE amount=VALUES(amount), settle_amount=VALUES(settle_amount), status=VALUES(status);
+INSERT INTO ai_merchant_withdraw(id, tenant_id, merchant_id, withdraw_no, amount, account_no, account_name, status, audit_remark) VALUES
+(1,1,1,'WD-10001',5000.00,'6222000000000001','AICloud 深圳运营中心','APPLY',NULL)
+ON DUPLICATE KEY UPDATE amount=VALUES(amount), status=VALUES(status);
+
+INSERT INTO ai_member_points_rule(id, tenant_id, rule_code, rule_name, biz_type, points, growth, status, remark) VALUES
+(1,1,'SIGN','每日签到','SIGN',10,1,1,'每日签到赠送积分')
+ON DUPLICATE KEY UPDATE rule_name=VALUES(rule_name), status=VALUES(status);
+INSERT INTO ai_member_sign_record(id, tenant_id, user_id, sign_date, points, continuous_days, remark) VALUES
+(1,1,3,'2026-05-22',10,1,'签到赠送')
+ON DUPLICATE KEY UPDATE points=VALUES(points), continuous_days=VALUES(continuous_days);
+INSERT INTO ai_member_tag(id, tenant_id, tag_code, tag_name, tag_type, status, remark) VALUES
+(1,1,'HIGH_VALUE','高价值客户','AUTO',1,'按消费自动计算')
+ON DUPLICATE KEY UPDATE tag_name=VALUES(tag_name), status=VALUES(status);
+INSERT INTO ai_member_growth_log(id, tenant_id, user_id, biz_type, growth_delta, growth_after, remark) VALUES
+(1,1,3,'SIGN',1,1,'签到成长值')
+ON DUPLICATE KEY UPDATE growth_delta=VALUES(growth_delta), growth_after=VALUES(growth_after);
+
+INSERT INTO ai_bpm_model(id, tenant_id, model_key, model_name, model_json, version_no, status, create_by, remark) VALUES
+(1,1,'order_audit','订单审批模型','{"nodes":["start","audit","end"]}',1,'ACTIVE','admin','演示模型')
+ON DUPLICATE KEY UPDATE model_name=VALUES(model_name), version_no=VALUES(version_no), status=VALUES(status);
+INSERT INTO ai_bpm_form(id, tenant_id, form_key, form_name, form_schema, status, create_by, remark) VALUES
+(1,1,'order_audit_form','订单审批表单','{"fields":[{"label":"订单号","prop":"orderNo"}]}','ACTIVE','admin','演示表单')
+ON DUPLICATE KEY UPDATE form_name=VALUES(form_name), status=VALUES(status);
+INSERT INTO ai_bpm_cc(id, tenant_id, instance_id, task_id, user_id, username, read_status, read_time, remark) VALUES
+(1,1,1,1,2,'ops',0,NULL,'流程抄送')
+ON DUPLICATE KEY UPDATE username=VALUES(username), read_status=VALUES(read_status);
+
+INSERT INTO ai_infra_codegen_table(id, tenant_id, table_name, class_name, module_name, business_name, author, status, remark) VALUES
+(1,1,'ai_product_spu','ProductSpu','product','商品','admin',1,'代码生成元数据')
+ON DUPLICATE KEY UPDATE class_name=VALUES(class_name), status=VALUES(status);
+INSERT INTO ai_infra_codegen_column(id, tenant_id, table_id, column_name, java_field, java_type, query_type, form_show, list_show, sort) VALUES
+(1,1,1,'spu_no','spuNo','String','LIKE',1,1,10),(2,1,1,'name','name','String','LIKE',1,1,20)
+ON DUPLICATE KEY UPDATE java_field=VALUES(java_field), sort=VALUES(sort);
+INSERT INTO ai_infra_storage_config(id, tenant_id, storage_code, storage_name, endpoint, bucket_name, access_key, secret_key, status, remark) VALUES
+(1,1,'LOCAL','本地存储','http://127.0.0.1:48080','aicloud','local-ak','local-sk',1,'本地开发存储')
+ON DUPLICATE KEY UPDATE storage_name=VALUES(storage_name), status=VALUES(status);
+INSERT INTO ai_infra_job_log(id, tenant_id, job_id, job_name, handler_name, success, duration_ms, error_msg) VALUES
+(1,1,1,'订单超时关闭','tradeOrderTimeoutJob',1,35,NULL)
+ON DUPLICATE KEY UPDATE success=VALUES(success), duration_ms=VALUES(duration_ms);

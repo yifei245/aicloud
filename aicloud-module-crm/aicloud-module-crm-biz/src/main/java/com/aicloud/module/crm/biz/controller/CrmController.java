@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "CRM 客户关系")
 @RestController
 @RequestMapping("/crm")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class CrmController {
 
     private final CrmService crmService;

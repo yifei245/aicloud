@@ -7,6 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MybatisPlusConfig {
 
     @Bean

@@ -9,6 +9,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AuditLogArchiveTask {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuditLogArchiveTask.class);

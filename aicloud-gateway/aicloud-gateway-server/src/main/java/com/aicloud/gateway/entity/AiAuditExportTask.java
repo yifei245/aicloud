@@ -7,6 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 
 @TableName("ai_audit_export_task")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiAuditExportTask {
 
     @TableId(type = IdType.AUTO)

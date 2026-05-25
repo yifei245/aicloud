@@ -23,8 +23,23 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class TradeOrderService {
+
+    private static final String ORDER_STATUS_CREATED = "CREATED";
+    private static final String ORDER_STATUS_PAID = "PAID";
+    private static final String ORDER_STATUS_SHIPPED = "SHIPPED";
+    private static final String ORDER_STATUS_CANCELLED = "CANCELLED";
+    private static final String ORDER_STATUS_FINISHED = "FINISHED";
+    private static final String ORDER_STATUS_AFTER_SALE = "AFTER_SALE";
+    private static final String DELIVERY_STATUS_RECEIVED = "RECEIVED";
+    private static final String AFTER_SALE_STATUS_APPLY = "APPLY";
+
     private final TradeOrderMapper tradeOrderMapper;
     private final TradeCartItemMapper cartItemMapper;
     private final TradeDeliveryMapper deliveryMapper;
@@ -68,7 +83,7 @@ public class TradeOrderService {
         order.setUserId(body.getUserId());
         order.setTotalAmount(body.getTotalAmount());
         order.setPayAmount(body.getPayAmount());
-        order.setStatus(StringUtils.hasText(body.getStatus()) ? body.getStatus() : "CREATED");
+        order.setStatus(StringUtils.hasText(body.getStatus()) ? body.getStatus() : ORDER_STATUS_CREATED);
         order.setCreateTime(LocalDateTime.now());
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.insert(order);
@@ -82,7 +97,7 @@ public class TradeOrderService {
         order.setUserId(userId);
         order.setTotalAmount(body.getTotalAmount());
         order.setPayAmount(body.getPayAmount());
-        order.setStatus("CREATED");
+        order.setStatus(ORDER_STATUS_CREATED);
         order.setCreateTime(LocalDateTime.now());
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.insert(order);
@@ -107,10 +122,10 @@ public class TradeOrderService {
 
     public AiTradeOrder cancel(Long tenantId, Long userId, Long id) {
         AiTradeOrder order = validateMemberOrder(tenantId, userId, id);
-        if ("PAID".equals(order.getStatus()) || "SHIPPED".equals(order.getStatus())) {
+        if (ORDER_STATUS_PAID.equals(order.getStatus()) || ORDER_STATUS_SHIPPED.equals(order.getStatus())) {
             throw new IllegalArgumentException("订单已支付或已发货，请申请售后");
         }
-        order.setStatus("CANCELLED");
+        order.setStatus(ORDER_STATUS_CANCELLED);
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
         return order;
@@ -118,7 +133,7 @@ public class TradeOrderService {
 
     public AiTradeOrder confirm(Long tenantId, Long userId, Long id) {
         AiTradeOrder order = validateMemberOrder(tenantId, userId, id);
-        order.setStatus("FINISHED");
+        order.setStatus(ORDER_STATUS_FINISHED);
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
         return order;
@@ -195,12 +210,12 @@ public class TradeOrderService {
         delivery.setReceiverName(body.getReceiverName());
         delivery.setReceiverMobile(body.getReceiverMobile());
         delivery.setReceiverAddress(body.getReceiverAddress());
-        delivery.setStatus("SHIPPED");
+        delivery.setStatus(ORDER_STATUS_SHIPPED);
         delivery.setShippedTime(LocalDateTime.now());
         delivery.setCreateTime(LocalDateTime.now());
         delivery.setUpdateTime(LocalDateTime.now());
         deliveryMapper.insert(delivery);
-        order.setStatus("SHIPPED");
+        order.setStatus(ORDER_STATUS_SHIPPED);
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
         return delivery;
@@ -211,12 +226,12 @@ public class TradeOrderService {
         if (delivery == null) {
             throw new IllegalArgumentException("物流单不存在");
         }
-        delivery.setStatus("RECEIVED");
+        delivery.setStatus(DELIVERY_STATUS_RECEIVED);
         delivery.setReceivedTime(LocalDateTime.now());
         delivery.setUpdateTime(LocalDateTime.now());
         deliveryMapper.updateById(delivery);
         AiTradeOrder order = get(delivery.getOrderId());
-        order.setStatus("FINISHED");
+        order.setStatus(ORDER_STATUS_FINISHED);
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
         return delivery;
@@ -239,11 +254,11 @@ public class TradeOrderService {
         afterSale.setType(body.getType());
         afterSale.setReason(body.getReason());
         afterSale.setAmount(body.getAmount());
-        afterSale.setStatus("APPLY");
+        afterSale.setStatus(AFTER_SALE_STATUS_APPLY);
         afterSale.setCreateTime(LocalDateTime.now());
         afterSale.setUpdateTime(LocalDateTime.now());
         afterSaleMapper.insert(afterSale);
-        order.setStatus("AFTER_SALE");
+        order.setStatus(ORDER_STATUS_AFTER_SALE);
         order.setUpdateTime(LocalDateTime.now());
         tradeOrderMapper.updateById(order);
         return afterSale;

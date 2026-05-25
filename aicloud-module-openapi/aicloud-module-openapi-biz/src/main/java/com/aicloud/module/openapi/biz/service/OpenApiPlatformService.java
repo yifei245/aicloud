@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class OpenApiPlatformService {
 
@@ -39,7 +44,7 @@ public class OpenApiPlatformService {
                 .orderByDesc(AiOpenApiApp::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiOpenApiApp saveApp(Long tenantId, AiOpenApiApp app) {
         LocalDateTime now = LocalDateTime.now();
         app.setTenantId(tenantId);
@@ -109,7 +114,7 @@ public class OpenApiPlatformService {
                 .orderByDesc(AiOpenApiWebhook::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiOpenApiWebhook saveWebhook(Long tenantId, AiOpenApiWebhook webhook) {
         LocalDateTime now = LocalDateTime.now();
         webhook.setTenantId(tenantId);
@@ -134,7 +139,7 @@ public class OpenApiPlatformService {
         webhook.setLastPushTime(LocalDateTime.now());
         webhook.setUpdateTime(LocalDateTime.now());
         webhookMapper.updateById(webhook);
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("webhookId", webhook.getId());
         data.put("eventType", webhook.getEventType());
         data.put("targetUrl", webhook.getTargetUrl());

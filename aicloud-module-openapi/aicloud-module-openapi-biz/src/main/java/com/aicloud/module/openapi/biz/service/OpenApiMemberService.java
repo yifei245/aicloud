@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class OpenApiMemberService {
 
@@ -31,7 +36,7 @@ public class OpenApiMemberService {
     public Map<String, Object> summary(Long tenantId, Long memberId, String appKey) {
         long start = System.currentTimeMillis();
         AiMemberProfile profile = findProfile(tenantId, memberId);
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("memberId", memberId);
         data.put("tenantId", tenantId);
         data.put("appKey", appKey);
@@ -47,7 +52,7 @@ public class OpenApiMemberService {
     public Map<String, Object> detail(Long tenantId, Long memberId, String appKey) {
         long start = System.currentTimeMillis();
         AiMemberProfile profile = findProfile(tenantId, memberId);
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>(8);
         data.put("tenantId", tenantId);
         data.put("appKey", appKey);
         data.put("member", profile);

@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.post;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PostSaveRequest {
     private Long id;
     private String code;

@@ -3,6 +3,11 @@ package com.aicloud.module.product.biz.model;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class ProductStockUpdateRequest {
     @NotNull
     private Long id;

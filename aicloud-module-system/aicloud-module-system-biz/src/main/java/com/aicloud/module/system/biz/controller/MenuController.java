@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统权限")
 @RestController
 @RequestMapping("/system")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MenuController {
 
     private final MenuService menuService;

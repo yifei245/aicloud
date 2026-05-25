@@ -6,6 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("ai_menu")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class AiMenu {
 
     @TableId(type = IdType.AUTO)

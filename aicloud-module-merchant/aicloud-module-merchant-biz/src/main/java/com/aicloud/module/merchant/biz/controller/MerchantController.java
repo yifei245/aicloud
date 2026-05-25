@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "商家中心")
 @RestController
 @RequestMapping("/merchant")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class MerchantController {
 
     private final MerchantService merchantService;

@@ -5,10 +5,14 @@ spring:
   application:
     name: aicloud-gateway
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&sslMode=PREFERRED
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 2
+      idle-timeout: 30000
   cloud:
     gateway:
       routes:
@@ -133,6 +137,10 @@ spring:
           uri: http://${AICLOUD_PROMOTION_HOST:127.0.0.1}:49016
           predicates:
             - Path=/app/promotion/**,/web/promotion/**
+        - id: aicloud-member-admin
+          uri: http://${AICLOUD_MEMBER_HOST:127.0.0.1}:49012
+          predicates:
+            - Path=/member/**
         - id: aicloud-member
           uri: http://${AICLOUD_MEMBER_HOST:127.0.0.1}:49012
           predicates:
@@ -511,6 +519,13 @@ aicloud:
         enabled: true
       - name: allow-admin-infra
         path: /infra/**
+        effect: ALLOW
+        priority: 8
+        terminals: [ADMIN]
+        user-types: [ADMIN]
+        enabled: true
+      - name: allow-admin-member
+        path: /member/**
         effect: ALLOW
         priority: 8
         terminals: [ADMIN]

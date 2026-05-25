@@ -19,10 +19,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class TokenStoreService {
 
     private static final Long DEFAULT_TENANT_ID = 1L;
+    private static final long ACCESS_TOKEN_SECONDS = 2 * 60 * 60;
+    private static final long REFRESH_TOKEN_SECONDS = 30L * 24 * 60 * 60;
     private final UserMapper userMapper;
     private final Oauth2ClientMapper oauth2ClientMapper;
     private final SsoSessionMapper ssoSessionMapper;
@@ -91,7 +98,7 @@ public class TokenStoreService {
             return null;
         }
         AiSsoSession oldSession = ssoSessionMapper.findByRefreshToken(refreshToken);
-        if (oldSession == null || oldSession.getExpireTime() == null || oldSession.getExpireTime().isBefore(LocalDateTime.now())) {
+        if (oldSession == null || oldSession.getRefreshExpireTime() == null || oldSession.getRefreshExpireTime().isBefore(LocalDateTime.now())) {
             return null;
         }
         int deleted = ssoSessionMapper.deleteByIdAndRefreshToken(oldSession.getId(), refreshToken);
@@ -153,7 +160,8 @@ public class TokenStoreService {
     }
 
     private TokenResponse createSession(Long tenantId, AiUser user, List<String> roleCodes, List<String> permissions, String terminal) {
-        LocalDateTime expireAt = LocalDateTime.now().plusHours(2);
+        LocalDateTime expireAt = LocalDateTime.now().plusSeconds(ACCESS_TOKEN_SECONDS);
+        LocalDateTime refreshExpireAt = LocalDateTime.now().plusSeconds(REFRESH_TOKEN_SECONDS);
         String accessToken = "atk_" + UUID.randomUUID().toString().replace("-", "");
         String refreshToken = "rtk_" + UUID.randomUUID().toString().replace("-", "");
         String sessionId = "sid_" + UUID.randomUUID().toString().replace("-", "");
@@ -166,6 +174,7 @@ public class TokenStoreService {
         session.setRefreshToken(refreshToken);
         session.setLoginTerminal(StringUtils.hasText(terminal) ? terminal : "WEB");
         session.setExpireTime(expireAt);
+        session.setRefreshExpireTime(refreshExpireAt);
         session.setCreateTime(LocalDateTime.now());
         ssoSessionMapper.insert(session);
 
@@ -174,6 +183,8 @@ public class TokenStoreService {
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshToken);
         response.setExpireAt(expireAt);
+        response.setRefreshExpireAt(refreshExpireAt);
+        response.setExpiresIn(ACCESS_TOKEN_SECONDS);
         response.setTenantId(tenantId);
         response.setUserId(user.getId());
         response.setUsername(user.getUsername());

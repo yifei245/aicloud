@@ -13,6 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 @Service
 public class DictAdminService {
 
@@ -40,7 +45,7 @@ public class DictAdminService {
                 .orderByAsc(AiDictData::getSort, AiDictData::getId));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiDictType saveType(Long tenantId, DictTypeSaveRequest request) {
         if (!StringUtils.hasText(request.getDictType()) || !StringUtils.hasText(request.getDictName())) {
             throw new IllegalArgumentException("字典类型和值名称不能为空");
@@ -68,7 +73,7 @@ public class DictAdminService {
         return entity;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AiDictData saveData(Long tenantId, DictDataSaveRequest request) {
         if (!StringUtils.hasText(request.getDictType()) || !StringUtils.hasText(request.getDictLabel()) || !StringUtils.hasText(request.getDictValue())) {
             throw new IllegalArgumentException("字典数据字段不能为空");
@@ -95,7 +100,7 @@ public class DictAdminService {
         return entity;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void deleteType(Long tenantId, Long id) {
         AiDictType type = dictTypeMapper.selectById(id);
         if (type == null || !tenantId.equals(type.getTenantId())) {

@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.user;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class UserPasswordRequest {
     private Long id;
     private String password;

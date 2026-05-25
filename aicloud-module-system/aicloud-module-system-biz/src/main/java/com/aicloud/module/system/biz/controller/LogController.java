@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "系统日志")
 @RestController
 @RequestMapping("/system/log")
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class LogController {
 
     private final LogAdminService logAdminService;

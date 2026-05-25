@@ -23,7 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "营销中心")
 @RestController
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class PromotionController {
+
+    private static final String USER_TYPE_MEMBER = "MEMBER";
 
     private final PromotionCouponService promotionCouponService;
 
@@ -115,7 +122,7 @@ public class PromotionController {
     }
 
     private void validateMember(String userType, String userId) {
-        if (!"MEMBER".equalsIgnoreCase(userType)) {
+        if (!USER_TYPE_MEMBER.equalsIgnoreCase(userType)) {
             throw new IllegalArgumentException("仅会员用户可访问");
         }
         if (parseLong(userId, null) == null) {

@@ -1,5 +1,10 @@
 package com.aicloud.module.system.biz.model.config;
 
+/**
+ * AICloud generated source.
+ *
+ * @author AICloud
+ */
 public class SystemConfigSaveRequest {
     private Long id;
     private String configKey;
