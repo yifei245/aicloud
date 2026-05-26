@@ -8,4 +8,10 @@
     </parent>
     <artifactId>aicloud-spring-boot-starter-openapi</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+    </dependencies>
 </project>

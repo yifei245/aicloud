@@ -1,25 +1,22 @@
 package com.aicloud.gateway.service.export;
 
-import com.aicloud.gateway.entity.AiAuditExportTask;
-import com.aicloud.gateway.mapper.AuditExportTaskMapper;
-import com.aicloud.gateway.model.AuditLogItemResponse;
 import com.aicloud.common.pojo.PageResponse;
+import com.aicloud.gateway.model.AuditLogItemResponse;
 import com.aicloud.gateway.model.export.AuditExportCleanupResult;
 import com.aicloud.gateway.model.export.AuditExportTaskInfo;
 import com.aicloud.gateway.model.export.AuditExportTaskRequest;
 import com.aicloud.gateway.model.export.AuditExportTaskStatus;
 import com.aicloud.gateway.service.AuditArchiveService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -34,23 +31,22 @@ import org.springframework.util.StringUtils;
 public class AuditExportTaskService {
 
     private final AuditArchiveService auditArchiveService;
-    private final AuditExportTaskMapper auditExportTaskMapper;
     private final Executor auditTaskExecutor;
+    private final Map<String, AuditExportTaskInfo> tasks = new ConcurrentHashMap<>();
     private final Path exportDir = Path.of(System.getProperty("java.io.tmpdir"), "aicloud-audit-exports");
 
-    public AuditExportTaskService(AuditArchiveService auditArchiveService, AuditExportTaskMapper auditExportTaskMapper,
+    public AuditExportTaskService(AuditArchiveService auditArchiveService,
                                   @Qualifier("auditTaskExecutor") Executor auditTaskExecutor) {
         this.auditArchiveService = auditArchiveService;
-        this.auditExportTaskMapper = auditExportTaskMapper;
         this.auditTaskExecutor = auditTaskExecutor;
     }
 
     public AuditExportTaskInfo createTask(AuditExportTaskRequest request) {
         String taskId = UUID.randomUUID().toString().replace("-", "");
-        AiAuditExportTask task = new AiAuditExportTask();
+        AuditExportTaskInfo task = new AuditExportTaskInfo();
         task.setTaskId(taskId);
-        task.setStatus(AuditExportTaskStatus.PENDING.name());
-        task.setMessage("排队中");
+        task.setStatus(AuditExportTaskStatus.PENDING);
+        task.setMessage("排队中，gateway 不再持久化任务状态");
         task.setArchived(request.isArchived() ? 1 : 0);
         task.setTenantId(request.getTenantId());
         task.setUserId(request.getUserId());
@@ -59,15 +55,15 @@ public class AuditExportTaskService {
         task.setEndTime(request.getEndTime());
         task.setMaxRows(request.getMaxRows() == null ? 5000 : request.getMaxRows());
         task.setCreatedAt(LocalDateTime.now());
-        auditExportTaskMapper.insert(task);
+        tasks.put(taskId, task);
 
         auditTaskExecutor.execute(() -> runTask(taskId, request));
-        return toInfo(task);
+        return copy(task);
     }
 
     public AuditExportTaskInfo getTask(String taskId) {
-        AiAuditExportTask task = queryByTaskId(taskId);
-        return task == null ? null : toInfo(task);
+        AuditExportTaskInfo task = tasks.get(taskId);
+        return task == null ? null : copy(task);
     }
 
     public PageResponse<AuditExportTaskInfo> queryTasks(AuditExportTaskStatus status,
@@ -84,48 +80,37 @@ public class AuditExportTaskService {
                                                         long pageSize) {
         long safePageNo = Math.max(pageNo, 1);
         long safePageSize = Math.min(Math.max(pageSize, 1), 200);
-        boolean asc = "asc".equalsIgnoreCase(sortOrder);
-
-        Page<AiAuditExportTask> page = new Page<>(safePageNo, safePageSize);
-        LambdaQueryWrapper<AiAuditExportTask> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(status != null, AiAuditExportTask::getStatus, status.name())
-                .eq(archived != null, AiAuditExportTask::getArchived, Boolean.TRUE.equals(archived) ? 1 : 0)
-                .eq(tenantId != null, AiAuditExportTask::getTenantId, tenantId)
-                .eq(userId != null, AiAuditExportTask::getUserId, userId)
-                .eq(success != null, AiAuditExportTask::getSuccess, success)
-                .and(StringUtils.hasText(keyword), w -> w.like(AiAuditExportTask::getTaskId, keyword)
-                        .or()
-                        .like(AiAuditExportTask::getFilename, keyword))
-                .ge(startTime != null, AiAuditExportTask::getCreatedAt, startTime)
-                .le(endTime != null, AiAuditExportTask::getCreatedAt, endTime);
-        applyOrder(wrapper, sortBy, asc);
-        Page<AiAuditExportTask> result = auditExportTaskMapper.selectPage(page, wrapper);
+        Comparator<AuditExportTaskInfo> comparator = comparator(sortBy);
+        if (!"asc".equalsIgnoreCase(sortOrder)) {
+            comparator = comparator.reversed();
+        }
+        List<AuditExportTaskInfo> filtered = tasks.values().stream()
+                .filter(item -> status == null || status == item.getStatus())
+                .filter(item -> archived == null || (Boolean.TRUE.equals(archived) ? 1 : 0) == nullToZero(item.getArchived()))
+                .filter(item -> tenantId == null || tenantId.equals(item.getTenantId()))
+                .filter(item -> userId == null || userId.equals(item.getUserId()))
+                .filter(item -> success == null || success.equals(item.getSuccess()))
+                .filter(item -> !StringUtils.hasText(keyword)
+                        || contains(item.getTaskId(), keyword) || contains(item.getFilename(), keyword))
+                .filter(item -> startTime == null || !item.getCreatedAt().isBefore(startTime))
+                .filter(item -> endTime == null || !item.getCreatedAt().isAfter(endTime))
+                .sorted(comparator)
+                .map(this::copy)
+                .toList();
+        int fromIndex = (int) Math.min((safePageNo - 1) * safePageSize, filtered.size());
+        int toIndex = (int) Math.min(fromIndex + safePageSize, filtered.size());
 
         PageResponse<AuditExportTaskInfo> response = new PageResponse<>();
-        response.setTotal(result.getTotal());
-        response.setPageNo(result.getCurrent());
-        response.setPageSize(result.getSize());
-        response.setList(result.getRecords().stream().map(this::toInfo).toList());
+        response.setTotal(filtered.size());
+        response.setPageNo(safePageNo);
+        response.setPageSize(safePageSize);
+        response.setList(filtered.subList(fromIndex, toIndex));
         return response;
     }
 
-    private void applyOrder(LambdaQueryWrapper<AiAuditExportTask> wrapper, String sortBy, boolean asc) {
-        if ("finishedAt".equalsIgnoreCase(sortBy)) {
-            wrapper.orderBy(true, asc, AiAuditExportTask::getFinishedAt)
-                    .orderByDesc(AiAuditExportTask::getId);
-            return;
-        }
-        if ("id".equalsIgnoreCase(sortBy)) {
-            wrapper.orderBy(true, asc, AiAuditExportTask::getId);
-            return;
-        }
-        wrapper.orderBy(true, asc, AiAuditExportTask::getCreatedAt)
-                .orderByDesc(AiAuditExportTask::getId);
-    }
-
     public byte[] readFile(String taskId) throws IOException {
-        AiAuditExportTask task = queryByTaskId(taskId);
-        if (task == null || !AuditExportTaskStatus.SUCCESS.name().equals(task.getStatus()) || task.getFilename() == null) {
+        AuditExportTaskInfo task = tasks.get(taskId);
+        if (task == null || task.getStatus() != AuditExportTaskStatus.SUCCESS || task.getFilename() == null) {
             return null;
         }
         Path path = exportDir.resolve(task.getFilename());
@@ -138,37 +123,30 @@ public class AuditExportTaskService {
     public AuditExportCleanupResult cleanupFinishedTasks(int retentionDays, int batchSize) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(Math.max(retentionDays, 1));
         int safeBatch = Math.max(batchSize, 1);
-
-        LambdaQueryWrapper<AiAuditExportTask> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(AiAuditExportTask::getStatus, AuditExportTaskStatus.SUCCESS.name(), AuditExportTaskStatus.FAILED.name())
-                .lt(AiAuditExportTask::getFinishedAt, cutoff)
-                .orderByAsc(AiAuditExportTask::getId)
-                .last("LIMIT " + safeBatch);
-        List<AiAuditExportTask> tasks = auditExportTaskMapper.selectList(wrapper);
+        List<AuditExportTaskInfo> expired = tasks.values().stream()
+                .filter(item -> item.getFinishedAt() != null && item.getFinishedAt().isBefore(cutoff))
+                .limit(safeBatch)
+                .toList();
 
         int deletedFiles = 0;
-        for (AiAuditExportTask task : tasks) {
-            if (task.getFilename() == null || task.getFilename().isBlank()) {
-                continue;
-            }
-            Path file = exportDir.resolve(task.getFilename());
-            try {
-                if (Files.deleteIfExists(file)) {
-                    deletedFiles++;
-                }
-            } catch (IOException ignored) {
-                // Ignore file deletion errors, continue with DB cleanup.
-            }
-        }
-
         int deletedRows = 0;
-        if (!tasks.isEmpty()) {
-            List<Long> ids = tasks.stream().map(AiAuditExportTask::getId).collect(Collectors.toList());
-            deletedRows = auditExportTaskMapper.deleteBatchIds(ids);
+        for (AuditExportTaskInfo task : expired) {
+            if (StringUtils.hasText(task.getFilename())) {
+                try {
+                    if (Files.deleteIfExists(exportDir.resolve(task.getFilename()))) {
+                        deletedFiles++;
+                    }
+                } catch (IOException ignored) {
+                    // Ignore file deletion errors; gateway cleanup must not affect request processing.
+                }
+            }
+            if (tasks.remove(task.getTaskId()) != null) {
+                deletedRows++;
+            }
         }
 
         AuditExportCleanupResult result = new AuditExportCleanupResult();
-        result.setScanned(tasks.size());
+        result.setScanned(expired.size());
         result.setDeletedRows(deletedRows);
         result.setDeletedFiles(deletedFiles);
         return result;
@@ -189,10 +167,11 @@ public class AuditExportTaskService {
                     maxRows);
             byte[] csv = auditArchiveService.buildCsv(logs);
 
-            String filename = "gateway-audit-export-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + taskId + ".csv";
+            String filename = "gateway-audit-export-"
+                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                    + "-" + taskId + ".csv";
             Path file = exportDir.resolve(filename);
             Files.write(file, csv);
-
             updateStatus(taskId, AuditExportTaskStatus.SUCCESS, "完成", filename, (long) csv.length, LocalDateTime.now());
         } catch (Exception ex) {
             updateStatus(taskId, AuditExportTaskStatus.FAILED, "导出失败，请稍后重试", null, null, LocalDateTime.now());
@@ -201,37 +180,54 @@ public class AuditExportTaskService {
 
     private void updateStatus(String taskId, AuditExportTaskStatus status, String message,
                               String filename, Long fileSize, LocalDateTime finishedAt) {
-        LambdaUpdateWrapper<AiAuditExportTask> update = new LambdaUpdateWrapper<>();
-        update.eq(AiAuditExportTask::getTaskId, taskId)
-                .set(AiAuditExportTask::getStatus, status.name())
-                .set(AiAuditExportTask::getMessage, message)
-                .set(filename != null, AiAuditExportTask::getFilename, filename)
-                .set(fileSize != null, AiAuditExportTask::getFileSize, fileSize)
-                .set(finishedAt != null, AiAuditExportTask::getFinishedAt, finishedAt);
-        auditExportTaskMapper.update(null, update);
+        AuditExportTaskInfo task = tasks.get(taskId);
+        if (task == null) {
+            return;
+        }
+        task.setStatus(status);
+        task.setMessage(message);
+        if (filename != null) {
+            task.setFilename(filename);
+        }
+        if (fileSize != null) {
+            task.setFileSize(fileSize);
+        }
+        if (finishedAt != null) {
+            task.setFinishedAt(finishedAt);
+        }
     }
 
-    private AiAuditExportTask queryByTaskId(String taskId) {
-        return auditExportTaskMapper.selectOne(
-                new LambdaQueryWrapper<AiAuditExportTask>().eq(AiAuditExportTask::getTaskId, taskId).last("LIMIT 1"));
+    private Comparator<AuditExportTaskInfo> comparator(String sortBy) {
+        if ("finishedAt".equalsIgnoreCase(sortBy)) {
+            return Comparator.comparing(AuditExportTaskInfo::getFinishedAt, Comparator.nullsLast(Comparator.naturalOrder()));
+        }
+        return Comparator.comparing(AuditExportTaskInfo::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder()));
     }
 
-    private AuditExportTaskInfo toInfo(AiAuditExportTask task) {
-        AuditExportTaskInfo info = new AuditExportTaskInfo();
-        info.setTaskId(task.getTaskId());
-        info.setStatus(AuditExportTaskStatus.valueOf(task.getStatus()));
-        info.setMessage(task.getMessage());
-        info.setArchived(task.getArchived());
-        info.setTenantId(task.getTenantId());
-        info.setUserId(task.getUserId());
-        info.setSuccess(task.getSuccess());
-        info.setMaxRows(task.getMaxRows());
-        info.setStartTime(task.getStartTime());
-        info.setEndTime(task.getEndTime());
-        info.setFilename(task.getFilename());
-        info.setFileSize(task.getFileSize());
-        info.setCreatedAt(task.getCreatedAt());
-        info.setFinishedAt(task.getFinishedAt());
-        return info;
+    private boolean contains(String source, String keyword) {
+        return source != null && source.contains(keyword);
+    }
+
+    private int nullToZero(Integer value) {
+        return value == null ? 0 : value;
+    }
+
+    private AuditExportTaskInfo copy(AuditExportTaskInfo source) {
+        AuditExportTaskInfo target = new AuditExportTaskInfo();
+        target.setTaskId(source.getTaskId());
+        target.setStatus(source.getStatus());
+        target.setMessage(source.getMessage());
+        target.setArchived(source.getArchived());
+        target.setTenantId(source.getTenantId());
+        target.setUserId(source.getUserId());
+        target.setSuccess(source.getSuccess());
+        target.setMaxRows(source.getMaxRows());
+        target.setStartTime(source.getStartTime());
+        target.setEndTime(source.getEndTime());
+        target.setFilename(source.getFilename());
+        target.setFileSize(source.getFileSize());
+        target.setCreatedAt(source.getCreatedAt());
+        target.setFinishedAt(source.getFinishedAt());
+        return target;
     }
 }

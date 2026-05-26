@@ -73,6 +73,6 @@ public class BpmController {
     @Operation(summary = "完成任务")
     @PostMapping("/task/complete")
     public ApiResponse<AiBpmTask> complete(@Valid @RequestBody BpmTaskCompleteRequest body) {
-        return ApiResponse.ok(bpmService.complete(body.getTaskId()));
+        return ApiResponse.ok(bpmService.complete(body.getTaskId(), body.getVariables()));
     }
 }

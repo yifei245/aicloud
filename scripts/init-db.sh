@@ -20,7 +20,7 @@ run_mysql_file "sql/aicloud-03-business.sql"
 run_mysql_file "sql/aicloud-99-demo.sql"
 if [ -d "sql/migrations" ]; then
   for file in sql/migrations/*.sql; do
-    [ -e "" ] || continue
-    run_mysql_file ""
+    [ -e "$file" ] || continue
+    run_mysql_file "$file"
   done
 fi

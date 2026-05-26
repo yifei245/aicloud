@@ -8,4 +8,10 @@
     </parent>
     <artifactId>aicloud-spring-boot-starter-job</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
 </project>

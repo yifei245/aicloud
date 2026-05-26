@@ -85,6 +85,11 @@ aicloud
 - 公共 RBAC：`@RequirePermission` 注解和权限拦截器。
 - 公共租户上下文：`TenantContext`、`TenantContextHolder`、`TenantContextFilter`。
 - MyBatis Plus 公共配置：分页插件和 `TenantLineInnerInterceptor` 租户拦截器。
+- Redis Starter：统一 `RedisCacheService`，提供 key 前缀、默认 TTL、JSON 序列化、计数与删除能力。
+- Job Starter：统一异步线程池、调度线程池和 `JobRunner`，避免各模块重复定义执行器。
+- MQ Starter：统一 `DomainEvent` 和 `MessagePublisher` 抽象，默认使用 Spring 本地事件，后续可替换 RabbitMQ/Kafka/RocketMQ 适配器。
+- OpenAPI Starter：统一 Swagger/OpenAPI 文档信息、Bearer Token 和 `X-Tenant-Id` 安全头。
+- Biz Auth Starter：统一 `BizAuthService`，提供当前用户、租户、管理员、权限断言能力。
 - 阿里 P3C 代码规范检查脚本已接入。
 
 ### 2. 网关与鉴权
@@ -99,8 +104,9 @@ aicloud
 - 超级管理员跨租户策略：支持根据请求租户切换有效租户。
 - OpenAPI 签名鉴权：`X-App-Key`、`X-Timestamp`、`X-Nonce`、`X-Sign`。
 - OpenAPI 防重放、时间窗校验、限流头返回。
-- 网关审计日志：鉴权允许/拒绝、权限命中、失败原因、请求路径、用户、租户。
-- 网关审计归档、查询、导出、导出任务、清理任务。
+- 网关保持纯 WebFlux 边界层：不引入 MyBatis Plus、JDBC、Mapper、实体表映射，不直连 MySQL。
+- OpenAPI 应用签名密钥由 `aicloud.gateway.openapi.apps` 配置注册，后续可改为远程调用开放平台服务校验。
+- 网关审计日志当前输出结构化日志；审计落库、归档、查询、导出应下沉到 infra/report/audit 业务服务，避免网关混入阻塞型数据层。
 
 ### 3. 认证中心
 
@@ -224,11 +230,14 @@ aicloud
 
 ### 14. 工作流 BPM
 
-- 流程定义列表、新增、更新。
-- 发起流程实例。
-- 流程实例列表。
-- 待办任务列表。
-- 任务办理。
+- 已集成 Flowable Process Engine，BPM 不再是手工状态流。
+- Flowable 自动维护 `ACT_*` 引擎表，业务侧 `ai_bpm_*` 表作为流程定义、实例、任务镜像。
+- 流程定义列表、新增、更新，保存时通过 Flowable `RepositoryService` 部署 BPMN。
+- 支持传入自定义 BPMN XML；未传入时自动生成单级审批 BPMN。
+- 发起流程实例，使用 Flowable `RuntimeService` 创建真实流程实例，并写入 `engineInstanceId`。
+- 流程实例列表，展示业务实例状态和 Flowable 引擎定义/实例 ID。
+- 待办任务列表，来自 Flowable `TaskService`，并映射 `engineTaskId`。
+- 任务办理，调用 Flowable `TaskService.complete` 推进流程。
 - 扩展资源：模型、表单、抄送等支持列表、详情、保存、状态、删除。
 
 ### 15. 基础设施 Infra

@@ -1,9 +1,6 @@
 package com.aicloud.gateway.service;
 
 import com.aicloud.gateway.config.OpenApiSecurityProperties;
-import com.aicloud.gateway.entity.AiApiApp;
-import com.aicloud.gateway.mapper.ApiAppMapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -25,14 +22,11 @@ import org.springframework.web.server.ServerWebExchange;
 @Service
 public class OpenApiAuthService {
 
-    private final ApiAppMapper apiAppMapper;
     private final OpenApiSecurityProperties properties;
     private final OpenApiClusterGuardService clusterGuardService;
 
-    public OpenApiAuthService(ApiAppMapper apiAppMapper,
-                              OpenApiSecurityProperties properties,
+    public OpenApiAuthService(OpenApiSecurityProperties properties,
                               OpenApiClusterGuardService clusterGuardService) {
-        this.apiAppMapper = apiAppMapper;
         this.properties = properties;
         this.clusterGuardService = clusterGuardService;
     }
@@ -63,10 +57,7 @@ public class OpenApiAuthService {
             return VerifyResult.fail("OPENAPI_TIMESTAMP_EXPIRED");
         }
 
-        AiApiApp app = apiAppMapper.selectOne(new LambdaQueryWrapper<AiApiApp>()
-                .eq(AiApiApp::getAppKey, appKey)
-                .eq(AiApiApp::getStatus, 1)
-                .last("LIMIT 1"));
+        OpenApiSecurityProperties.App app = findEnabledApp(appKey);
         if (app == null || !StringUtils.hasText(app.getAppSecret())) {
             return VerifyResult.fail("OPENAPI_APP_NOT_FOUND");
         }
@@ -94,6 +85,17 @@ public class OpenApiAuthService {
             return VerifyResult.fail("OPENAPI_SIGN_INVALID");
         }
         return VerifyResult.success(app.getTenantId(), app.getAppKey(), app.getAppName(), rateLimitDecision);
+    }
+
+    private OpenApiSecurityProperties.App findEnabledApp(String appKey) {
+        if (properties.getApps() == null) {
+            return null;
+        }
+        return properties.getApps().stream()
+                .filter(OpenApiSecurityProperties.App::isEnabled)
+                .filter(item -> appKey.equals(item.getAppKey()))
+                .findFirst()
+                .orElse(null);
     }
 
     private String header(ServerWebExchange exchange, String name) {

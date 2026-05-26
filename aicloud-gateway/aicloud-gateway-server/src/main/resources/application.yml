@@ -4,15 +4,6 @@ spring:
       - optional:nacos:${spring.application.name}.yaml
   application:
     name: aicloud-gateway
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/aicloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&sslMode=PREFERRED
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 8
-      minimum-idle: 2
-      idle-timeout: 30000
   cloud:
     gateway:
       routes:
@@ -144,7 +135,7 @@ spring:
         - id: aicloud-member
           uri: http://${AICLOUD_MEMBER_HOST:127.0.0.1}:49012
           predicates:
-            - Path=/app/**,/web/**
+            - Path=/app/member/**,/web/member/**
         - id: aicloud-mp
           uri: http://${AICLOUD_MP_HOST:127.0.0.1}:49013
           predicates:
@@ -335,9 +326,6 @@ knife4j:
         service-name: aicloud-openapi
         context-path: /
         order: 16
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: true
 aicloud:
   gateway:
     openapi:
@@ -350,6 +338,12 @@ aicloud:
       rate-limit-enabled: true
       requests-per-minute: 120
       redis-guard-enabled: true
+      apps:
+        - tenant-id: 1
+          app-key: demo_app_key
+          app-secret: demo_app_secret
+          app-name: 默认第三方应用
+          enabled: true
     audit:
       archive:
         enabled: true

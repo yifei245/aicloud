@@ -31,3 +31,18 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+flowable:
+  database-schema-update: true
+  async-executor-activate: false
+  idm:
+    enabled: false
+  eventregistry:
+    enabled: false
+  cmmn:
+    enabled: false
+  dmn:
+    enabled: false
+  form:
+    enabled: false
+  content:
+    enabled: false
