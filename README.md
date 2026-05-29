@@ -17,6 +17,8 @@ AICloud 是一个以 Java 后端为主的综合型微服务项目，项目结构
 - 管理端：Vue 3 + TypeScript + Vite + Element Plus + Pinia
 - 构建：Maven 多模块 + pnpm
 - 容器：Docker / Docker Compose
+- JDK 21 新特性：Servlet 业务服务启用虚拟线程，容器默认使用 Generational ZGC
+- AOT/Native：提供 Spring AOT 检查脚本和 GraalVM Native Maven profile，默认不影响普通 JVM 构建
 - 代码规范：阿里 P3C PMD 规则
 - 许可证：MIT
 
@@ -363,12 +365,22 @@ mvn -q package -DskipTests
 cd aicloud-ui-admin && pnpm build
 ```
 
+## JDK 21 / AOT / Native 优化
+
+- 虚拟线程：除 Gateway 外，Servlet 业务服务在 `application.yml` 中启用 `spring.threads.virtual.enabled=true`，适合 MyBatis、Redis、HTTP 等阻塞 IO 场景。
+- Gateway：基于 WebFlux/Netty，Compose 中显式设置 `SPRING_THREADS_VIRTUAL_ENABLED=false`，避免把虚拟线程当成错误优化点。
+- JVM GC：Dockerfile 和 Compose 默认 `JAVA_OPTS` 使用 `-XX:+UseZGC -XX:+ZGenerational`、`MaxRAMPercentage`、UTF-8 和非阻塞随机源。
+- AOT 检查：执行 `./scripts/aot-check.sh aicloud-auth/aicloud-auth-server`，默认以认证服务作为试点。
+- GraalVM Native：根 POM 提供 `native` profile，建议先从 `auth/openapi/gateway` 这类轻服务试点，不建议第一批处理 BPM/Flowable。
+- 普通构建：`mvn package -DskipTests` 不会触发 AOT/Native，不影响日常开发和本地调试。
+
 ## Docker 支持
 
 - 网关 Dockerfile：`docker/gateway/Dockerfile`
 - 认证服务 Dockerfile：`docker/auth/Dockerfile`
 - 业务模块 Dockerfile：`docker/modules/Dockerfile`
 - Compose：`docker/docker-compose.yml`
+- 容器安全：固定非 root UID `10001`，启用 `no-new-privileges`，丢弃 Linux capabilities，挂载受限 tmpfs 给 `/tmp` 和 `/app/logs`。
 
 当前服务容器命名约定：
 

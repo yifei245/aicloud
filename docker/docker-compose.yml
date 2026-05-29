@@ -1,4 +1,3 @@
-version: '3.9'
 x-app-env: &app_env
   SPRING_CLOUD_NACOS_SERVER_ADDR: host.docker.internal:8848
   SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: host.docker.internal:8848
@@ -17,14 +16,29 @@ x-app-env: &app_env
   SPRING_DATA_REDIS_HOST: host.docker.internal
   SPRING_DATA_REDIS_PORT: 6379
   SPRING_DATA_REDIS_PASSWORD: Aa123456
+  JAVA_OPTS: "-XX:+UseZGC -XX:+ZGenerational -XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=20 -Djava.security.egd=file:/dev/urandom -Dfile.encoding=UTF-8"
+  SPRING_THREADS_VIRTUAL_ENABLED: "true"
+x-gateway-env: &gateway_env
+  JAVA_OPTS: "-XX:+UseZGC -XX:+ZGenerational -XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=20 -Djava.security.egd=file:/dev/urandom -Dfile.encoding=UTF-8"
+  SPRING_THREADS_VIRTUAL_ENABLED: "false"
+x-app-security: &app_security
+  user: "10001:10001"
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m,uid=10001,gid=10001
+    - /app/logs:rw,nosuid,size=128m,uid=10001,gid=10001
 services:
   gateway:
     build:
       context: ..
       dockerfile: docker/gateway/Dockerfile
+    <<: *app_security
     container_name: aicloud-gateway
     environment:
-      <<: *app_env
+      <<: [*app_env, *gateway_env]
       AICLOUD_AUTH_HOST: auth
       AICLOUD_SYSTEM_HOST: system
       AICLOUD_MEMBER_HOST: member
@@ -48,6 +62,7 @@ services:
     build:
       context: ..
       dockerfile: docker/auth/Dockerfile
+    <<: *app_security
     container_name: aicloud-auth
     environment:
       <<: *app_env
@@ -60,6 +75,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-system/aicloud-module-system-biz/target/aicloud-module-system-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-system
     environment:
       <<: *app_env
@@ -72,6 +88,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-member/aicloud-module-member-biz/target/aicloud-module-member-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-member
     environment:
       <<: *app_env
@@ -84,6 +101,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-mp/aicloud-module-mp-biz/target/aicloud-module-mp-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-mp
     environment:
       <<: *app_env
@@ -96,6 +114,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-openapi/aicloud-module-openapi-biz/target/aicloud-module-openapi-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-openapi
     environment:
       <<: *app_env
@@ -108,6 +127,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-infra/aicloud-module-infra-biz/target/aicloud-module-infra-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-infra
     environment:
       <<: *app_env
@@ -120,6 +140,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-trade/aicloud-module-trade-biz/target/aicloud-module-trade-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-trade
     environment:
       <<: *app_env
@@ -132,6 +153,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-pay/aicloud-module-pay-biz/target/aicloud-module-pay-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-pay
     environment:
       <<: *app_env
@@ -144,6 +166,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-promotion/aicloud-module-promotion-biz/target/aicloud-module-promotion-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-promotion
     environment:
       <<: *app_env
@@ -156,6 +179,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-product/aicloud-module-product-biz/target/aicloud-module-product-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-product
     environment:
       <<: *app_env
@@ -168,6 +192,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-merchant/aicloud-module-merchant-biz/target/aicloud-module-merchant-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-merchant
     environment:
       <<: *app_env
@@ -180,6 +205,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-crm/aicloud-module-crm-biz/target/aicloud-module-crm-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-crm
     environment:
       <<: *app_env
@@ -192,6 +218,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-erp/aicloud-module-erp-biz/target/aicloud-module-erp-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-erp
     environment:
       <<: *app_env
@@ -204,6 +231,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-bpm/aicloud-module-bpm-biz/target/aicloud-module-bpm-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-bpm
     environment:
       <<: *app_env
@@ -216,6 +244,7 @@ services:
       dockerfile: docker/modules/Dockerfile
       args:
         JAR_FILE: aicloud-module-report/aicloud-module-report-biz/target/aicloud-module-report-biz-1.0.0-SNAPSHOT.jar
+    <<: *app_security
     container_name: aicloud-report
     environment:
       <<: *app_env

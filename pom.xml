@@ -36,6 +36,7 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.5.0</spring-boot.version>
+        <graalvm-native-plugin.version>0.10.6</graalvm-native-plugin.version>
         <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
         <p3c-pmd.version>2.1.1</p3c-pmd.version>
         <pmd.target-jdk>17</pmd.target-jdk>
@@ -111,6 +112,37 @@
                         </dependencies>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>aot</id>
+            <properties>
+                <spring.aot.enabled>true</spring.aot.enabled>
+            </properties>
+        </profile>
+        <profile>
+            <id>native</id>
+            <properties>
+                <spring.aot.enabled>true</spring.aot.enabled>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.graalvm.buildtools</groupId>
+                            <artifactId>native-maven-plugin</artifactId>
+                            <version>${graalvm-native-plugin.version}</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <fallback>false</fallback>
+                                <buildArgs>
+                                    <buildArg>--enable-url-protocols=http,https</buildArg>
+                                    <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                </buildArgs>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
