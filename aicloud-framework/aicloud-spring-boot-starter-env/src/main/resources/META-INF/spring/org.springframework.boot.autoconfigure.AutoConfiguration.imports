@@ -1,0 +1,2 @@
+com.aicloud.framework.env.config.AicloudEnvWebAutoConfiguration
+com.aicloud.framework.env.config.AicloudEnvRpcAutoConfiguration

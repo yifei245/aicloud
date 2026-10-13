@@ -1,0 +1,150 @@
+{
+  "checkedAt": "2026-10-01T03:35:19.369155+00:00",
+  "services": [
+    {
+      "service": "ai-server",
+      "profile": "ai",
+      "port": 48090,
+      "status": "UP"
+    },
+    {
+      "service": "bpm-server",
+      "profile": "bpm",
+      "port": 48083,
+      "status": "UP"
+    },
+    {
+      "service": "crm-server",
+      "profile": "crm",
+      "port": 48089,
+      "status": "UP"
+    },
+    {
+      "service": "erp-server",
+      "profile": "erp",
+      "port": 48088,
+      "status": "UP"
+    },
+    {
+      "service": "fms-server",
+      "profile": "fms",
+      "port": 48095,
+      "status": "UP"
+    },
+    {
+      "service": "gateway-server",
+      "profile": "gateway",
+      "port": 18080,
+      "status": "UP"
+    },
+    {
+      "service": "hrm-server",
+      "profile": "hrm",
+      "port": 48094,
+      "status": "UP"
+    },
+    {
+      "service": "im-server",
+      "profile": "im",
+      "port": 48093,
+      "status": "UP"
+    },
+    {
+      "service": "infra-server",
+      "profile": "infra",
+      "port": 48082,
+      "status": "UP"
+    },
+    {
+      "service": "iot-gateway-server",
+      "profile": "iot-gateway",
+      "port": 1883,
+      "status": "UP"
+    },
+    {
+      "service": "iot-server",
+      "profile": "iot",
+      "port": 48098,
+      "status": "UP"
+    },
+    {
+      "service": "member-server",
+      "profile": "member",
+      "port": 48087,
+      "status": "UP"
+    },
+    {
+      "service": "mes-server",
+      "profile": "mes",
+      "port": 48091,
+      "status": "UP"
+    },
+    {
+      "service": "mp-server",
+      "profile": "mp",
+      "port": 48086,
+      "status": "UP"
+    },
+    {
+      "service": "oa-server",
+      "profile": "oa",
+      "port": 48097,
+      "status": "UP"
+    },
+    {
+      "service": "pay-server",
+      "profile": "pay",
+      "port": 48085,
+      "status": "UP"
+    },
+    {
+      "service": "pms-server",
+      "profile": "pms",
+      "port": 48096,
+      "status": "UP"
+    },
+    {
+      "service": "product-server",
+      "profile": "product",
+      "port": 48100,
+      "status": "UP"
+    },
+    {
+      "service": "promotion-server",
+      "profile": "promotion",
+      "port": 48101,
+      "status": "UP"
+    },
+    {
+      "service": "report-server",
+      "profile": "report",
+      "port": 48084,
+      "status": "UP"
+    },
+    {
+      "service": "statistics-server",
+      "profile": "statistics",
+      "port": 48103,
+      "status": "UP"
+    },
+    {
+      "service": "system-server",
+      "profile": "system",
+      "port": 48081,
+      "status": "UP"
+    },
+    {
+      "service": "trade-server",
+      "profile": "trade",
+      "port": 48102,
+      "status": "UP"
+    },
+    {
+      "service": "wms-server",
+      "profile": "wms",
+      "port": 48092,
+      "status": "UP"
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,1 @@
+package com.aicloud.module.crm.framework.permission.core;

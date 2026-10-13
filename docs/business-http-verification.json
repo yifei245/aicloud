@@ -1,0 +1,3124 @@
+{
+  "pay": {
+    "service": "pay-server",
+    "port": 48085,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/pay/app/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/app/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/demo-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/demo-withdraw/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/notify/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/refund/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/transfer/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/wallet-recharge-package/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/wallet-transaction/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pay/wallet/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/pay/channel/list",
+        "requires": [
+          "appId"
+        ]
+      }
+    ],
+    "openapiPaths": 71,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "product": {
+    "service": "product-server",
+    "port": 48100,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/product/brand/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/brand/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/browse-history/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/comment/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/favorite/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/product/property/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/product/property/page",
+        "requires": [
+          "status"
+        ]
+      },
+      {
+        "path": "/admin-api/product/property/value/page",
+        "requires": [
+          "status"
+        ]
+      },
+      {
+        "path": "/admin-api/product/property/value/simple-list",
+        "requires": [
+          "propertyId"
+        ]
+      },
+      {
+        "path": "/admin-api/product/spu/list",
+        "requires": [
+          "spuIds"
+        ]
+      },
+      {
+        "path": "/admin-api/product/spu/page",
+        "requires": [
+          "tabType"
+        ]
+      }
+    ],
+    "openapiPaths": 66,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "promotion": {
+    "service": "promotion-server",
+    "port": 48101,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/promotion/article-category/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/article/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/banner/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/bargain-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/bargain-help/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/bargain-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/combination-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/combination-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/coupon-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/coupon/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/discount-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/diy-page/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/diy-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/kefu-conversation/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/point-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/reward-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/seckill-activity/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/seckill-config/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/seckill-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/promotion/seckill-config/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/promotion/coupon-template/list",
+        "requires": [
+          "ids"
+        ]
+      },
+      {
+        "path": "/admin-api/promotion/diy-page/list",
+        "requires": [
+          "ids"
+        ]
+      },
+      {
+        "path": "/admin-api/promotion/kefu-message/list",
+        "requires": [
+          "conversationId",
+          "limit"
+        ]
+      }
+    ],
+    "openapiPaths": 170,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "trade": {
+    "service": "trade-server",
+    "port": 48102,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/trade/after-sale/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/brokerage-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/brokerage-user/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/brokerage-withdraw/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/delivery/express-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/delivery/express/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/delivery/pick-up-store/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/delivery/pick-up-store/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/trade/order/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/trade/delivery/express-template/list",
+        "requires": [
+          "ids"
+        ]
+      },
+      {
+        "path": "/admin-api/trade/delivery/pick-up-store/list",
+        "requires": [
+          "ids"
+        ]
+      }
+    ],
+    "openapiPaths": 103,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "statistics": {
+    "service": "statistics-server",
+    "port": 48103,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/statistics/product/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/statistics/product/rank-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/statistics/trade/list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [],
+    "openapiPaths": 21,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "bpm": {
+    "service": "bpm-server",
+    "port": 48083,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/bpm/category/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/form/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/form/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/model/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/oa/leave/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-definition/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-definition/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-expression/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-instance/copy/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-instance/manager-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-instance/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/process-listener/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/task/done-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/task/manager-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/task/todo-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/user-group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/bpm/user-group/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/bpm/process-definition/list",
+        "requires": [
+          "suspensionState"
+        ]
+      }
+    ],
+    "openapiPaths": 83,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "crm": {
+    "service": "crm-server",
+    "port": 48089,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/crm/business-status/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/business/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/clue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/contact/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/contract/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/customer-limit-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/customer/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/performance-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/product-category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/product/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/product/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/receivable-plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/crm/receivable/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/crm/contract/simple-list",
+        "requires": [
+          "customerId"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/customer/page",
+        "requires": [
+          "pool"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/customer/put-pool-remind-page",
+        "requires": [
+          "pool"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/follow-up-record/page",
+        "requires": [
+          "bizType",
+          "bizId"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/operate-log/page",
+        "requires": [
+          "bizType",
+          "bizId"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/permission/list",
+        "requires": [
+          "bizType",
+          "bizId"
+        ]
+      },
+      {
+        "path": "/admin-api/crm/receivable-plan/simple-list",
+        "requires": [
+          "customerId",
+          "contractId"
+        ]
+      }
+    ],
+    "openapiPaths": 171,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "erp": {
+    "service": "erp-server",
+    "port": 48088,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/erp/account/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/account/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/customer/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/customer/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/finance-payment/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/finance-receipt/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product-category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product-category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product-unit/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product-unit/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/product/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/purchase-in/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/purchase-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/purchase-return/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/sale-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/sale-out/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/sale-return/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock-check/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock-in/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock-move/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock-out/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/stock/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/supplier/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/supplier/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/warehouse/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/erp/warehouse/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [],
+    "openapiPaths": 148,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "mp": {
+    "service": "mp-server",
+    "port": 48086,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/mp/account/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/mp/auto-reply/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/draft/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/free-publish/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/material/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/menu/list",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/message-template/list",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/message/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/tag/page",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/mp/user/page",
+        "requires": [
+          "accountId"
+        ]
+      }
+    ],
+    "openapiPaths": 53,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "report": {
+    "service": "report-server",
+    "port": 48084,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/report/go-view/project/my-page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [],
+    "openapiPaths": 9,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "iot": {
+    "service": "iot-server",
+    "port": 48098,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/iot/alert-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/alert-config/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/alert-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/data-rule/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/data-sink/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/data-sink/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device-group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device-group/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device-modbus-point/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/device/unbound-sub-device-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/ota/firmware/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/ota/task/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/ota/task/record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/product-category/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/product-category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/product/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/product/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/scene-rule/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/iot/scene-rule/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/iot/device/message/page",
+        "requires": [
+          "deviceId"
+        ]
+      },
+      {
+        "path": "/admin-api/iot/device/message/pair-page",
+        "requires": [
+          "deviceId"
+        ]
+      },
+      {
+        "path": "/admin-api/iot/thing-model/list",
+        "requires": [
+          "productId"
+        ]
+      },
+      {
+        "path": "/admin-api/iot/thing-model/page",
+        "requires": [
+          "productId"
+        ]
+      }
+    ],
+    "openapiPaths": 109,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "iot-gateway": {
+    "service": "iot-gateway-server",
+    "port": 1883,
+    "healthy": true,
+    "queries": [],
+    "skipped": [],
+    "protocol": "MQTT TCP listener",
+    "passed": true
+  },
+  "mes": {
+    "service": "mes-server",
+    "port": 48091,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/mes/cal/holiday/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/cal/plan-shift/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/cal/plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/cal/team-shift/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/cal/team/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/cal/team/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/check-plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/check-record-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/check-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/machinery-type/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/machinery-type/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/machinery/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/machinery/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/mainten-record-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/mainten-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/repair-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/repair/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/subject/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/dv/subject/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md-client/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md-vendor/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md-workshop/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md-workshop/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md-workstation/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/auto-code-rule/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/auto-code-rule/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/item-type/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/item-type/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/item/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/unit-measure/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/md/unit-measure/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/andon-config/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/andon-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/andon-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/card/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/feedback/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/process/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/process/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/route/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/route/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/task-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/task/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/work-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/pro/workrecord/log/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/defect/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/defect/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/indicator-result/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/indicator/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/ipqc/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/iqc/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/oqc/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/pending-inspect/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/rqc/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/qc/template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/tm/tool-type/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/tm/tool-type/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/tm/tool/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/tm/tool/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/arrival-notice/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/barcode-config/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/barcode/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/batch/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/item-receipt-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/item-receipt/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/material-stock/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/misc-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/misc-receipt/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/outsource-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/outsource-receipt-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/outsource-receipt/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/package/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/product-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/product-receipt-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/product-receipt/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/product-sales-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/product-sales/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/return-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/return-sales-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/return-sales/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/return-vendor/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/sales-notice-line/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/sales-notice/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/sn/group-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-task-result/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-task/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/transfer/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse-area/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse-area/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse-location/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse-location/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/mes/wm/warehouse/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/mes/cal/calendar/list",
+        "requires": [
+          "startDay",
+          "endDay",
+          "queryType"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/cal/team-member/page",
+        "requires": [
+          "teamId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/md/product-bom/page",
+        "requires": [
+          "itemId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/md/product-sip/page",
+        "requires": [
+          "itemId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/md/product-sop/page",
+        "requires": [
+          "itemId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/pro/card-process/page",
+        "requires": [
+          "cardId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/pro/route-product-bom/list",
+        "requires": [
+          "routeId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/pro/work-order-bom/page",
+        "requires": [
+          "workOrderId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/defect-record/page",
+        "requires": [
+          "qcType",
+          "qcId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/ipqc/line/page",
+        "requires": [
+          "ipqcId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/iqc/line/page",
+        "requires": [
+          "iqcId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/oqc/line/page",
+        "requires": [
+          "oqcId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/rqc/line/page",
+        "requires": [
+          "rqcId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/template/indicator/page",
+        "requires": [
+          "templateId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/qc/template/item/page",
+        "requires": [
+          "templateId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/arrival-notice-line/page",
+        "requires": [
+          "noticeId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/item-consume-line/page",
+        "requires": [
+          "feedbackId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/misc-issue-line/page",
+        "requires": [
+          "issueId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/misc-receipt-line/page",
+        "requires": [
+          "receiptId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/outsource-issue-line/page",
+        "requires": [
+          "issueId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/package-line/page",
+        "requires": [
+          "packageId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/product-issue-line/page",
+        "requires": [
+          "issueId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/product-produce-line/page",
+        "requires": [
+          "feedbackId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/return-issue-line/page",
+        "requires": [
+          "issueId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/return-vendor-line/page",
+        "requires": [
+          "returnId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-plan-param/page",
+        "requires": [
+          "planId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-task-line/page",
+        "requires": [
+          "taskId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/stocktaking-task-line/simple-list",
+        "requires": [
+          "taskId"
+        ]
+      },
+      {
+        "path": "/admin-api/mes/wm/transfer-line/list",
+        "requires": [
+          "transferId"
+        ]
+      }
+    ],
+    "openapiPaths": 768,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "wms": {
+    "service": "wms-server",
+    "port": 48092,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/wms/check-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/inventory-history/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item-brand/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item-brand/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item-category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item-category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item-sku/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/item/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/merchant/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/merchant/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/movement-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/receipt-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/shipment-order/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/warehouse/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/wms/warehouse/simple-list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/wms/inventory/list",
+        "requires": [
+          "warehouseId"
+        ]
+      },
+      {
+        "path": "/admin-api/wms/inventory/page",
+        "requires": [
+          "type"
+        ]
+      }
+    ],
+    "openapiPaths": 79,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "im": {
+    "service": "im-server",
+    "port": 48093,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/im/face-pack/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/face-user-item/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/friend/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/group/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/channel-material/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/channel-message/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/channel/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/channel/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/face-pack-item/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/face-pack/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/face-user-item/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/friend-request/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/friend/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/group-request/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/message/group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/message/private/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/rtc/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/im/manager/sensitive-word/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/im/friend-request/list",
+        "requires": [
+          "limit"
+        ]
+      },
+      {
+        "path": "/admin-api/im/group-member/list",
+        "requires": [
+          "groupId"
+        ]
+      },
+      {
+        "path": "/admin-api/im/manager/channel-material/simple-list",
+        "requires": [
+          "channelId"
+        ]
+      },
+      {
+        "path": "/admin-api/im/manager/group/member/list",
+        "requires": [
+          "groupId"
+        ]
+      },
+      {
+        "path": "/admin-api/im/message/group/list",
+        "requires": [
+          "groupId",
+          "limit"
+        ]
+      },
+      {
+        "path": "/admin-api/im/message/private/list",
+        "requires": [
+          "receiverId",
+          "limit"
+        ]
+      }
+    ],
+    "openapiPaths": 129,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "hrm": {
+    "service": "hrm-server",
+    "port": 48094,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/hrm/attendance/clock/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/attendance/group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/attendance/group/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/attendance/holiday/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/attendance/leave/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/employee/config/archive-field/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/employee/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/employee/simple-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/insurance/month-record/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/insurance/scheme/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/insurance/scheme/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/assessment-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/assessment-template/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/assessment/archive-employee-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/assessment/archive-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/assessment/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/result-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/performance/result-template/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/attendance/clock/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/attendance/leave/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/certificate/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/contact/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/education-experience/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/field-config/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/training-experience/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/employee/work-experience/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/insurance/record/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/portal/salary/slip/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/candidate/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/channel/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/channel/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/config/eliminate-reason/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/post-type/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/post/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/recruit/post/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/change-template/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/employee-info/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/group/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/group/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/month-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/option/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/option/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/slip-send-record/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/slip-template/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/slip/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/hrm/salary/tax-rule/list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/hrm/attendance/statistics/month-daily-page",
+        "requires": [
+          "year",
+          "month"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/attendance/statistics/month-record-page",
+        "requires": [
+          "year",
+          "month"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/certificate/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/change-record/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/config/create-field/list",
+        "requires": [
+          "entryStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/contact/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/contract/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/education-experience/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/file/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/list",
+        "requires": [
+          "ids"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/simple-list",
+        "requires": [
+          "ids"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/training-experience/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/employee/work-experience/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/insurance/month-employee-record/page",
+        "requires": [
+          "monthRecordId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/operate-log/page",
+        "requires": [
+          "bizType",
+          "bizId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/appeal-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/fill-quota-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/page",
+        "requires": [
+          "archived"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/result-audit-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/result-confirmation-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/review-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/portal/performance/assessment/target-confirmation-task-page",
+        "requires": [
+          "stageStatus"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/salary/change-record/list",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/salary/month-employee-record/employee-page",
+        "requires": [
+          "employeeId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/salary/month-employee-record/list",
+        "requires": [
+          "monthRecordId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/salary/month-employee-record/page",
+        "requires": [
+          "monthRecordId"
+        ]
+      },
+      {
+        "path": "/admin-api/hrm/salary/slip-send-record/employee-page",
+        "requires": [
+          "monthRecordId"
+        ]
+      }
+    ],
+    "openapiPaths": 313,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "fms": {
+    "service": "fms-server",
+    "port": 48095,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/fms/config/account-set/list",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/fms/closing/scheme/list",
+        "requires": [
+          "accountSetId",
+          "month"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/closing/template/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/account-user/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/auxiliary-item/page",
+        "requires": [
+          "accountSetId",
+          "auxiliaryTypeId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/auxiliary-item/simple-list",
+        "requires": [
+          "accountSetId",
+          "auxiliaryTypeId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/auxiliary-type/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/auxiliary-type/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/currency/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/currency/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/digest/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/digest/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/finance-indicator/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/initial-balance/list",
+        "requires": [
+          "accountSetId",
+          "subjectType"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/subject/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/subject/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-template-category/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-template-category/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-template/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-template/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-word/list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/config/voucher-word/simple-list",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/auxiliary-balance/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth",
+          "auxiliaryTypeId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/auxiliary-detail/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth",
+          "auxiliaryTypeId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/detail/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/general/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/multi-column/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/quantity-detail/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/quantity-general/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/ledger/subject-balance/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/report/cash-flow-statement/adjustment/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/voucher/page",
+        "requires": [
+          "accountSetId"
+        ]
+      },
+      {
+        "path": "/admin-api/fms/voucher/statistics/list",
+        "requires": [
+          "accountSetId",
+          "startMonth",
+          "endMonth"
+        ]
+      }
+    ],
+    "openapiPaths": 143,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "pms": {
+    "service": "pms-server",
+    "port": 48096,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/pms/kb/document-label/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/document/search-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/favorite/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/group/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/library-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/library-template/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/kb/library/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/project-group/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/project-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/project/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/work-item-label/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/workbench/iteration-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/pms/pm/workbench/work-item-page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/pms/kb/document-comment/list",
+        "requires": [
+          "documentId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/kb/document-label/document-page",
+        "requires": [
+          "labelId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/kb/favorite/list",
+        "requires": [
+          "libraryId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/kb/library-member/list",
+        "requires": [
+          "libraryId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/iteration/page",
+        "requires": [
+          "projectId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/project-announcement/list",
+        "requires": [
+          "projectId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/project-member/list",
+        "requires": [
+          "projectId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/work-item-activity/list",
+        "requires": [
+          "workItemId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/work-item-comment/list",
+        "requires": [
+          "workItemId"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/work-item-status/list",
+        "requires": [
+          "projectId",
+          "type"
+        ]
+      },
+      {
+        "path": "/admin-api/pms/pm/work-item/page",
+        "requires": [
+          "projectId"
+        ]
+      }
+    ],
+    "openapiPaths": 147,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "oa": {
+    "service": "oa-server",
+    "port": 48097,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/oa/announcement/published-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/announcement/received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/attendance/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/attendance/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/contact-category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/contact-category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/contact/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/contact/received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/contact/shared-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/discussion/manage-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/discussion/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/leave-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/mail-account/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/mail-account/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/mail-provider/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/mail-provider/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/meeting-room-booking/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/meeting-room/bookable-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/meeting-room/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/note-category/list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/note-category/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/note/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/note/received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/officialdoc-receive/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/officialdoc-send/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/officialdoc-template/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/officialdoc-template/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/overtime-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/plan/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/regular-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/reimbursement/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/resign-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/schedule/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/schedule/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/schedule/received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/seal-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/seal-apply/register-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/seal-apply/seal-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/seal/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/supply-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/supply-issue/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/supply-item/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/supply-item/select-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/task/published-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/task/received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/travel-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/travel-reimbursement/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/vehicle-apply/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/vehicle-apply/vehicle-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/vehicle-return/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/vehicle/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/oa/work-report/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/oa/discussion-reply/page",
+        "requires": [
+          "discussionId"
+        ]
+      },
+      {
+        "path": "/admin-api/oa/file-node/page",
+        "requires": [
+          "scope"
+        ]
+      },
+      {
+        "path": "/admin-api/oa/file-permission/list",
+        "requires": [
+          "nodeId"
+        ]
+      },
+      {
+        "path": "/admin-api/oa/mail-folder/list",
+        "requires": [
+          "accountId"
+        ]
+      },
+      {
+        "path": "/admin-api/oa/mail-message/page",
+        "requires": [
+          "accountId",
+          "folderKey"
+        ]
+      },
+      {
+        "path": "/admin-api/oa/plan/report-page",
+        "requires": [
+          "type",
+          "createTime"
+        ]
+      }
+    ],
+    "openapiPaths": 281,
+    "gatewayRoute": true,
+    "passed": true
+  },
+  "ai": {
+    "service": "ai-server",
+    "port": 48090,
+    "healthy": true,
+    "queries": [
+      {
+        "path": "/admin-api/ai/api-key/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/api-key/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/chat-role/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/chat-role/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/chat/conversation/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/chat/message/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/image/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/image/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/image/public-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/knowledge/document/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/knowledge/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/knowledge/segment/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/knowledge/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/mind-map/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/model/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/music/my-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/music/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/tool/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/tool/simple-list",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/workflow/page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "path": "/admin-api/ai/write/page",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "skipped": [
+      {
+        "path": "/admin-api/ai/model/simple-list",
+        "requires": [
+          "type"
+        ]
+      }
+    ],
+    "openapiPaths": 106,
+    "gatewayRoute": true,
+    "passed": true
+  }
+}

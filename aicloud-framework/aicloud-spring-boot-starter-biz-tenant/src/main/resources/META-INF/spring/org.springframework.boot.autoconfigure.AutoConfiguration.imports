@@ -1,0 +1,2 @@
+com.aicloud.framework.tenant.config.AicloudTenantRpcAutoConfiguration
+com.aicloud.framework.tenant.config.AicloudTenantAutoConfiguration

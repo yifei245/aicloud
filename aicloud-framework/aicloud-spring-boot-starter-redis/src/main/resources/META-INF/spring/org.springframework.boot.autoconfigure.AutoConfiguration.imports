@@ -1,0 +1,2 @@
+com.aicloud.framework.redis.config.AicloudRedisAutoConfiguration
+com.aicloud.framework.redis.config.AicloudCacheAutoConfiguration

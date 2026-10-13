@@ -1,0 +1,2 @@
+com.aicloud.framework.tracer.config.AicloudTracerAutoConfiguration
+com.aicloud.framework.tracer.config.AicloudMetricsAutoConfiguration

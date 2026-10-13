@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      discovery:
+        namespace: public
+        group: AICLOUD
+      config:
+        enabled: false
+        import-check:
+          enabled: false
+    sentinel:
+      enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:12}
+server:
+  port: ${GATEWAY_PORT:18080}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+aicloud:
+  security:
+    internal-secret: ${AICLOUD_INTERNAL_SECRET}
+
+---
+spring:
+  cache:
+    redis:
+      key-prefix: "aicloud:"

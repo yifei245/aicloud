@@ -1,0 +1,3 @@
+com.aicloud.framework.mq.redis.config.AicloudRedisMQProducerAutoConfiguration
+com.aicloud.framework.mq.redis.config.AicloudRedisMQConsumerAutoConfiguration
+com.aicloud.framework.mq.rabbitmq.config.AicloudRabbitMQAutoConfiguration

@@ -1,0 +1,116 @@
+{
+  "checkedAt": "2026-10-01T03:28:11.754Z",
+  "groups": [
+    {
+      "group": "system-server",
+      "menuItems": 58,
+      "businessVisible": true
+    },
+    {
+      "group": "infra-server",
+      "menuItems": 22,
+      "businessVisible": true
+    },
+    {
+      "group": "member-server",
+      "menuItems": 28,
+      "businessVisible": true
+    },
+    {
+      "group": "bpm-server",
+      "menuItems": 18,
+      "businessVisible": true
+    },
+    {
+      "group": "report-server",
+      "menuItems": 7,
+      "businessVisible": true
+    },
+    {
+      "group": "pay-server",
+      "menuItems": 28,
+      "businessVisible": true
+    },
+    {
+      "group": "mp-server",
+      "menuItems": 17,
+      "businessVisible": true
+    },
+    {
+      "group": "product-server",
+      "menuItems": 22,
+      "businessVisible": true
+    },
+    {
+      "group": "promotion-server",
+      "menuItems": 48,
+      "businessVisible": true
+    },
+    {
+      "group": "trade-server",
+      "menuItems": 24,
+      "businessVisible": true
+    },
+    {
+      "group": "statistics-server",
+      "menuItems": 9,
+      "businessVisible": true
+    },
+    {
+      "group": "erp-server",
+      "menuItems": 27,
+      "businessVisible": true
+    },
+    {
+      "group": "crm-server",
+      "menuItems": 31,
+      "businessVisible": true
+    },
+    {
+      "group": "ai-server",
+      "menuItems": 19,
+      "businessVisible": true
+    },
+    {
+      "group": "iot-server",
+      "menuItems": 24,
+      "businessVisible": true
+    },
+    {
+      "group": "mes-server",
+      "menuItems": 132,
+      "businessVisible": true
+    },
+    {
+      "group": "wms-server",
+      "menuItems": 22,
+      "businessVisible": true
+    },
+    {
+      "group": "im-server",
+      "menuItems": 32,
+      "businessVisible": true
+    },
+    {
+      "group": "hrm-server",
+      "menuItems": 67,
+      "businessVisible": true
+    },
+    {
+      "group": "fms-server",
+      "menuItems": 28,
+      "businessVisible": true
+    },
+    {
+      "group": "pms-server",
+      "menuItems": 33,
+      "businessVisible": true
+    },
+    {
+      "group": "oa-server",
+      "menuItems": 60,
+      "businessVisible": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,43 @@
+package com.aicloud.module.hrm.job.performance;
+
+import com.aicloud.framework.tenant.core.job.TenantJob;
+import com.aicloud.module.hrm.dal.dataobject.performance.assessment.HrmPerformanceAssessmentStageDO;
+import com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentProcessService;
+import jakarta.annotation.Resource;
+import com.xxl.job.core.handler.annotation.XxlJob;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * HRM 绩效申诉超期处理 Job
+ *
+ * @author 芋道源码
+ */
+@Component
+public class HrmPerformanceAppealTimeoutJob {
+
+    @Resource
+    private HrmPerformanceAssessmentProcessService performanceAssessmentProcessService;
+
+    @XxlJob("hrmPerformanceAppealTimeoutJob")
+    @TenantJob
+    public String execute() {
+        // 1. 查询超时的绩效申诉阶段
+        List<HrmPerformanceAssessmentStageDO> stages =
+                performanceAssessmentProcessService.getAppealTimeoutStageList(LocalDateTime.now());
+
+        // 2. 逐个处理，确保每个申诉使用独立事务
+        int successCount = 0;
+        for (HrmPerformanceAssessmentStageDO stage : stages) {
+            if (performanceAssessmentProcessService.processAppealTimeout(stage.getId())) {
+                successCount++;
+            }
+        }
+
+        // 3. 返回执行结果
+        return String.format("HRM 绩效申诉超期处理：待处理 %s 条，成功 %s 条", stages.size(), successCount);
+    }
+
+}

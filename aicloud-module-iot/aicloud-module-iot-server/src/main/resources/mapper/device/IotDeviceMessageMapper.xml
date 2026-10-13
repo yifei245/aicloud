@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aicloud.module.iot.dal.mysql.device.IotDeviceMessageMapper">
+
+    <insert id="insert">
+        INSERT INTO iot_device_message (
+            device_id,
+            ts, id, report_time, tenant_id, server_id,
+            upstream, reply, identifier, request_id, method,
+            params, data, code, msg
+        )
+        VALUES (
+            #{deviceId}, #{ts}, #{id}, #{reportTime}, #{tenantId},  #{serverId},
+            #{upstream}, #{reply}, #{identifier}, #{requestId}, #{method}, 
+            #{params}, #{data}, #{code}, #{msg}
+        )
+    </insert>
+
+    <select id="selectPage" resultType="com.aicloud.module.iot.dal.dataobject.device.IotDeviceMessageDO">
+        <bind name="currentTenantId" value="@com.aicloud.framework.tenant.core.context.TenantContextHolder@getRequiredTenantId()"/>
+        SELECT ts, id, report_time, tenant_id, server_id,
+               upstream, reply, identifier, request_id, method, 
+               params, data, code, msg
+        FROM iot_device_message
+        <where>
+            tenant_id = #{currentTenantId}
+            AND device_id = #{reqVO.deviceId}
+            <if test="reqVO.method != null and reqVO.method != ''">
+                AND method = #{reqVO.method}
+            </if>
+            <if test="reqVO.upstream != null">
+                AND upstream = #{reqVO.upstream}
+            </if>
+            <if test="reqVO.reply != null">
+                AND reply = #{reqVO.reply}
+            </if>
+            <if test="reqVO.identifier != null and reqVO.identifier != ''">
+                AND identifier = #{reqVO.identifier}
+            </if>
+        </where>
+        ORDER BY ts DESC
+    </select>
+
+    <select id="selectListByRequestIdsAndReply" resultType="com.aicloud.module.iot.dal.dataobject.device.IotDeviceMessageDO">
+        <bind name="currentTenantId" value="@com.aicloud.framework.tenant.core.context.TenantContextHolder@getRequiredTenantId()"/>
+        SELECT ts, id, report_time, tenant_id, server_id,
+               upstream, reply, identifier, request_id, method, 
+               params, data, code, msg
+        FROM iot_device_message
+        WHERE tenant_id = #{currentTenantId}
+        AND device_id = #{deviceId}
+        AND reply = #{reply}
+        AND request_id IN
+        <foreach collection="requestIds" item="requestId" open="(" close=")" separator=",">
+            #{requestId}
+        </foreach>
+        ORDER BY ts DESC
+    </select>
+
+    <select id="selectCountByCreateTime" resultType="Long">
+        <bind name="currentTenantId" value="@com.aicloud.framework.tenant.core.context.TenantContextHolder@getRequiredTenantId()"/>
+        SELECT COUNT(*)
+        FROM iot_device_message
+        <where>
+            tenant_id = #{currentTenantId}
+            <if test="createTime != null">
+                AND ts >= #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDeviceMessageCountGroupByDate" resultType="java.util.Map">
+        <bind name="currentTenantId" value="@com.aicloud.framework.tenant.core.context.TenantContextHolder@getRequiredTenantId()"/>
+        SELECT
+            FLOOR(ts / 3600000) * 3600000 AS time,
+            SUM(CASE WHEN upstream = true THEN 1 ELSE 0 END) AS upstream_count,
+            SUM(CASE WHEN upstream = false THEN 1 ELSE 0 END) AS downstream_count
+        FROM iot_device_message
+        <where>
+            tenant_id = #{currentTenantId}
+            <if test="startTime != null">
+                AND ts >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND ts &lt;= #{endTime}
+            </if>
+        </where>
+        GROUP BY FLOOR(ts / 3600000) * 3600000
+    </select>
+
+</mapper>

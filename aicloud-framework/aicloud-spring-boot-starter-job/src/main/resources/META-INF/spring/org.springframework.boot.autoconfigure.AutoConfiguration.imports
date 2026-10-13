@@ -1,0 +1,2 @@
+com.aicloud.framework.quartz.config.AicloudXxlJobAutoConfiguration
+com.aicloud.framework.quartz.config.AicloudAsyncAutoConfiguration

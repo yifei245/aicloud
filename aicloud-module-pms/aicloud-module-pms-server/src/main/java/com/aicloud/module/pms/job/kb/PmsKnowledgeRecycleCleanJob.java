@@ -1,0 +1,35 @@
+package com.aicloud.module.pms.job.kb;
+
+import com.aicloud.framework.tenant.core.job.TenantJob;
+import com.aicloud.module.pms.service.kb.recycle.PmsKnowledgeRecycleService;
+import com.xxl.job.core.handler.annotation.XxlJob;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+
+/**
+ * PMS 知识库回收站到期清理 Job
+ *
+ * @author 芋道源码
+ */
+@Component
+@Slf4j
+public class PmsKnowledgeRecycleCleanJob {
+
+    private static final int RETAIN_DAYS = 30;
+
+    @Resource
+    private PmsKnowledgeRecycleService recycleService;
+
+    @XxlJob("pmsKnowledgeRecycleCleanJob")
+    @TenantJob
+    public String execute() {
+        LocalDateTime deleteTime = LocalDateTime.now().minusDays(RETAIN_DAYS);
+        int cleanCount = recycleService.deleteExpiredRecycleRecords(deleteTime);
+        log.info("[execute][清理知识库到期回收站记录 ({}) 条]", cleanCount);
+        return String.format("清理知识库到期回收站记录 %s 条", cleanCount);
+    }
+
+}

@@ -1,0 +1,84 @@
+{
+  "tests": 123,
+  "passed": true,
+  "suites": [
+    {
+      "class": "com.aicloud.module.report.service.goview.GoViewDataServiceImplTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.iot.service.device.property.IotDevicePropertyServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.iot.service.thingmodel.IotThingModelServiceImplTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.crm.service.permission.CrmPermissionServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.controller.admin.oauth2.OAuth2OpenControllerTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2CodeServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2ApproveServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2GrantServiceImplTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2PkceTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2ClientServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.permission.PermissionServiceTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.oauth2.OAuth2TokenServiceImplTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "class": "com.aicloud.module.system.service.auth.AdminAuthServiceImplTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0
+    }
+  ]
+}

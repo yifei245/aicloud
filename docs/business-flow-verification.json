@@ -1,0 +1,316 @@
+{
+  "erp": {
+    "checks": [
+      {
+        "check": "ERP create unit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP create category",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP create product",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP create warehouse",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP create stock-in",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP approve stock-in",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP read inventory",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP approval adds five inventory units",
+        "passed": true
+      },
+      {
+        "check": "ERP read stock-in",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP persists approval and item amount",
+        "passed": true
+      },
+      {
+        "check": "ERP unapprove stock-in",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP read reversed inventory",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP reversal returns inventory to zero",
+        "passed": true
+      },
+      {
+        "check": "ERP delete verification stock-in",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP delete verification product",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP delete verification warehouse",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP delete verification product-category",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "ERP delete verification product-unit",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true
+  },
+  "crm": {
+    "checks": [
+      {
+        "check": "CRM create customer",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "CRM read customer",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "CRM persists customer ownership",
+        "passed": true
+      },
+      {
+        "check": "CRM create follow-up",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "CRM read follow-up",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "CRM persists related follow-up",
+        "passed": true
+      },
+      {
+        "check": "CRM delete verification follow-up",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "CRM delete verification customer",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true
+  },
+  "bpm": {
+    "checks": [
+      {
+        "check": "BPM create model",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM deploy model",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM read deployed models",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM start instance",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM read pending approval",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM approve task",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM read completed instance",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "BPM completes and persists approval",
+        "passed": true
+      },
+      {
+        "check": "BPM delete verification model",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true
+  },
+  "report": {
+    "checks": [
+      {
+        "check": "Report create project",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "Report save dashboard",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "Report read project",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "Report persists dashboard content",
+        "passed": true
+      },
+      {
+        "check": "Report query real tenant data",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "Report SQL restricts tenant rows",
+        "passed": true
+      },
+      {
+        "check": "Report reject write",
+        "passed": true,
+        "code": 400
+      },
+      {
+        "check": "Report reject multi-statement",
+        "passed": true,
+        "code": 400
+      },
+      {
+        "check": "Report reject foreign database",
+        "passed": true,
+        "code": 400
+      },
+      {
+        "check": "Report query actual API statistics",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "Report returns actual request counts",
+        "passed": true
+      },
+      {
+        "check": "Report delete verification project",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true
+  },
+  "iot": {
+    "checks": [
+      {
+        "check": "IoT create category",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT create product",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT read product",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT create property definition",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT create device",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT simulate property report",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT persists numeric property in MySQL",
+        "passed": true
+      },
+      {
+        "check": "IoT read stored device messages",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT persists property message log",
+        "passed": true
+      },
+      {
+        "check": "IoT delete verification device",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT delete verification thing-model",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT delete verification product",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "IoT delete verification product-category",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true
+  }
+}

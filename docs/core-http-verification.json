@@ -1,0 +1,267 @@
+[
+  {
+    "check": "health 48081",
+    "passed": true
+  },
+  {
+    "check": "health 48082",
+    "passed": true
+  },
+  {
+    "check": "health 48087",
+    "passed": true
+  },
+  {
+    "check": "health 18080",
+    "passed": true
+  },
+  {
+    "check": "wrong password rejected",
+    "passed": true
+  },
+  {
+    "check": "admin login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "dynamic role menus",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "anonymous admin denied",
+    "passed": true,
+    "code": 401
+  },
+  {
+    "check": "forged identity denied",
+    "passed": true,
+    "code": 401
+  },
+  {
+    "check": "refresh bearer denied",
+    "passed": true,
+    "code": 401
+  },
+  {
+    "check": "cross tenant denied",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "viewer login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "viewer can query users",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "viewer cannot delete admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "administrator cannot use member identity",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "member terminal 0 login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 0 profile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 0 cannot access admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "member terminal 10 login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 10 profile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 10 cannot access admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "member terminal 11 login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 11 profile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 11 cannot access admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "member terminal 20 login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 20 profile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 20 cannot access admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "member terminal 31 login",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 31 profile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "member terminal 31 cannot access admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "public RPC denied",
+    "passed": true,
+    "code": 401
+  },
+  {
+    "check": "authorize sso-web",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "SSO code redeem sso-web",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "SSO replay denied sso-web",
+    "passed": true
+  },
+  {
+    "check": "authorize sso-mobile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "SSO code redeem sso-mobile",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "SSO replay denied sso-mobile",
+    "passed": true
+  },
+  {
+    "check": "SSO invalid redirect denied",
+    "passed": true
+  },
+  {
+    "check": "authorize sso-public",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "public client S256 PKCE",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "authorize sso-public",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "invalid PKCE denied",
+    "passed": true
+  },
+  {
+    "check": "third party client credentials",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "third party scoped API",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "third party cannot use admin",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "admin token cannot impersonate application",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "third party empty scope token",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "application without scope denied",
+    "passed": true,
+    "code": 403
+  },
+  {
+    "check": "persist department create",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "persist department read",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "persist department delete",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "OpenAPI schema through gateway",
+    "passed": true,
+    "paths": 275
+  },
+  {
+    "check": "Knife4j UI",
+    "passed": true
+  },
+  {
+    "check": "global SSO logout",
+    "passed": true,
+    "code": 0
+  },
+  {
+    "check": "SSO tokens revoked",
+    "passed": true,
+    "code": 401
+  }
+]

@@ -1,0 +1,5 @@
+com.aicloud.framework.security.config.AicloudSecurityRpcAutoConfiguration
+com.aicloud.framework.security.config.AicloudSecurityAutoConfiguration
+com.aicloud.framework.security.config.AicloudWebSecurityConfigurerAdapter
+com.aicloud.framework.operatelog.config.AicloudOperateLogConfiguration
+com.aicloud.framework.operatelog.config.AicloudOperateLogRpcAutoConfiguration

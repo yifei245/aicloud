@@ -1,0 +1,54 @@
+package com.aicloud.module.bpm.api.event;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import org.springframework.context.ApplicationEvent;
+
+/**
+ * 流程实例的状态（结果）发生变化的 Event
+ *
+ * @author 芋道源码
+ */
+@SuppressWarnings("ALL")
+@Data
+public class BpmProcessInstanceStatusEvent extends ApplicationEvent {
+
+    /**
+     * 流程实例的编号
+     */
+    @NotNull(message = "流程实例的编号不能为空")
+    private String id;
+    /**
+     * 流程实例的 key
+     */
+    @NotNull(message = "流程实例的 key 不能为空")
+    private String processDefinitionKey;
+    /**
+     * 流程实例的结果
+     */
+    @NotNull(message = "流程实例的状态不能为空")
+    private Integer status;
+    /**
+     * 流程实例结束的原因
+     */
+    private String reason;
+
+    /**
+     * 流程实例对应的业务标识
+     * 例如说，请假
+     */
+    private String businessKey;
+
+    /** 流程所属租户；流程结束后不再依赖运行时查询恢复租户。 */
+    private String tenantId;
+
+    public BpmProcessInstanceStatusEvent() {
+        // new Object() 保证非空
+        super(new Object());
+    }
+
+    public BpmProcessInstanceStatusEvent(Object source) {
+        super(source);
+    }
+
+}

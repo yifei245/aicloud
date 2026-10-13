@@ -1,0 +1,230 @@
+{
+  "checkedAt": "2026-10-01T03:29:06.632575+00:00",
+  "gateway": "http://127.0.0.1:18080",
+  "groups": [
+    {
+      "name": "system-server",
+      "url": "/admin-api/system/v3/api-docs",
+      "passed": true,
+      "paths": 275,
+      "operations": 279,
+      "adminOperations": 210,
+      "appOperations": 9,
+      "openOperations": 1
+    },
+    {
+      "name": "infra-server",
+      "url": "/admin-api/infra/v3/api-docs",
+      "passed": true,
+      "paths": 111,
+      "operations": 111,
+      "adminOperations": 99,
+      "appOperations": 3,
+      "openOperations": 0
+    },
+    {
+      "name": "member-server",
+      "url": "/admin-api/member/v3/api-docs",
+      "passed": true,
+      "paths": 87,
+      "operations": 87,
+      "adminOperations": 38,
+      "appOperations": 34,
+      "openOperations": 0
+    },
+    {
+      "name": "bpm-server",
+      "url": "/admin-api/bpm/v3/api-docs",
+      "passed": true,
+      "paths": 83,
+      "operations": 83,
+      "adminOperations": 79,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "report-server",
+      "url": "/admin-api/report/v3/api-docs",
+      "passed": true,
+      "paths": 9,
+      "operations": 21,
+      "adminOperations": 19,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "pay-server",
+      "url": "/admin-api/pay/v3/api-docs",
+      "passed": true,
+      "paths": 71,
+      "operations": 71,
+      "adminOperations": 50,
+      "appOperations": 10,
+      "openOperations": 0
+    },
+    {
+      "name": "mp-server",
+      "url": "/admin-api/mp/v3/api-docs",
+      "passed": true,
+      "paths": 53,
+      "operations": 54,
+      "adminOperations": 52,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "product-server",
+      "url": "/admin-api/product/v3/api-docs",
+      "passed": true,
+      "paths": 66,
+      "operations": 66,
+      "adminOperations": 41,
+      "appOperations": 14,
+      "openOperations": 0
+    },
+    {
+      "name": "promotion-server",
+      "url": "/admin-api/promotion/v3/api-docs",
+      "passed": true,
+      "paths": 170,
+      "operations": 194,
+      "adminOperations": 101,
+      "appOperations": 71,
+      "openOperations": 0
+    },
+    {
+      "name": "trade-server",
+      "url": "/admin-api/trade/v3/api-docs",
+      "passed": true,
+      "paths": 103,
+      "operations": 103,
+      "adminOperations": 56,
+      "appOperations": 42,
+      "openOperations": 0
+    },
+    {
+      "name": "statistics-server",
+      "url": "/admin-api/statistics/v3/api-docs",
+      "passed": true,
+      "paths": 21,
+      "operations": 21,
+      "adminOperations": 19,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "erp-server",
+      "url": "/admin-api/erp/v3/api-docs",
+      "passed": true,
+      "paths": 148,
+      "operations": 148,
+      "adminOperations": 146,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "crm-server",
+      "url": "/admin-api/crm/v3/api-docs",
+      "passed": true,
+      "paths": 171,
+      "operations": 171,
+      "adminOperations": 167,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "ai-server",
+      "url": "/admin-api/ai/v3/api-docs",
+      "passed": true,
+      "paths": 106,
+      "operations": 106,
+      "adminOperations": 104,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "iot-server",
+      "url": "/admin-api/iot/v3/api-docs",
+      "passed": true,
+      "paths": 109,
+      "operations": 109,
+      "adminOperations": 102,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "mes-server",
+      "url": "/admin-api/mes/v3/api-docs",
+      "passed": true,
+      "paths": 768,
+      "operations": 768,
+      "adminOperations": 766,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "wms-server",
+      "url": "/admin-api/wms/v3/api-docs",
+      "passed": true,
+      "paths": 79,
+      "operations": 79,
+      "adminOperations": 77,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "im-server",
+      "url": "/admin-api/im/v3/api-docs",
+      "passed": true,
+      "paths": 129,
+      "operations": 129,
+      "adminOperations": 127,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "hrm-server",
+      "url": "/admin-api/hrm/v3/api-docs",
+      "passed": true,
+      "paths": 313,
+      "operations": 313,
+      "adminOperations": 311,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "fms-server",
+      "url": "/admin-api/fms/v3/api-docs",
+      "passed": true,
+      "paths": 143,
+      "operations": 143,
+      "adminOperations": 141,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "pms-server",
+      "url": "/admin-api/pms/v3/api-docs",
+      "passed": true,
+      "paths": 147,
+      "operations": 147,
+      "adminOperations": 145,
+      "appOperations": 0,
+      "openOperations": 0
+    },
+    {
+      "name": "oa-server",
+      "url": "/admin-api/oa/v3/api-docs",
+      "passed": true,
+      "paths": 281,
+      "operations": 281,
+      "adminOperations": 265,
+      "appOperations": 0,
+      "openOperations": 0
+    }
+  ],
+  "missingGroups": [],
+  "unexpectedGroups": [],
+  "duplicateGroups": [],
+  "passed": true
+}

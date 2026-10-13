@@ -1,0 +1,149 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "Docker uses local socket",
+      "passed": true
+    },
+    {
+      "check": "Docker healthy system-server",
+      "passed": true
+    },
+    {
+      "check": "Docker non-root application user system-server",
+      "passed": true
+    },
+    {
+      "check": "Docker persistent application volume system-server",
+      "passed": true
+    },
+    {
+      "check": "Docker private service ports system-server",
+      "passed": true
+    },
+    {
+      "check": "Docker healthy infra-server",
+      "passed": true
+    },
+    {
+      "check": "Docker non-root application user infra-server",
+      "passed": true
+    },
+    {
+      "check": "Docker persistent application volume infra-server",
+      "passed": true
+    },
+    {
+      "check": "Docker private service ports infra-server",
+      "passed": true
+    },
+    {
+      "check": "Docker healthy member-server",
+      "passed": true
+    },
+    {
+      "check": "Docker non-root application user member-server",
+      "passed": true
+    },
+    {
+      "check": "Docker persistent application volume member-server",
+      "passed": true
+    },
+    {
+      "check": "Docker private service ports member-server",
+      "passed": true
+    },
+    {
+      "check": "Docker healthy gateway-server",
+      "passed": true
+    },
+    {
+      "check": "Docker non-root application user gateway-server",
+      "passed": true
+    },
+    {
+      "check": "Docker persistent application volume gateway-server",
+      "passed": true
+    },
+    {
+      "check": "Docker gateway administrator login",
+      "passed": true
+    },
+    {
+      "check": "Docker dynamic permission menus",
+      "passed": true
+    },
+    {
+      "check": "Docker menu tree and button permissions",
+      "passed": true
+    },
+    {
+      "check": "Docker administrator database query",
+      "passed": true
+    },
+    {
+      "check": "Docker anonymous administrator rejected",
+      "passed": true
+    },
+    {
+      "check": "Docker viewer login",
+      "passed": true
+    },
+    {
+      "check": "Docker viewer write rejected",
+      "passed": true
+    },
+    {
+      "check": "Docker member login",
+      "passed": true
+    },
+    {
+      "check": "Docker member database profile",
+      "passed": true
+    },
+    {
+      "check": "Docker member administrator boundary",
+      "passed": true
+    },
+    {
+      "check": "Docker third party credentials",
+      "passed": true
+    },
+    {
+      "check": "Docker third party scoped dictionary API",
+      "passed": true
+    },
+    {
+      "check": "Docker aggregated OpenAPI",
+      "passed": true
+    },
+    {
+      "check": "Docker Knife4j UI",
+      "passed": true
+    },
+    {
+      "check": "Docker file upload and MySQL metadata",
+      "passed": true
+    },
+    {
+      "check": "Docker stored file URL is local",
+      "passed": true
+    },
+    {
+      "check": "Docker file content readback",
+      "passed": true
+    },
+    {
+      "check": "Docker persisted file metadata lookup",
+      "passed": true
+    },
+    {
+      "check": "Docker file survives container restart",
+      "passed": true
+    },
+    {
+      "check": "Docker delete verification file",
+      "passed": true
+    }
+  ]
+}

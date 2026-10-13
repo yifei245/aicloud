@@ -1,0 +1,1429 @@
+{
+  "applications": {
+    "checks": [
+      {
+        "check": "dictionary oa_apply_urgency",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "dictionary oa_leave_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "leave-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "leave-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "leave-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "leave reads generated attendance",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave approval creates attendance",
+        "passed": true
+      },
+      {
+        "check": "dictionary oa_overtime_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "overtime-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "overtime-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "overtime-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overtime-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "regular-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "regular-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "regular-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "regular-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "regular-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "regular-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "regular-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "regular-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "regular-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "resign-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "resign-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "resign-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "resign-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "resign-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "resign-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "resign-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "resign-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "resign-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "dictionary oa_reimbursement_payment_method",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "dictionary oa_expense_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement persists draft",
+        "passed": true
+      },
+      {
+        "check": "reimbursement submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "reimbursement has approval task",
+        "passed": true
+      },
+      {
+        "check": "reimbursement approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "reimbursement callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "expense total computed from persisted lines",
+        "passed": true
+      },
+      {
+        "check": "dictionary oa_leave_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "leave-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "leave-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "leave-apply reject",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "leave-apply callback persists business outcome",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "travel": {
+    "checks": [
+      {
+        "check": "dictionary oa_transport_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "travel-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "travel-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "travel-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "actual verification attachment upload",
+        "passed": true
+      },
+      {
+        "check": "verification attachment remains on local storage",
+        "passed": true
+      },
+      {
+        "check": "dictionary oa_expense_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement persists draft",
+        "passed": true
+      },
+      {
+        "check": "travel-reimbursement submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "travel-reimbursement has approval task",
+        "passed": true
+      },
+      {
+        "check": "travel-reimbursement approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel-reimbursement callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "travel reimbursement persists actual line total",
+        "passed": true
+      },
+      {
+        "check": "travel-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "travel reimbursement updates linked application",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824876231948000"
+  },
+  "supplies": {
+    "checks": [
+      {
+        "check": "supply-item create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "supply-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "supply-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "supply-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "supply-issue issue",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-item get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply issuing deducts inventory",
+        "passed": true
+      },
+      {
+        "check": "supply-issue return",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-item get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "partial return restores one inventory unit",
+        "passed": true
+      },
+      {
+        "check": "supply-issue return",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply-item get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "full return restores original inventory",
+        "passed": true
+      },
+      {
+        "check": "supply-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "supply return records quantities and final status",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "meetings": {
+    "checks": [
+      {
+        "check": "meeting-room create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking persists draft",
+        "passed": true
+      },
+      {
+        "check": "meeting-room-booking submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "meeting-room-booking has approval task",
+        "passed": true
+      },
+      {
+        "check": "meeting-room-booking approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "approved meeting reserves room",
+        "passed": true
+      },
+      {
+        "check": "meeting-room-booking create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "overlapping meeting reservation rejected",
+        "passed": true
+      },
+      {
+        "check": "meeting-room-booking delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking cancel",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting-room-booking get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "meeting cancellation releases reservation",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "vehicles": {
+    "checks": [
+      {
+        "check": "vehicle create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "vehicle-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "vehicle-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "vehicle-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "approved vehicle application awaits return",
+        "passed": true
+      },
+      {
+        "check": "vehicle-return create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-return get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-return persists draft",
+        "passed": true
+      },
+      {
+        "check": "vehicle-return submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-return get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-return awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "vehicle-return has approval task",
+        "passed": true
+      },
+      {
+        "check": "vehicle-return approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle-return callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "vehicle-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "vehicle return closes linked application",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "documents": {
+    "checks": [
+      {
+        "check": "dictionary oa_official_doc_separator_type",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-template create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "dictionary oa_official_doc_secret_level",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "dictionary oa_official_doc_urgency_level",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "dictionary oa_official_doc_public_category",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send persists draft",
+        "passed": true
+      },
+      {
+        "check": "officialdoc-send submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "officialdoc-send has approval task",
+        "passed": true
+      },
+      {
+        "check": "officialdoc-send approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-send callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "official doc receives issued document",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "approved issuing distributes to recipient department",
+        "passed": true
+      },
+      {
+        "check": "officialdoc-receive create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-receive claim",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-receive get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "automatic document claim assigns current owner",
+        "passed": true
+      },
+      {
+        "check": "officialdoc-receive submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "officialdoc-receive get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "official receive approval task",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "approve official receive",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "official receive callback completes handling",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824876231948000"
+  },
+  "collaboration": {
+    "checks": [
+      {
+        "check": "create isolated OA test department",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "create isolated OA test user",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "create isolated OA test role",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "read actual OA permission buttons",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "grant explicit test role permissions",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "assign isolated test role",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "announcement create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "announcement received-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "published announcement delivered to test subordinate",
+        "passed": true
+      },
+      {
+        "check": "announcement update-read-status",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "announcement get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "announcement read status persisted",
+        "passed": true
+      },
+      {
+        "check": "announcement delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "contact-category create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "contact create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "contact get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "contact persists category and email",
+        "passed": true
+      },
+      {
+        "check": "contact delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "contact-category delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note-category create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note update-favorite",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note favorite persisted",
+        "passed": true
+      },
+      {
+        "check": "note delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "note-category delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "plan create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "plan get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "work plan persisted",
+        "passed": true
+      },
+      {
+        "check": "plan delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "work-report create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "work-report submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "work-report get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "submitted work report persisted",
+        "passed": true
+      },
+      {
+        "check": "discussion create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion-vote create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion vote count persisted",
+        "passed": true
+      },
+      {
+        "check": "discussion-like create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "discussion like persisted",
+        "passed": true
+      },
+      {
+        "check": "discussion delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task feedback",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task feedback",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task feedback",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task feedback",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "task feedback persists completion and history",
+        "passed": true
+      },
+      {
+        "check": "task delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "viewer cannot create OA plan",
+        "passed": true,
+        "code": 403
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "seals": {
+    "checks": [
+      {
+        "check": "seal create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply persists draft",
+        "passed": true
+      },
+      {
+        "check": "seal-apply submit",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply awaits actual approval",
+        "passed": true
+      },
+      {
+        "check": "seal-apply has approval task",
+        "passed": true
+      },
+      {
+        "check": "seal-apply approve",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal-apply callback persists business outcome",
+        "passed": true
+      },
+      {
+        "check": "approval grants permission without fabricating seal handover",
+        "passed": true
+      },
+      {
+        "check": "seal-apply register-page",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "keeper can find approved applications for registration",
+        "passed": true
+      },
+      {
+        "check": "seal-apply use",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "keeper handover marks seal in use",
+        "passed": true
+      },
+      {
+        "check": "seal-apply return",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "returned seal becomes available",
+        "passed": true
+      },
+      {
+        "check": "seal-apply get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "seal use and return times persisted",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824729095005000"
+  },
+  "cloud-drive": {
+    "checks": [
+      {
+        "check": "create isolated OA test department",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "create isolated OA test user",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "create isolated OA test role",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "read actual OA permission buttons",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "grant explicit test role permissions",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "assign isolated test role",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "actual verification attachment upload",
+        "passed": true
+      },
+      {
+        "check": "verification attachment remains on local storage",
+        "passed": true
+      },
+      {
+        "check": "cloud drive raw private file rejects anonymous access",
+        "passed": true
+      },
+      {
+        "check": "file-node create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive MySQL stores real file metadata",
+        "passed": true
+      },
+      {
+        "check": "cloud drive private node denied to other user",
+        "passed": true
+      },
+      {
+        "check": "file-permission save",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive inherited read permission",
+        "passed": true
+      },
+      {
+        "check": "cloud drive read-only grant cannot rename",
+        "passed": true
+      },
+      {
+        "check": "file-permission save",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive shared download stays local",
+        "passed": true
+      },
+      {
+        "check": "cloud drive shared file readback",
+        "passed": true
+      },
+      {
+        "check": "file-permission delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive grant revocation takes effect",
+        "passed": true
+      },
+      {
+        "check": "file-favorite create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node copy",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive copy preserves metadata",
+        "passed": true
+      },
+      {
+        "check": "file-node recycle",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "recycled folder hides child nodes",
+        "passed": true
+      },
+      {
+        "check": "file-node restore",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "cloud drive restoring folder restores children",
+        "passed": true
+      },
+      {
+        "check": "file-node recycle",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node recycle",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "file-node delete",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "locate uploaded verification content",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "delete only verification content",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824876231948000"
+  },
+  "reminders": {
+    "checks": [
+      {
+        "check": "schedule create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "local scheduler delivers actual schedule notification",
+        "passed": true
+      },
+      {
+        "check": "schedule reminder is delivered once per recipient",
+        "passed": true
+      },
+      {
+        "check": "schedule delete",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824876231948000"
+  },
+  "mail": {
+    "checks": [
+      {
+        "check": "mail-provider create",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "mail-provider get",
+        "passed": true,
+        "code": 0
+      },
+      {
+        "check": "mail local provider configuration persisted",
+        "passed": true
+      },
+      {
+        "check": "mail-provider delete",
+        "passed": true,
+        "code": 0
+      }
+    ],
+    "passed": true,
+    "runName": "aicloud OA verify 1790824876231948000"
+  }
+}

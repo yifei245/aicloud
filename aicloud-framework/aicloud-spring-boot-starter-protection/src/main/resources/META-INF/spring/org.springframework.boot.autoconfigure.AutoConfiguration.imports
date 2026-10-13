@@ -1,0 +1,4 @@
+com.aicloud.framework.idempotent.config.AicloudIdempotentConfiguration
+com.aicloud.framework.lock4j.config.AicloudLock4jConfiguration
+com.aicloud.framework.ratelimiter.config.AicloudRateLimiterConfiguration
+com.aicloud.framework.signature.config.AicloudApiSignatureAutoConfiguration

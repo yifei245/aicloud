@@ -1,0 +1,72 @@
+[
+  {
+    "key": "oa_leave_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_meeting_room_booking",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_official_doc_receive",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_official_doc_send",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_overtime_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_regular_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_reimbursement",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_resign_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_seal_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_supply_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_travel_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_travel_reimbursement",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_vehicle_apply",
+    "action": "preserved existing deployment",
+    "passed": true
+  },
+  {
+    "key": "oa_vehicle_return",
+    "action": "preserved existing deployment",
+    "passed": true
+  }
+]

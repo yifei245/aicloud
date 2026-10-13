@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aicloud.module.iot.dal.mysql.device.IotDevicePropertyMapper">
+    <resultMap id="propertyHistory" type="com.aicloud.module.iot.controller.admin.device.vo.property.IotDevicePropertyRespVO">
+        <result column="identifier" property="identifier"/>
+        <result column="value" property="value" javaType="java.lang.Object" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="ts" property="updateTime"/>
+    </resultMap>
+    <insert id="insert">
+        INSERT INTO iot_device_property_history (tenant_id, product_id, device_id, identifier, `value`, ts, report_time)
+        VALUES
+        <foreach collection="properties" index="identifier" item="value" separator=",">
+            (#{device.tenantId}, #{device.productId}, #{device.id}, #{identifier}, #{value}, #{ts}, #{reportTime})
+        </foreach>
+    </insert>
+    <select id="selectListByHistory" resultMap="propertyHistory">
+        <bind name="currentTenantId" value="@com.aicloud.framework.tenant.core.context.TenantContextHolder@getRequiredTenantId()"/>
+        SELECT identifier, `value`, ts
+        FROM iot_device_property_history
+        WHERE tenant_id = #{currentTenantId}
+          AND device_id = #{reqVO.deviceId} AND identifier = #{reqVO.identifier}
+        <if test="reqVO.times != null and reqVO.times.length == 2">
+            <bind name="startTs" value="@cn.hutool.core.date.LocalDateTimeUtil@toEpochMilli(reqVO.times[0])"/>
+            <bind name="endTs" value="@cn.hutool.core.date.LocalDateTimeUtil@toEpochMilli(reqVO.times[1])"/>
+            AND ts BETWEEN #{startTs}
+                       AND #{endTs}
+        </if>
+        ORDER BY ts DESC LIMIT 1000
+    </select>
+</mapper>

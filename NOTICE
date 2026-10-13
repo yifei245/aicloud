@@ -1,0 +1,15 @@
+aicloud includes modified backend source from YunaiV/yudao-cloud, master-jdk17.
+Upstream archive retrieved 2026-09-29; SHA256: 03bc7bff4157f3117a156708b3c3aea6c8062a782c37056a209ca0cdb0096de8
+Upstream copyright and MIT license: LICENSES/yudao-cloud-MIT.txt
+Reference architecture: YunaiV/ruoyi-vue-pro master-jdk17.
+Financial report seed templates are adapted from YunaiV/ruoyi-vue-pro, master-jdk17 (MIT).
+Source: https://github.com/YunaiV/ruoyi-vue-pro/blob/master-jdk17/sql/mysql/upgrade/20260926-fms-report-template.sql
+The adapted script only inserts missing rows and preserves existing formulas and IDs.
+Other referenced projects are architectural references, not copied source.
+Third-party libraries remain under their respective licenses.
+Flowable 8.0.0 MySQL schemas are derived from official Maven artifacts, with
+table/index/constraint prefixes changed for isolation. Copyright Flowable contributors.
+These SQL resources remain licensed under Apache-2.0; see LICENSES/flowable-Apache-2.0.txt.
+Quartz 2.5.0 MySQL InnoDB schema is derived from its official Maven artifact,
+with destructive DROP statements omitted and tables prefixed ac_QRTZ_.
+Copyright Quartz contributors; Apache-2.0, see LICENSES/flowable-Apache-2.0.txt.

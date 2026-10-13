@@ -1,0 +1,11 @@
+.git
+**/target/classes
+**/target/generated-sources
+**/target/maven-archiver
+**/target/maven-status
+**/target/test-classes
+**/target/*.jar.original
+.idea
+.DS_Store
+*.log
+data

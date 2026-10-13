@@ -1,0 +1,9 @@
+{
+  "command": "mvn -q -s .mvn/settings.xml -DskipTests clean package",
+  "exitCode": 0,
+  "javaMajor": 21,
+  "mavenModules": 87,
+  "applicationServices": 24,
+  "javaSourceFiles": 6924,
+  "allServiceJarsExist": true
+}

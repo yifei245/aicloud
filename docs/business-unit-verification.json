@@ -1,0 +1,67 @@
+{
+  "collectedAt": "2026-10-01T03:30:53.219504+00:00",
+  "allModulesCompile": true,
+  "source": "Local Maven Surefire XML reports; callback, OA, file and financial regressions have been rerun during this business completion work.",
+  "modules": {
+    "oa": {
+      "tests": 786,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fms": {
+      "tests": 278,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "hrm": {
+      "tests": 571,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "im": {
+      "tests": 303,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "pms": {
+      "tests": 236,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "wms": {
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "mes": {
+      "tests": 163,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "infra": {
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "bpm": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "totals": {
+    "tests": 2460,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

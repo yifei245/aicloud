@@ -1,0 +1,8 @@
+com.aicloud.framework.apilog.config.AicloudApiLogAutoConfiguration
+com.aicloud.framework.jackson.config.AicloudJacksonAutoConfiguration
+com.aicloud.framework.swagger.config.AicloudSwaggerAutoConfiguration
+com.aicloud.framework.web.config.AicloudWebAutoConfiguration
+com.aicloud.framework.apilog.config.AicloudApiLogRpcAutoConfiguration
+com.aicloud.framework.xss.config.AicloudXssAutoConfiguration
+com.aicloud.framework.banner.config.AicloudBannerAutoConfiguration
+com.aicloud.framework.encrypt.config.AicloudApiEncryptAutoConfiguration

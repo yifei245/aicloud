@@ -1,0 +1,109 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "FMS administrator login",
+      "passed": true
+    },
+    {
+      "check": "create actual verification account",
+      "passed": true
+    },
+    {
+      "check": "read uninitialized account",
+      "passed": true
+    },
+    {
+      "check": "new account begins uninitialized",
+      "passed": true
+    },
+    {
+      "check": "initialize subjects, currency and closing templates",
+      "passed": true
+    },
+    {
+      "check": "read initialized account",
+      "passed": true
+    },
+    {
+      "check": "initialization persists state and base currency",
+      "passed": true
+    },
+    {
+      "check": "read actual account subjects",
+      "passed": true
+    },
+    {
+      "check": "default hierarchy includes necessary finance accounts",
+      "passed": true
+    },
+    {
+      "check": "read closing templates",
+      "passed": true
+    },
+    {
+      "check": "all 21 default closing templates were initialized",
+      "passed": true
+    },
+    {
+      "check": "cash withdrawal uses cash debit and bank credit",
+      "passed": true
+    },
+    {
+      "check": "business entertainment uses expense debit and cash credit",
+      "passed": true
+    },
+    {
+      "check": "read balance-sheet",
+      "passed": true
+    },
+    {
+      "check": "balance-sheet has persisted report definitions",
+      "passed": true
+    },
+    {
+      "check": "read income-statement",
+      "passed": true
+    },
+    {
+      "check": "income-statement has persisted report definitions",
+      "passed": true
+    },
+    {
+      "check": "read cash-flow-statement",
+      "passed": true
+    },
+    {
+      "check": "cash-flow-statement has persisted report definitions",
+      "passed": true
+    },
+    {
+      "check": "read cash flow adjustment definitions",
+      "passed": true
+    },
+    {
+      "check": "cash flow includes all 21 adjustment definitions",
+      "passed": true
+    },
+    {
+      "check": "repeat initialization rejects reset",
+      "passed": true
+    },
+    {
+      "check": "read protected initialized account",
+      "passed": true
+    },
+    {
+      "check": "repeat initialization preserves account",
+      "passed": true
+    }
+  ],
+  "accountSetId": 1,
+  "subjects": 113,
+  "closingTemplates": 21,
+  "reportRows": {
+    "balance-sheet": 32,
+    "income-statement": 31,
+    "cash-flow-statement": 25
+  }
+}

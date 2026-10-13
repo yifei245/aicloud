@@ -1,0 +1,170 @@
+[
+  {
+    "name": "ai-server",
+    "artifact": "aicloud-module-ai-server",
+    "directory": "aicloud-module-ai/aicloud-module-ai-server",
+    "port": 48090,
+    "profile": "ai"
+  },
+  {
+    "name": "bpm-server",
+    "artifact": "aicloud-module-bpm-server",
+    "directory": "aicloud-module-bpm/aicloud-module-bpm-server",
+    "port": 48083,
+    "profile": "bpm"
+  },
+  {
+    "name": "crm-server",
+    "artifact": "aicloud-module-crm-server",
+    "directory": "aicloud-module-crm/aicloud-module-crm-server",
+    "port": 48089,
+    "profile": "crm"
+  },
+  {
+    "name": "erp-server",
+    "artifact": "aicloud-module-erp-server",
+    "directory": "aicloud-module-erp/aicloud-module-erp-server",
+    "port": 48088,
+    "profile": "erp"
+  },
+  {
+    "name": "fms-server",
+    "artifact": "aicloud-module-fms-server",
+    "directory": "aicloud-module-fms/aicloud-module-fms-server",
+    "port": 48095,
+    "profile": "fms"
+  },
+  {
+    "name": "gateway-server",
+    "artifact": "aicloud-gateway",
+    "directory": "aicloud-gateway",
+    "port": 18080,
+    "profile": "gateway"
+  },
+  {
+    "name": "hrm-server",
+    "artifact": "aicloud-module-hrm-server",
+    "directory": "aicloud-module-hrm/aicloud-module-hrm-server",
+    "port": 48094,
+    "profile": "hrm"
+  },
+  {
+    "name": "im-server",
+    "artifact": "aicloud-module-im-server",
+    "directory": "aicloud-module-im/aicloud-module-im-server",
+    "port": 48093,
+    "profile": "im"
+  },
+  {
+    "name": "infra-server",
+    "artifact": "aicloud-module-infra-server",
+    "directory": "aicloud-module-infra/aicloud-module-infra-server",
+    "port": 48082,
+    "profile": "infra"
+  },
+  {
+    "name": "iot-gateway-server",
+    "artifact": "aicloud-module-iot-gateway",
+    "directory": "aicloud-module-iot/aicloud-module-iot-gateway",
+    "port": 1883,
+    "profile": "iot-gateway"
+  },
+  {
+    "name": "iot-server",
+    "artifact": "aicloud-module-iot-server",
+    "directory": "aicloud-module-iot/aicloud-module-iot-server",
+    "port": 48098,
+    "profile": "iot"
+  },
+  {
+    "name": "member-server",
+    "artifact": "aicloud-module-member-server",
+    "directory": "aicloud-module-member/aicloud-module-member-server",
+    "port": 48087,
+    "profile": "member"
+  },
+  {
+    "name": "mes-server",
+    "artifact": "aicloud-module-mes-server",
+    "directory": "aicloud-module-mes/aicloud-module-mes-server",
+    "port": 48091,
+    "profile": "mes"
+  },
+  {
+    "name": "mp-server",
+    "artifact": "aicloud-module-mp-server",
+    "directory": "aicloud-module-mp/aicloud-module-mp-server",
+    "port": 48086,
+    "profile": "mp"
+  },
+  {
+    "name": "oa-server",
+    "artifact": "aicloud-module-oa-server",
+    "directory": "aicloud-module-oa/aicloud-module-oa-server",
+    "port": 48097,
+    "profile": "oa"
+  },
+  {
+    "name": "pay-server",
+    "artifact": "aicloud-module-pay-server",
+    "directory": "aicloud-module-pay/aicloud-module-pay-server",
+    "port": 48085,
+    "profile": "pay"
+  },
+  {
+    "name": "pms-server",
+    "artifact": "aicloud-module-pms-server",
+    "directory": "aicloud-module-pms/aicloud-module-pms-server",
+    "port": 48096,
+    "profile": "pms"
+  },
+  {
+    "name": "product-server",
+    "artifact": "aicloud-module-product-server",
+    "directory": "aicloud-module-mall/aicloud-module-product-server",
+    "port": 48100,
+    "profile": "product"
+  },
+  {
+    "name": "promotion-server",
+    "artifact": "aicloud-module-promotion-server",
+    "directory": "aicloud-module-mall/aicloud-module-promotion-server",
+    "port": 48101,
+    "profile": "promotion"
+  },
+  {
+    "name": "report-server",
+    "artifact": "aicloud-module-report-server",
+    "directory": "aicloud-module-report/aicloud-module-report-server",
+    "port": 48084,
+    "profile": "report"
+  },
+  {
+    "name": "statistics-server",
+    "artifact": "aicloud-module-statistics-server",
+    "directory": "aicloud-module-mall/aicloud-module-statistics-server",
+    "port": 48103,
+    "profile": "statistics"
+  },
+  {
+    "name": "system-server",
+    "artifact": "aicloud-module-system-server",
+    "directory": "aicloud-module-system/aicloud-module-system-server",
+    "port": 48081,
+    "profile": "system"
+  },
+  {
+    "name": "trade-server",
+    "artifact": "aicloud-module-trade-server",
+    "directory": "aicloud-module-mall/aicloud-module-trade-server",
+    "port": 48102,
+    "profile": "trade"
+  },
+  {
+    "name": "wms-server",
+    "artifact": "aicloud-module-wms-server",
+    "directory": "aicloud-module-wms/aicloud-module-wms-server",
+    "port": 48092,
+    "profile": "wms"
+  }
+]

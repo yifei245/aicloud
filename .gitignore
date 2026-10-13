@@ -1,0 +1,14 @@
+.idea/
+.vscode/
+.DS_Store
+**/target/
+/data/
+.env
+*.log
+__pycache__/
+!README.md
+!.gitignore
+
+.flattened-pom.xml
+**/.flattened-pom.xml
+.run/

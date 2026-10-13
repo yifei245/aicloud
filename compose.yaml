@@ -1,0 +1,545 @@
+name: aicloud
+# Only aicloud applications. Existing local middleware remains outside this project.
+x-app-env: &app-env
+  MYSQL_HOST: host.docker.internal
+  MYSQL_PORT: 3306
+  MYSQL_USER: ${MYSQL_USER:?set MYSQL_USER in .env}
+  MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+  REDIS_HOST: host.docker.internal
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  REDIS_DATABASE: ${REDIS_DATABASE:-12}
+  NACOS_ADDR: host.docker.internal:8848
+  IOT_RPC_URL: http://iot-server:48098
+  NACOS_USERNAME: ${NACOS_USERNAME:-nacos}
+  NACOS_PASSWORD: ${NACOS_PASSWORD:-nacos}
+  AICLOUD_INTERNAL_SECRET: ${AICLOUD_INTERNAL_SECRET:?set AICLOUD_INTERNAL_SECRET in .env}
+  SPRING_PROFILES_ACTIVE: local
+services:
+  ai-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-ai/aicloud-module-ai-server/target/aicloud-module-ai-server.jar
+    image: aicloud/ai-server:1.0.0
+    profiles: ["ai", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1536m
+    volumes: ["ai-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48090/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  bpm-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-bpm/aicloud-module-bpm-server/target/aicloud-module-bpm-server.jar
+    image: aicloud/bpm-server:1.0.0
+    profiles: ["bpm", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1536m
+    volumes: ["bpm-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48083/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  crm-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-crm/aicloud-module-crm-server/target/aicloud-module-crm-server.jar
+    image: aicloud/crm-server:1.0.0
+    profiles: ["crm", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["crm-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48089/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  erp-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-erp/aicloud-module-erp-server/target/aicloud-module-erp-server.jar
+    image: aicloud/erp-server:1.0.0
+    profiles: ["erp", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["erp-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48088/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  fms-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-fms/aicloud-module-fms-server/target/aicloud-module-fms-server.jar
+    image: aicloud/fms-server:1.0.0
+    profiles: ["fms", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["fms-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48095/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  gateway-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-gateway/target/aicloud-gateway.jar
+    image: aicloud/gateway-server:1.0.0
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["gateway-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:18080/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+    ports: ["127.0.0.1:${GATEWAY_PORT:-18080}:18080"]
+  hrm-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-hrm/aicloud-module-hrm-server/target/aicloud-module-hrm-server.jar
+    image: aicloud/hrm-server:1.0.0
+    profiles: ["hrm", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["hrm-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48094/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  im-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-im/aicloud-module-im-server/target/aicloud-module-im-server.jar
+    image: aicloud/im-server:1.0.0
+    profiles: ["im", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["im-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48093/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  infra-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-infra/aicloud-module-infra-server/target/aicloud-module-infra-server.jar
+    image: aicloud/infra-server:1.0.0
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["infra-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48082/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  iot-gateway-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-iot/aicloud-module-iot-gateway/target/aicloud-module-iot-gateway.jar
+    image: aicloud/iot-gateway-server:1.0.0
+    profiles: ["iot-gateway", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["iot-gateway-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 1883"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+    ports: ["127.0.0.1:${IOT_MQTT_PORT:-1883}:1883"]
+  iot-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-iot/aicloud-module-iot-server/target/aicloud-module-iot-server.jar
+    image: aicloud/iot-server:1.0.0
+    profiles: ["iot", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["iot-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48098/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  member-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-member/aicloud-module-member-server/target/aicloud-module-member-server.jar
+    image: aicloud/member-server:1.0.0
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["member-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48087/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  mes-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mes/aicloud-module-mes-server/target/aicloud-module-mes-server.jar
+    image: aicloud/mes-server:1.0.0
+    profiles: ["mes", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["mes-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48091/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  mp-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mp/aicloud-module-mp-server/target/aicloud-module-mp-server.jar
+    image: aicloud/mp-server:1.0.0
+    profiles: ["mp", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["mp-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48086/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  oa-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-oa/aicloud-module-oa-server/target/aicloud-module-oa-server.jar
+    image: aicloud/oa-server:1.0.0
+    profiles: ["oa", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["oa-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48097/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  pay-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-pay/aicloud-module-pay-server/target/aicloud-module-pay-server.jar
+    image: aicloud/pay-server:1.0.0
+    profiles: ["pay", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["pay-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48085/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  pms-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-pms/aicloud-module-pms-server/target/aicloud-module-pms-server.jar
+    image: aicloud/pms-server:1.0.0
+    profiles: ["pms", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["pms-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48096/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  product-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mall/aicloud-module-product-server/target/aicloud-module-product-server.jar
+    image: aicloud/product-server:1.0.0
+    profiles: ["product", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["product-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48100/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  promotion-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mall/aicloud-module-promotion-server/target/aicloud-module-promotion-server.jar
+    image: aicloud/promotion-server:1.0.0
+    profiles: ["promotion", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["promotion-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48101/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  report-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-report/aicloud-module-report-server/target/aicloud-module-report-server.jar
+    image: aicloud/report-server:1.0.0
+    profiles: ["report", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["report-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48084/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  statistics-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mall/aicloud-module-statistics-server/target/aicloud-module-statistics-server.jar
+    image: aicloud/statistics-server:1.0.0
+    profiles: ["statistics", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["statistics-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48103/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  system-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-system/aicloud-module-system-server/target/aicloud-module-system-server.jar
+    image: aicloud/system-server:1.0.0
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["system-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48081/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  trade-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-mall/aicloud-module-trade-server/target/aicloud-module-trade-server.jar
+    image: aicloud/trade-server:1.0.0
+    profiles: ["trade", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["trade-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48102/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+  wms-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      args:
+        JAR_FILE: aicloud-module-wms/aicloud-module-wms-server/target/aicloud-module-wms-server.jar
+    image: aicloud/wms-server:1.0.0
+    profiles: ["wms", "full"]
+    env_file: [".env"]
+    environment:
+      <<: *app-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    restart: on-failure:3
+    mem_limit: 1024m
+    volumes: ["wms-data:/app/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:48092/actuator/health"]
+      start_period: 120s
+      interval: 20s
+      timeout: 5s
+      retries: 6
+volumes:
+  ai-data:
+  bpm-data:
+  crm-data:
+  erp-data:
+  fms-data:
+  gateway-data:
+  hrm-data:
+  im-data:
+  infra-data:
+  iot-gateway-data:
+  iot-data:
+  member-data:
+  mes-data:
+  mp-data:
+  oa-data:
+  pay-data:
+  pms-data:
+  product-data:
+  promotion-data:
+  report-data:
+  statistics-data:
+  system-data:
+  trade-data:
+  wms-data:

@@ -1,0 +1,9 @@
+{
+  "database": "aicloud",
+  "existingTablesPreserved": 751,
+  "applicationTables": 599,
+  "totalTablesAfterInit": 751,
+  "createdTables": 0,
+  "baselineOriginalTablesPreserved": 152,
+  "baselineMissingTables": []
+}

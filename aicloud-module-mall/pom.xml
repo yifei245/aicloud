@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>aicloud</artifactId>
+        <groupId>com.aicloud</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>aicloud-module-mall</artifactId>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+
+    <description>
+        商城大模块，由 product 商品、promotion 营销、trade 交易、statistics 统计等组成
+    </description>
+    <modules>
+        <module>aicloud-module-product-api</module>
+        <module>aicloud-module-product-server</module>
+        <module>aicloud-module-promotion-api</module>
+        <module>aicloud-module-promotion-server</module>
+        <module>aicloud-module-trade-api</module>
+        <module>aicloud-module-trade-server</module>
+        <module>aicloud-module-statistics-api</module>
+        <module>aicloud-module-statistics-server</module>
+    </modules>
+
+</project>

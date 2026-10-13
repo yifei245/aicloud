@@ -1,0 +1,10 @@
+{
+  "freshSchemaVerified": true,
+  "applicationTables": 599,
+  "demoAccountsVerified": 3,
+  "financeSubjectsVerified": 113,
+  "financeReportDefinitionsVerified": 135,
+  "privateFileColumnVerified": true,
+  "existingAicloudSchemaPreserved": true,
+  "middlewareInstalledOrRemoved": false
+}

@@ -1,0 +1,98 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      discovery:
+        namespace: public
+        group: AICLOUD
+      config:
+        enabled: false
+        import-check:
+          enabled: false
+    sentinel:
+      enabled: false
+  datasource:
+    dynamic:
+      primary: master
+      strict: true
+      datasource:
+        master:
+          url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/aicloud?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true
+          username: ${MYSQL_USER:aicloud}
+          password: ${MYSQL_PASSWORD:aicloud_dev_password}
+      druid:
+        initial-size: 1
+        min-idle: 1
+        max-active: 10
+    druid:
+      stat-view-servlet:
+        enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:12}
+  boot:
+    admin:
+      client:
+        enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+xxl:
+  job:
+    enabled: false
+    admin:
+      addresses: http://127.0.0.1:19090/xxl-job-admin
+lock4j:
+  acquire-timeout: 3000
+  expire: 30000
+aicloud:
+  env:
+    tag: local
+  security:
+    mock-enable: false
+    internal-secret: ${AICLOUD_INTERNAL_SECRET}
+  captcha:
+    enable: false
+  access-log:
+    enable: true
+  demo: false
+justauth:
+  enabled: true
+  type: {}
+  cache:
+    type: REDIS
+    prefix: 'aicloud:social:'
+    timeout: 5m
+wx:
+  mp:
+    app-id: ${WECHAT_MP_APP_ID:local-disabled}
+    secret: ${WECHAT_MP_SECRET:local-disabled}
+    config-storage:
+      type: RedisTemplate
+      key-prefix: aicloud:wx
+      http-client-type: HttpComponents
+      http-proxy-password: ""
+  miniapp:
+    appid: ${WECHAT_MINI_APP_ID:local-disabled}
+    secret: ${WECHAT_MINI_SECRET:local-disabled}
+    config-storage:
+      type: RedisTemplate
+      key-prefix: aicloud:wa
+      http-client-type: HttpClient
+      http-proxy-password: ""
+
+---
+spring:
+  cache:
+    redis:
+      key-prefix: "aicloud:"
