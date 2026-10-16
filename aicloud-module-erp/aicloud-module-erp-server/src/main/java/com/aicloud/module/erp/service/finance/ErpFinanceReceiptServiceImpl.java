@@ -45,6 +45,7 @@ import static com.aicloud.module.erp.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
 
     @Resource
     private ErpFinanceReceiptMapper financeReceiptMapper;
@@ -154,6 +155,7 @@ public class ErpFinanceReceiptServiceImpl implements ErpFinanceReceiptService {
         if (updateCount == 0) {
             throw exception(approve ? FINANCE_RECEIPT_APPROVE_FAIL : FINANCE_RECEIPT_PROCESS_FAIL);
         }
+        finance.record("ERP_RECEIPT", id, receipt.getNo(), receipt.getReceiptPrice(), approve, "ERP Receipt");
     }
 
     private List<ErpFinanceReceiptItemDO> validateFinanceReceiptItems(

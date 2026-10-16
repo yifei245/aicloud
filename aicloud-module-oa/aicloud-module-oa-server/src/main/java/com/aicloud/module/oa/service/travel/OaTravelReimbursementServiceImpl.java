@@ -36,6 +36,7 @@ import static com.aicloud.module.oa.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class OaTravelReimbursementServiceImpl implements OaTravelReimbursementService {
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
 
     @Resource
     private OaTravelReimbursementMapper travelReimbursementMapper;
@@ -195,6 +196,9 @@ public class OaTravelReimbursementServiceImpl implements OaTravelReimbursementSe
 
         // 2. 更新审批状态
         travelReimbursementMapper.updateById(new OaTravelReimbursementDO().setId(id).setStatus(status));
+        if (status.equals(BpmProcessInstanceStatusEnum.APPROVE.getStatus())) {
+            finance.record("OA_TRAVEL_EXPENSE", id, "OA-TRAVEL-" + id, record.getTotalPrice(), true, "出差报销");
+        }
 
         // 3. 审批通过时标记关联申请已报销，不修改支付状态
         if (ObjUtil.equal(status, BpmProcessInstanceStatusEnum.APPROVE.getStatus()) && record.getTravelApplyId() != null) {

@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "erpRpcConfiguration", proxyBeanMethods = false)
-@EnableFeignClients(clients = AdminUserApi.class)
+@org.springframework.context.annotation.Import({com.aicloud.module.fms.api.business.FmsBusinessSourceConfiguration.class, com.aicloud.module.wms.api.integration.WmsStockSourceConfiguration.class})
+@EnableFeignClients(clients = {
+        com.aicloud.module.fms.api.business.FmsBusinessApi.class,AdminUserApi.class, com.aicloud.module.wms.api.integration.WmsStockApi.class})
 public class RpcConfiguration {
 }

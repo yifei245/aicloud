@@ -11,7 +11,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "oaRpcConfiguration", proxyBeanMethods = false)
-@EnableFeignClients(clients = {BpmProcessInstanceApi.class, FileApi.class, DeptApi.class, DictDataApi.class,
+@org.springframework.context.annotation.Import(com.aicloud.module.fms.api.business.FmsBusinessSourceConfiguration.class)
+@EnableFeignClients(clients = {
+        com.aicloud.module.hrm.api.business.HrmOaApi.class,
+        com.aicloud.module.fms.api.business.FmsBusinessApi.class,BpmProcessInstanceApi.class, FileApi.class, DeptApi.class, DictDataApi.class,
         NotifyMessageSendApi.class, PermissionApi.class, AdminUserApi.class})
 public class RpcConfiguration {
 }

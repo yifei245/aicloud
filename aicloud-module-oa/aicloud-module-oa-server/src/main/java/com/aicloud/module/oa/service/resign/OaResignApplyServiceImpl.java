@@ -32,6 +32,7 @@ import static com.aicloud.module.oa.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class OaResignApplyServiceImpl implements OaResignApplyService {
+    @Resource private com.aicloud.module.oa.service.leave.OaHrmIntegration hrmIntegration;
 
     @Resource
     private OaResignApplyMapper resignApplyMapper;
@@ -71,6 +72,7 @@ public class OaResignApplyServiceImpl implements OaResignApplyService {
     public void submitResignApply(OaResignApplySubmitReqVO submitReqVO, Long userId) {
         // 1. 校验申请可提交
         OaResignApplyDO resignApply = validateResignApplyEditable(submitReqVO.getId(), userId);
+        hrmIntegration.validateEmployee(userId);
 
         // 2. 更新为审批中
         resignApplyMapper.updateById(new OaResignApplyDO().setId(resignApply.getId())
@@ -101,10 +103,13 @@ public class OaResignApplyServiceImpl implements OaResignApplyService {
     @Transactional(rollbackFor = Exception.class)
     public void updateResignApplyStatus(Long id, Integer status) {
         // 1. 校验申请存在
-        validateResignApplyExists(id);
+        OaResignApplyDO record=validateResignApplyExists(id);
+        if(java.util.Objects.equals(record.getStatus(),status)) return;
 
         // 2. 更新审批状态
         resignApplyMapper.updateById(new OaResignApplyDO().setId(id).setStatus(status));
+        if(status.equals(BpmProcessInstanceStatusEnum.APPROVE.getStatus())) hrmIntegration.personnel("RESIGN","oa-resign:"+id+":"+record.getProcessInstanceId(),
+                Long.valueOf(record.getCreator()),record.getCreateTime(),java.time.LocalDateTime.now(),record.getReason());
     }
 
     /**

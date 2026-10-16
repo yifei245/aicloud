@@ -48,6 +48,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     private ProductPropertyService productPropertyService;
     @Resource
     private ProductPropertyValueService productPropertyValueService;
+    @Resource private com.aicloud.module.wms.api.integration.WmsStockApi wms;
+    @org.springframework.beans.factory.annotation.Value("${aicloud.trade.fulfillment-warehouse-id:1}") private Long fulfillmentWarehouse;
 
     @Override
     public void deleteSku(Long id) {
@@ -65,7 +67,9 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 
     @Override
     public ProductSkuDO getSku(Long id) {
-        return productSkuMapper.selectById(id);
+        ProductSkuDO sku = productSkuMapper.selectById(id);
+        if (sku != null) refreshStock(sku);
+        return sku;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         if (CollUtil.isEmpty(ids)) {
             return ListUtil.empty();
         }
-        return productSkuMapper.selectByIds(ids);
+        return refreshStocks(productSkuMapper.selectByIds(ids));
     }
 
     @Override
@@ -151,7 +155,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 
     @Override
     public List<ProductSkuDO> getSkuListBySpuId(Long spuId) {
-        return productSkuMapper.selectListBySpuId(spuId);
+        return refreshStocks(productSkuMapper.selectListBySpuId(spuId));
     }
 
     @Override
@@ -159,7 +163,7 @@ public class ProductSkuServiceImpl implements ProductSkuService {
         if (CollUtil.isEmpty(spuIds)) {
             return Collections.emptyList();
         }
-        return productSkuMapper.selectListBySpuId(spuIds);
+        return refreshStocks(productSkuMapper.selectListBySpuId(spuIds));
     }
 
     @Override
@@ -256,24 +260,17 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSkuStock(ProductSkuUpdateStockReqDTO updateStockReqDTO) {
-        // 更新 SKU 库存
-        updateStockReqDTO.getItems().forEach(item -> {
-            if (item.getIncrCount() > 0) {
-                productSkuMapper.updateStockIncr(item.getId(), item.getIncrCount());
-            } else if (item.getIncrCount() < 0) {
-                int updateStockIncr = productSkuMapper.updateStockDecr(item.getId(), item.getIncrCount());
-                if (updateStockIncr == 0) {
-                    throw exception(SKU_STOCK_NOT_ENOUGH);
-                }
-            }
-        });
+        throw new IllegalArgumentException("实物库存由 WMS 统一管理，请使用业务单据或 WMS 出入库接口");
+    }
 
-        // 更新 SPU 库存
-        List<ProductSkuDO> skus = productSkuMapper.selectByIds(
-                convertSet(updateStockReqDTO.getItems(), ProductSkuUpdateStockReqDTO.Item::getId));
-        Map<Long, Integer> spuStockIncrCounts = ProductSkuConvert.INSTANCE.convertSpuStockMap(
-                updateStockReqDTO.getItems(), skus);
-        productSpuService.updateSpuStock(spuStockIncrCounts);
+    private List<ProductSkuDO> refreshStocks(List<ProductSkuDO> skus) {
+        skus.forEach(this::refreshStock);
+        return skus;
+    }
+    private void refreshStock(ProductSkuDO sku) {
+        var balance = wms.balance("MALL", sku.getId(), fulfillmentWarehouse).getCheckedData();
+        sku.setStock(balance.getAvailableQuantity().max(java.math.BigDecimal.ZERO)
+                .min(java.math.BigDecimal.valueOf(Integer.MAX_VALUE)).intValue());
     }
 
 }

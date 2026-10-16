@@ -3,11 +3,19 @@ package com.aicloud.framework.xss.core.clean;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.regex.Pattern;
 
 /**
  * 基于 JSONP 实现 XSS 过滤字符串
  */
 public class JsoupXssCleaner implements XssCleaner {
+
+    private static final Pattern HTML = Pattern.compile("<\\s*[/!a-zA-Z]", Pattern.CASE_INSENSITIVE);
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     private final Safelist safelist;
 
@@ -21,7 +29,7 @@ public class JsoupXssCleaner implements XssCleaner {
      */
     public JsoupXssCleaner() {
         this.safelist = buildSafelist();
-        this.baseUri = "";
+        this.baseUri = "https://aicloud.invalid";
     }
 
     /**
@@ -39,11 +47,11 @@ public class JsoupXssCleaner implements XssCleaner {
         // 富文本编辑时一些样式是使用 style 来进行实现的
         // 比如红色字体 style="color:red;", 所以需要给所有标签添加 style 属性
         // 注意：style 属性会有注入风险 <img STYLE="background-image:url(javascript:alert('XSS'))">
-        relaxedSafelist.addAttributes(":all", "style", "class");
+        relaxedSafelist.addAttributes(":all", "class");
         // 保留 a 标签的 target 属性
         relaxedSafelist.addAttributes("a", "target");
-        // 支持img 为base64
-        relaxedSafelist.addProtocols("img", "src", "data");
+        relaxedSafelist.addEnforcedAttribute("a", "rel", "noopener noreferrer");
+        relaxedSafelist.preserveRelativeLinks(true);
 
         // 保留相对路径, 保留相对路径时，必须提供对应的 baseUri 属性，否则依然会被删除
         // WHITELIST.preserveRelativeLinks(false);
@@ -57,7 +65,48 @@ public class JsoupXssCleaner implements XssCleaner {
 
     @Override
     public String clean(String html) {
+        if (html == null) return null;
+        String trimmed = html.trim();
+        // IM and form content can be a JSON string. Clean text values, not the JSON envelope.
+        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+            try {
+                JsonNode node = JSON.readTree(html);
+                if (cleanJson(node, 0)) return JSON.writeValueAsString(node);
+                return html;
+            } catch (java.io.IOException invalidJson) { /* The consuming business parser validates malformed JSON. */ }
+        }
+        if (!HTML.matcher(html).find()) return html; // Do not HTML-encode URLs, formulas or ordinary text.
+        return cleanHtml(html);
+    }
+
+    private String cleanHtml(String html) {
         return Jsoup.clean(html, baseUri, safelist, new Document.OutputSettings().prettyPrint(false));
+    }
+
+    private boolean cleanJson(JsonNode node, int depth) {
+        if (depth > 64) throw new IllegalArgumentException("JSON content is too deeply nested");
+        boolean changed = false;
+        if (node instanceof ObjectNode object) {
+            var fields = object.fields();
+            while (fields.hasNext()) {
+                var field = fields.next();
+                if (field.getValue().isTextual() && HTML.matcher(field.getValue().textValue()).find()) {
+                    String clean = cleanHtml(field.getValue().textValue());
+                    changed |= !clean.equals(field.getValue().textValue());
+                    object.put(field.getKey(), clean);
+                } else changed |= cleanJson(field.getValue(), depth + 1);
+            }
+        } else if (node instanceof ArrayNode array) {
+            for (int i = 0; i < array.size(); i++) {
+                JsonNode value = array.get(i);
+                if (value.isTextual() && HTML.matcher(value.textValue()).find()) {
+                    String clean = cleanHtml(value.textValue());
+                    changed |= !clean.equals(value.textValue());
+                    array.set(i, JSON.getNodeFactory().textNode(clean));
+                } else changed |= cleanJson(value, depth + 1);
+            }
+        }
+        return changed;
     }
 
 }

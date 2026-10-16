@@ -316,6 +316,7 @@ public class CrmContractServiceImpl implements CrmContractService {
     public void updateContractAuditStatus(Long id, Integer bpmResult) {
         // 1.1 校验合同是否存在
         CrmContractDO contract = validateContractExists(id);
+        if (ObjUtil.equal(contract.getAuditStatus(), convertBpmResultToAuditStatus(bpmResult))) return;
         // 1.2 只有审批中，可以更新审批结果
         if (ObjUtil.notEqual(contract.getAuditStatus(), CrmAuditStatusEnum.PROCESS.getStatus())) {
             log.error("[updateContractAuditStatus][contract({}) 不处于审批中，无法更新审批结果({})]",

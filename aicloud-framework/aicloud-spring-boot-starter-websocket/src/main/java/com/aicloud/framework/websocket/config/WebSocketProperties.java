@@ -29,6 +29,6 @@ public class WebSocketProperties {
      * 可选值：local、redis、rocketmq、kafka、rabbitmq
      */
     @NotNull(message = "WebSocket 的消息发送者不能为空")
-    private String senderType = "local";
+    private String senderType = "redis";
 
 }

@@ -91,8 +91,8 @@ public class BpmFlowableConfiguration {
     // =========== 自己拓展的 Bean ==========
 
     @Bean
-    public BpmProcessInstanceEventPublisher processInstanceEventPublisher(ApplicationEventPublisher publisher) {
-        return new BpmProcessInstanceEventPublisher(publisher);
+    public BpmProcessInstanceEventPublisher processInstanceEventPublisher(ApplicationEventPublisher publisher, com.aicloud.framework.mybatis.core.integration.IntegrationOutboxService outbox) {
+        return new BpmProcessInstanceEventPublisher(publisher, outbox);
     }
 
 }

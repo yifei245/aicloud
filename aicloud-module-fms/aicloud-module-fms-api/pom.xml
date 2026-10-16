@@ -13,6 +13,9 @@
     <name>${project.artifactId}</name>
     <description>fms 模块 API，暴露给其它模块调用</description>
     <dependencies>
+        <dependency><groupId>org.springframework.cloud</groupId><artifactId>spring-cloud-starter-openfeign</artifactId><optional>true</optional></dependency>
+        <dependency><groupId>com.aicloud</groupId><artifactId>aicloud-spring-boot-starter-mybatis</artifactId><optional>true</optional></dependency>
+        <dependency><groupId>com.aicloud</groupId><artifactId>aicloud-spring-boot-starter-biz-tenant</artifactId><optional>true</optional></dependency>
         <dependency>
             <groupId>com.aicloud</groupId>
             <artifactId>aicloud-common</artifactId>

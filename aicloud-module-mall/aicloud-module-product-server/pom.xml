@@ -18,6 +18,11 @@
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-module-wms-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- Spring Cloud 基础 -->
         <dependency>
             <groupId>com.aicloud</groupId>

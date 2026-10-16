@@ -90,6 +90,7 @@ import static com.aicloud.module.hrm.util.HrmExcelUtils.parseAmount;
 @Service
 @Validated
 public class HrmSalaryMonthRecordServiceImpl implements HrmSalaryMonthRecordService {
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
 
     private static final String MONTH_RECORD_TITLE_TEMPLATE = "%d年%d月工资表";
 
@@ -175,6 +176,8 @@ public class HrmSalaryMonthRecordServiceImpl implements HrmSalaryMonthRecordServ
             if (ObjectUtil.notEqual(lastRecord.getStatus(), HrmSalaryMonthRecordStatusEnum.HISTORY.getStatus())) {
                 monthRecordMapper.updateById(new HrmSalaryMonthRecordDO()
                         .setId(lastRecord.getId()).setStatus(HrmSalaryMonthRecordStatusEnum.HISTORY.getStatus()));
+                finance.record("HRM_SALARY", lastRecord.getId(), "SALARY-" + lastRecord.getYear() + "-" + lastRecord.getMonth(),
+                        lastRecord.getExpectedPaySalary(), true, lastRecord.getTitle());
             }
             nextMonth = YearMonth.of(lastRecord.getYear(), lastRecord.getMonth()).plusMonths(1);
         }

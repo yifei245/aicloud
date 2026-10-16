@@ -29,9 +29,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "bpmRpcConfiguration", proxyBeanMethods = false)
-@EnableFeignClients(clients = {RoleApi.class, DeptApi.class, PostApi.class, AdminUserApi.class, SmsSendApi.class, DictDataApi.class,
+@EnableFeignClients(clients = {
+        com.aicloud.module.system.api.notify.NotifyMessageSendApi.class,RoleApi.class, DeptApi.class, PostApi.class, AdminUserApi.class, SmsSendApi.class, DictDataApi.class,
         PermissionApi.class})
 public class RpcConfiguration {
+    @Bean
+    @ConditionalOnMissingBean(name="hrmAttendanceLeaveStatusListener")
+    public com.aicloud.module.bpm.api.event.HrmLeaveStatusListener hrmAttendanceLeaveStatusListener() {
+        return new com.aicloud.module.bpm.api.event.HrmLeaveStatusListener();
+    }
 
     // ========== 特殊：解决微 aicloud-cloud 微服务场景下，跨服务（进程）无法 Listener 的问题 ==========
 

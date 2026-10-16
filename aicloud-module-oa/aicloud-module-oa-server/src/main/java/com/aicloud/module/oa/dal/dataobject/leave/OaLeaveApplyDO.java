@@ -78,6 +78,8 @@ public class OaLeaveApplyDO extends BaseDO {
      * 关联 BPM 流程实例编号
      */
     private String processInstanceId;
+    /** New submission's HRM reservation identity; historical applications may have no reservation. */
+    private String integrationKey;
     /**
      * 附件地址列表
      */

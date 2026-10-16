@@ -17,6 +17,7 @@
     </description>
 
     <dependencies>
+        <dependency><groupId>com.aicloud</groupId><artifactId>aicloud-module-fms-api</artifactId><version>${revision}</version></dependency>
         <!-- Spring Cloud 基础 -->
         <dependency>
             <groupId>com.aicloud</groupId>
@@ -24,6 +25,11 @@
         </dependency>
 
         <!-- 依赖服务 -->
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-module-wms-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <dependency>
             <groupId>com.aicloud</groupId>
             <artifactId>aicloud-module-system-api</artifactId>

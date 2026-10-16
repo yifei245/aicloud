@@ -14,8 +14,8 @@ if 'full' in selected: selected=[a['profile'] for a in apps]
 elif 'core' in selected: selected=list(dict.fromkeys(core+[p for p in selected if p!='core']))
 unknown=set(selected)-{a['profile'] for a in apps}
 if unknown: parser.error(f'Unknown services: {sorted(unknown)}')
-order=core+['bpm','pay','product','promotion','trade','statistics','erp','crm','report',
-            'iot','iot-gateway','mes','wms','im','hrm','fms','pms','oa','mp','ai']
+order=core+['bpm','wms','erp','pay','product','promotion','trade','statistics','crm','report',
+            'iot','iot-gateway','mes','im','hrm','fms','pms','oa','mp','ai']
 selected=[p for p in order if p in selected]
 if args.action=='stop':selected.reverse()
 env=os.environ.copy()
@@ -96,7 +96,7 @@ for profile in selected:
     else:raise SystemExit(f'{profile}: port {app["port"]} is already in use by an unrecorded process. Stop the other aicloud runtime before starting this one.')
     with (data/f'{profile}.log').open('a') as log:
         heap=env.get('AICLOUD_JAVA_XMX','768m' if profile in ['bpm','ai','mes'] else '512m')
-        process=subprocess.Popen([java,'-Xms64m',f'-Xmx{heap}','-Dfile.encoding=UTF-8','-jar',str(jar)],
+        process=subprocess.Popen([java,'-Xms64m',f'-Xmx{heap}','-Djava.awt.headless=true','-Dfile.encoding=UTF-8','-jar',str(jar)],
                     cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
     pidfile.write_text(str(process.pid))
     print(f'{profile}: starting (PID {process.pid}, port {app["port"]})',flush=True)

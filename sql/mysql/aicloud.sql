@@ -16941,9 +16941,11 @@ CREATE TABLE IF NOT EXISTS `wms_inventory` (
   `sku_id` bigint DEFAULT 0,
   `warehouse_id` bigint DEFAULT 0,
   `quantity` decimal(24,8) DEFAULT 0,
+  `reserved_quantity` decimal(24,8) NOT NULL DEFAULT 0,
   `remark` text,
   `tenant_id` bigint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_stock_dimension` (`tenant_id`,`sku_id`,`warehouse_id`,`deleted`),
   KEY `idx_sku_id` (`sku_id`),
   KEY `idx_warehouse_id` (`warehouse_id`),
   KEY `idx_tenant_id` (`tenant_id`)
@@ -19200,6 +19202,18 @@ INSERT INTO system_role_menu (role_id,menu_id,tenant_id) SELECT 1,id,1 FROM syst
 
 -- BEGIN 08-business-config.sql
 USE aicloud;
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批待办','bpm_task_assigned','aicloud 审批','{startUserNickname} 发起的「{processInstanceName}」有待办任务「{taskName}」，查看：{detailUrl}',2,'["startUserNickname","processInstanceName","taskName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_task_assigned' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批通过','bpm_process_instance_approve','aicloud 审批','你的申请「{processInstanceName}」已通过，查看：{detailUrl}',2,'["processInstanceName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_process_instance_approve' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批驳回','bpm_process_instance_reject','aicloud 审批','你的申请「{processInstanceName}」已驳回，原因：{reason}，查看：{detailUrl}',2,'["processInstanceName","reason","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_process_instance_reject' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批超时','bpm_task_timeout','aicloud 审批','流程「{processInstanceName}」的任务「{taskName}」已超时，查看：{detailUrl}',2,'["processInstanceName","taskName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_task_timeout' AND deleted=0);
 -- Only complete the aicloud demonstration department; preserve configured leaders.
 UPDATE system_dept SET leader_user_id=1 WHERE id=1 AND tenant_id=1 AND name='aicloud' AND parent_id=0 AND leader_user_id IS NULL AND deleted=0;
 
@@ -19714,6 +19728,82 @@ SELECT '6000','以前年度损益调整',0,5,6,1,0,0,1,0
 WHERE NOT EXISTS (SELECT 1 FROM fms_subject_template WHERE code='6000' AND deleted=0);
 
 -- END 09-fms-subjects.sql
+
+-- BEGIN 10-integration.sql
+USE aicloud;
+CREATE TABLE IF NOT EXISTS `integration_outbox` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `producer` varchar(64) NOT NULL,
+  `event_type` varchar(100) NOT NULL,
+  `business_key` varchar(200) NOT NULL,
+  `aggregate_key` varchar(200) NOT NULL DEFAULT '',
+  `payload` longtext NOT NULL,
+  `status` varchar(16) NOT NULL DEFAULT 'PENDING',
+  `attempts` int NOT NULL DEFAULT 0,
+  `next_attempt_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `lease_until` datetime(3) DEFAULT NULL,
+  `lock_token` varchar(36) DEFAULT NULL,
+  `last_error` varchar(200) DEFAULT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_source (tenant_id,producer,business_key),
+  KEY idx_pending (producer,status,next_attempt_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `integration_stock_intent` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `source` varchar(16) NOT NULL,
+  `business_key` varchar(160) NOT NULL,
+  `payload_hash` varchar(64) NOT NULL,
+  `state` varchar(16) NOT NULL DEFAULT 'WAITING',
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_intent (tenant_id,source,business_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `wms_integration_mapping` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `kind` varchar(16) NOT NULL,
+  `source` varchar(16) NOT NULL,
+  `source_id` bigint NOT NULL,
+  `target_id` bigint NOT NULL,
+  `enabled` tinyint NOT NULL DEFAULT 1,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_mapping (tenant_id,kind,source,source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `wms_integration_movement` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `source` varchar(16) NOT NULL,
+  `business_key` varchar(160) NOT NULL,
+  `payload_hash` varchar(64) DEFAULT NULL,
+  `state` varchar(16) NOT NULL,
+  `sku_id` bigint DEFAULT NULL,
+  `warehouse_id` bigint DEFAULT NULL,
+  `quantity` decimal(24,8) DEFAULT NULL,
+  `price` decimal(24,8) DEFAULT NULL,
+  `document_id` bigint DEFAULT NULL,
+  `document_no` varchar(200) DEFAULT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_movement (tenant_id,source,business_key),
+  KEY idx_reconcile (state,create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `integration_inbox` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `consumer` varchar(100) NOT NULL,
+  `business_key` varchar(200) NOT NULL,
+  `payload_hash` varchar(64) NOT NULL,
+  `status` varchar(16) NOT NULL,
+  `result_json` longtext DEFAULT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_target (tenant_id,consumer,business_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- END 10-integration.sql
 
 -- BEGIN upgrade/20260926-fms-report-template.sql
 -- Adapted from YunaiV/ruoyi-vue-pro master-jdk17, MIT. See NOTICE and LICENSES.

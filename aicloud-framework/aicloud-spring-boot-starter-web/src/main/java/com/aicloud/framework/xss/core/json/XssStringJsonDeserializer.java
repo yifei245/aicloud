@@ -48,6 +48,7 @@ public class XssStringJsonDeserializer extends StringDeserializer {
 
         // 2. 真正使用 xssCleaner 进行过滤
         if (p.hasToken(JsonToken.VALUE_STRING)) {
+            if (properties.getOpaqueFields().contains(p.currentName())) return p.getText();
             return xssCleaner.clean(p.getText());
         }
         JsonToken t = p.currentToken();

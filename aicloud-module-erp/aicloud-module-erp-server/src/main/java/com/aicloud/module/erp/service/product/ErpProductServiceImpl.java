@@ -40,6 +40,8 @@ public class ErpProductServiceImpl implements ErpProductService {
 
     @Resource
     private ErpProductMapper productMapper;
+    @Resource
+    private ErpWmsIntegration wmsIntegration;
 
     @Resource
     private ErpProductCategoryService productCategoryService;
@@ -65,26 +67,33 @@ public class ErpProductServiceImpl implements ErpProductService {
     private ErpSaleReturnService saleReturnService;
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public Long createProduct(ProductSaveReqVO createReqVO) {
         // TODO 芋艿：校验分类
         // 插入
         ErpProductDO product = BeanUtils.toBean(createReqVO, ErpProductDO.class);
+        wmsIntegration.validateMaster(product);
         productMapper.insert(product);
+        wmsIntegration.changed(product);
         // 返回
         return product.getId();
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public void updateProduct(ProductSaveReqVO updateReqVO) {
         // TODO 芋艿：校验分类
         // 校验存在
         validateProductExists(updateReqVO.getId());
         // 更新
         ErpProductDO updateObj = BeanUtils.toBean(updateReqVO, ErpProductDO.class);
+        wmsIntegration.validateMaster(updateObj);
         productMapper.updateById(updateObj);
+        wmsIntegration.changed(productMapper.selectById(updateReqVO.getId()));
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public void deleteProduct(Long id) {
         // 校验存在
         validateProductExists(id);
@@ -108,7 +117,10 @@ public class ErpProductServiceImpl implements ErpProductService {
             throw exception(PRODUCT_DELETE_FAIL_SALE_RETURN_EXISTS);
         }
         // 删除
+        ErpProductDO product = productMapper.selectById(id);
         productMapper.deleteById(id);
+        product.setStatus(CommonStatusEnum.DISABLE.getStatus());
+        wmsIntegration.changed(product);
     }
 
     @Override

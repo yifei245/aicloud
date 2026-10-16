@@ -46,6 +46,8 @@ public class WmsInventoryDO extends BaseDO {
      * 库存数量
      */
     private BigDecimal quantity;
+    /** Quantity held by accepted orders and uncommitted source movements. */
+    private BigDecimal reservedQuantity;
     /**
      * 备注
      */

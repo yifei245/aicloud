@@ -39,7 +39,11 @@ else:
     with os.fdopen(fd,'w') as f: f.write('\n'.join(f'{k}={v}' for k,v in env.items())+'\n')
 
 before = set(mysql("SELECT table_name FROM information_schema.tables WHERE table_schema='aicloud';").split())
-add_private_column=False
+pending_columns=[]
+safe_columns={('infra_file_record','private_file'): "bit(1) NOT NULL DEFAULT b'0' COMMENT '私有附件，仅限签名访问'",
+              ('wms_inventory','reserved_quantity'): "decimal(24,8) NOT NULL DEFAULT 0 COMMENT '业务预占库存'",
+              ('integration_outbox','aggregate_key'): "varchar(200) NOT NULL DEFAULT ''",
+              ('oa_leave_apply','integration_key'): "varchar(160) DEFAULT NULL"}
 schema = (ROOT/'sql/mysql/aicloud.sql').read_text()
 tables = dict(re.findall(r'CREATE TABLE IF NOT EXISTS `([^`]+)`\s*(\(.*?\)\s*ENGINE.*?;)',schema,re.S))
 for name,ddl in tables.items():
@@ -47,14 +51,23 @@ for name,ddl in tables.items():
     expected = set(re.findall(r'^\s*`([^`]+)`\s+\w+',ddl,re.M))
     actual = set(mysql(f"SELECT column_name FROM information_schema.columns WHERE table_schema='aicloud' AND table_name='{name}';").split())
     missing=expected-actual
-    if name=='infra_file_record' and missing=={'private_file'}:
-        add_private_column=True
+    if missing and all((name,column) in safe_columns for column in missing):
+        pending_columns.extend((name,column) for column in missing)
         continue
     if missing:
         raise SystemExit(f'Existing incompatible table {name}; missing columns {sorted(expected-actual)}. No data was changed.')
 
-if add_private_column:
-    mysql("ALTER TABLE aicloud.infra_file_record ADD COLUMN private_file bit(1) NOT NULL DEFAULT b'0' COMMENT '私有附件，仅限签名访问';")
+add_stock_index=False
+if 'wms_inventory' in before:
+    indexed=mysql("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema='aicloud' AND table_name='wms_inventory' AND index_name='uk_stock_dimension';").strip()
+    if indexed=='0':
+        duplicates=mysql("SELECT COUNT(*) FROM (SELECT tenant_id,sku_id,warehouse_id,deleted FROM aicloud.wms_inventory GROUP BY tenant_id,sku_id,warehouse_id,deleted HAVING COUNT(*)>1) d;").strip()
+        if duplicates!='0':raise SystemExit('Existing WMS inventory has duplicate dimensions; preserved data. Reconcile duplicates before this migration.')
+        add_stock_index=True
+for name,column in pending_columns:
+    mysql(f"ALTER TABLE aicloud.`{name}` ADD COLUMN `{column}` {safe_columns[(name,column)]};")
+if add_stock_index:
+    mysql("ALTER TABLE aicloud.wms_inventory ADD UNIQUE KEY uk_stock_dimension(tenant_id,sku_id,warehouse_id,deleted);")
 
 auxiliary=[]
 for name in ['04-flowable.sql','05-quartz.sql']:

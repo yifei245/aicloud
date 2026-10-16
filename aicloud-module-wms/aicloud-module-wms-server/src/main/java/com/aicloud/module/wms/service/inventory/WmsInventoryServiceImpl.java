@@ -92,6 +92,9 @@ public class WmsInventoryServiceImpl implements WmsInventoryService {
             // 1.2 无盈亏时不更新库存，也不生成库存流水
             BigDecimal beforeQuantity = inventory.getQuantity();
             BigDecimal afterQuantity = item.getCheckQuantity();
+            if (afterQuantity.compareTo(ObjectUtil.defaultIfNull(inventory.getReservedQuantity(), BigDecimal.ZERO)) < 0) {
+                throw new IllegalArgumentException("盘点后的实物库存不能小于业务预占库存");
+            }
             if (beforeQuantity.compareTo(afterQuantity) == 0) {
                 continue;
             }
@@ -152,7 +155,7 @@ public class WmsInventoryServiceImpl implements WmsInventoryService {
             }
             BigDecimal beforeQuantity = inventory.getQuantity();
             BigDecimal afterQuantity = beforeQuantity.add(item.getQuantity());
-            if (afterQuantity.compareTo(BigDecimal.ZERO) < 0) {
+            if (afterQuantity.compareTo(ObjectUtil.defaultIfNull(inventory.getReservedQuantity(), BigDecimal.ZERO)) < 0) {
                 throw buildInventoryQuantityNotEnoughException(item, beforeQuantity);
             }
             inventory.setQuantity(afterQuantity);

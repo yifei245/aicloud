@@ -44,6 +44,8 @@ public class OaLeaveApplyServiceImpl implements OaLeaveApplyService {
     @Resource
     @Lazy // 延迟，避免循环依赖报错
     private OaAttendanceService attendanceService;
+    @Resource private OaHrmIntegration hrmIntegration;
+    @Resource private org.springframework.jdbc.core.JdbcTemplate jdbc;
 
     @Resource
     private OaLeaveApplyMapper leaveApplyMapper;
@@ -84,14 +86,17 @@ public class OaLeaveApplyServiceImpl implements OaLeaveApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void submitLeaveApply(OaLeaveApplySubmitReqVO submitReqVO, Long userId) {
+        jdbc.queryForList("SELECT id FROM oa_leave_apply WHERE id=? AND tenant_id=? AND deleted=0 FOR UPDATE",submitReqVO.getId(),com.aicloud.framework.tenant.core.context.TenantContextHolder.getRequiredTenantId());
         // 1.1 校验申请可提交
         OaLeaveApplyDO leaveApply = validateLeaveApplyEditable(submitReqVO.getId(), userId);
         // 1.2 校验历史草稿的单次请假天数
         validateLeaveApplyDays(leaveApply.getType(), leaveApply.getDays());
 
         // 2. 更新为审批中
-        leaveApplyMapper.updateById(new OaLeaveApplyDO().setId(leaveApply.getId())
+        String reservationKey="oa-leave:"+leaveApply.getId()+":"+java.util.UUID.randomUUID();
+        leaveApplyMapper.updateById(new OaLeaveApplyDO().setId(leaveApply.getId()).setIntegrationKey(reservationKey)
                 .setStatus(BpmProcessInstanceStatusEnum.RUNNING.getStatus()));
+        hrmIntegration.reserve(leaveApply,reservationKey);
 
         // 3.1 发起审批
         Map<String, Object> variables = new HashMap<>();
@@ -149,11 +154,9 @@ public class OaLeaveApplyServiceImpl implements OaLeaveApplyService {
         // 2. 更新审批状态
         leaveApplyMapper.updateById(new OaLeaveApplyDO().setId(id).setStatus(status));
 
-        // 3. 审批通过后生成考勤明细
-        if (ObjUtil.equal(status, BpmProcessInstanceStatusEnum.APPROVE.getStatus())) {
-            attendanceService.createApplyAttendance(Long.valueOf(apply.getCreator()),
-                    OaAttendanceTypeEnum.LEAVE, apply.getStartTime());
-        }
+        // HRM owns leave balances and attendance; OA retains the application only.
+        if (BpmProcessInstanceStatusEnum.isProcessEndStatus(status)) hrmIntegration.result(apply,
+                ObjUtil.equal(status,BpmProcessInstanceStatusEnum.APPROVE.getStatus()));
     }
 
     /**

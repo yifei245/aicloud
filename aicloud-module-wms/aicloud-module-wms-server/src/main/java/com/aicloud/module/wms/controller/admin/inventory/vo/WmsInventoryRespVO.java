@@ -36,6 +36,12 @@ public class WmsInventoryRespVO {
 
     @Schema(description = "库存数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
     private BigDecimal quantity;
+    @Schema(description = "已预占库存")
+    private BigDecimal reservedQuantity;
+    @Schema(description = "可用库存")
+    public BigDecimal getAvailableQuantity() {
+        return quantity == null ? null : quantity.subtract(reservedQuantity == null ? BigDecimal.ZERO : reservedQuantity);
+    }
     @Schema(description = "备注", example = "备注")
     private String remark;
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

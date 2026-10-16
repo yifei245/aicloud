@@ -27,6 +27,8 @@ public class ErpStockRecordServiceImpl implements ErpStockRecordService {
 
     @Resource
     private ErpStockService stockService;
+    @Resource private com.aicloud.module.wms.api.integration.WmsStockBridge wmsStock;
+    @Resource private com.aicloud.module.erp.service.product.ErpWmsIntegration wmsMaster;
 
     @Override
     public ErpStockRecordDO getStockRecord(Long id) {
@@ -41,13 +43,21 @@ public class ErpStockRecordServiceImpl implements ErpStockRecordService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createStockRecord(ErpStockRecordCreateReqBO createReqBO) {
-        // 1. 更新库存
-        BigDecimal totalCount = stockService.updateStockCountIncrement(
-                createReqBO.getProductId(), createReqBO.getWarehouseId(), createReqBO.getCount());
-        // 2. 创建库存明细
+        // Keep ERP document history; physical availability and changes belong to WMS.
         ErpStockRecordDO stockRecord = BeanUtils.toBean(createReqBO, ErpStockRecordDO.class)
-                .setTotalCount(totalCount);
+                .setTotalCount(BigDecimal.ZERO);
         stockRecordMapper.insert(stockRecord);
+        var product = wmsMaster.ensureProduct(createReqBO.getProductId());
+        wmsMaster.ensureWarehouse(createReqBO.getWarehouseId());
+        var movement = new com.aicloud.module.wms.api.integration.WmsStockApi.Movement();
+        movement.setBusinessKey("stock-record:" + stockRecord.getId());
+        movement.setProductId(createReqBO.getProductId()); movement.setWarehouseId(createReqBO.getWarehouseId());
+        movement.setQuantity(createReqBO.getCount()); movement.setUnit(product.getUnit());
+        movement.setDocumentId(createReqBO.getBizId()); movement.setDocumentNo(createReqBO.getBizNo());
+        movement.setPrice(product.getPurchasePrice());
+        var balance = wmsStock.prepare(movement, true);
+        stockRecordMapper.updateById(new ErpStockRecordDO().setId(stockRecord.getId())
+                .setTotalCount(balance.getQuantity().add(createReqBO.getCount())));
     }
 
 }

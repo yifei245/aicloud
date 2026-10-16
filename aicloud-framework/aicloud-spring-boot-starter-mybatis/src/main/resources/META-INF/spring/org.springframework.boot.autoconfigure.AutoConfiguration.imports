@@ -1,3 +1,4 @@
 com.aicloud.framework.datasource.config.AicloudDataSourceAutoConfiguration
 com.aicloud.framework.mybatis.config.AicloudMybatisAutoConfiguration
 com.aicloud.framework.translate.config.AicloudTranslateAutoConfiguration
+com.aicloud.framework.mybatis.config.AicloudIntegrationAutoConfiguration

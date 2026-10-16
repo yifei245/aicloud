@@ -197,6 +197,7 @@ public class CrmReceivableServiceImpl implements CrmReceivableService {
     public void updateReceivableAuditStatus(Long id, Integer bpmResult) {
         // 1.1 校验存在
         CrmReceivableDO receivable = validateReceivableExists(id);
+        if (ObjUtil.equal(receivable.getAuditStatus(), convertBpmResultToAuditStatus(bpmResult))) return;
         // 1.2 只有审批中，可以更新审批结果
         if (ObjUtil.notEqual(receivable.getAuditStatus(), CrmAuditStatusEnum.PROCESS.getStatus())) {
             log.error("[updateReceivableAuditStatus][receivable({}) 不处于审批中，无法更新审批结果({})]",

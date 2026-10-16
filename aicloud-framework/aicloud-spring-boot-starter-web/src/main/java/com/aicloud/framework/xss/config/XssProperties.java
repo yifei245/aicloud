@@ -24,6 +24,14 @@ public class XssProperties {
     /**
      * 需要排除的 URL，默认为空
      */
-    private List<String> excludeUrls = Collections.emptyList();
+    private List<String> excludeUrls = List.of(
+            "/admin-api/bpm/model/create", "/admin-api/bpm/model/update", "/admin-api/bpm/model/import",
+            "/admin-api/bpm/form/create", "/admin-api/bpm/form/update",
+            "/admin-api/pay/order/notify/**", "/admin-api/pay/refund/notify/**", "/admin-api/pay/transfer/notify/**",
+            "/admin-api/im/livekit/webhook", "/admin-api/mp/message/receive");
+
+    /** Credentials and machine-readable process/SQL content are validated by their owning services. */
+    private List<String> opaqueFields = List.of("password", "oldPassword", "newPassword", "clientSecret", "secret",
+            "apiKey", "apiSecret", "accessToken", "refreshToken", "signature", "bpmnXml", "sql");
 
 }

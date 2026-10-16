@@ -20,4 +20,8 @@ public class NotifySendSingleToUserReqDTO {
     private String templateCode;
     @Schema(description = "邮件模板参数")
     private Map<String, Object> templateParams;
+
+    @Schema(description = "可选业务幂等键；同一接收人同一业务键只生成一条站内信")
+    @jakarta.validation.constraints.Size(max = 200)
+    private String businessKey;
 }

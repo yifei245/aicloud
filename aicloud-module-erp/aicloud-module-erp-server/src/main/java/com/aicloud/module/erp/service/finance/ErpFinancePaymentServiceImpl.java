@@ -45,6 +45,7 @@ import static com.aicloud.module.erp.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
 
     @Resource
     private ErpFinancePaymentMapper financePaymentMapper;
@@ -154,6 +155,7 @@ public class ErpFinancePaymentServiceImpl implements ErpFinancePaymentService {
         if (updateCount == 0) {
             throw exception(approve ? FINANCE_PAYMENT_APPROVE_FAIL : FINANCE_PAYMENT_PROCESS_FAIL);
         }
+        finance.record("ERP_PAYMENT", id, payment.getNo(), payment.getPaymentPrice(), approve, "ERP Payment");
     }
 
     private List<ErpFinancePaymentItemDO> validateFinancePaymentItems(

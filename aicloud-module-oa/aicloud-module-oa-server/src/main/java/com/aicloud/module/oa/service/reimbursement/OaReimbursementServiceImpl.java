@@ -34,6 +34,7 @@ import static com.aicloud.module.oa.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class OaReimbursementServiceImpl implements OaReimbursementService {
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
 
     @Resource
     private OaReimbursementMapper reimbursementMapper;
@@ -103,10 +104,14 @@ public class OaReimbursementServiceImpl implements OaReimbursementService {
     @Transactional(rollbackFor = Exception.class)
     public void updateReimbursementStatus(Long id, Integer status) {
         // 1. 校验申请存在
-        validateReimbursementExists(id);
+        OaReimbursementDO record = validateReimbursementExists(id);
+        if (java.util.Objects.equals(record.getStatus(), status)) return;
 
         // 2. 更新审批状态
         reimbursementMapper.updateById(new OaReimbursementDO().setId(id).setStatus(status));
+        if (status.equals(BpmProcessInstanceStatusEnum.APPROVE.getStatus())) {
+            finance.record("OA_EXPENSE", id, "OA-" + id, record.getTotalPrice(), true, record.getTitle());
+        }
     }
 
     /**

@@ -3,87 +3,35 @@ package com.aicloud.module.erp.service.stock;
 import com.aicloud.framework.common.pojo.PageResult;
 import com.aicloud.module.erp.controller.admin.stock.vo.stock.ErpStockPageReqVO;
 import com.aicloud.module.erp.dal.dataobject.stock.ErpStockDO;
-import com.aicloud.module.erp.dal.mysql.stock.ErpStockMapper;
-import com.aicloud.module.erp.service.product.ErpProductService;
+import com.aicloud.module.wms.api.integration.WmsStockApi;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
 import java.math.BigDecimal;
 
-import static com.aicloud.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.aicloud.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NEGATIVE;
-import static com.aicloud.module.erp.enums.ErrorCodeConstants.STOCK_COUNT_NEGATIVE2;
-
-/**
- * ERP 产品库存 Service 实现类
- *
- * @author 芋道源码
- */
+/** ERP stock views read WMS; erp_stock is retained only as historical data. */
 @Service
 @Validated
 public class ErpStockServiceImpl implements ErpStockService {
-
-    /**
-     * 允许库存为负数
-     *
-     * TODO 芋艿：后续做成 db 配置
-     */
-    private static final Boolean NEGATIVE_STOCK_COUNT_ENABLE = false;
-
-    @Resource
-    private ErpProductService productService;
-    @Resource
-    private ErpWarehouseService warehouseService;
-
-    @Resource
-    private ErpStockMapper stockMapper;
-
-    @Override
-    public ErpStockDO getStock(Long id) {
-        return stockMapper.selectById(id);
+    @Resource private WmsStockApi wms;
+    @Override public ErpStockDO getStock(Long id) {
+        var rows = wms.balances("ERP", null, null, id, 1, 1).getCheckedData().getList();
+        return rows.isEmpty() ? null : convert(rows.getFirst());
     }
-
-    @Override
-    public ErpStockDO getStock(Long productId, Long warehouseId) {
-        return stockMapper.selectByProductIdAndWarehouseId(productId, warehouseId);
+    @Override public ErpStockDO getStock(Long productId, Long warehouseId) {
+        var rows = wms.balances("ERP", productId, warehouseId, null, 1, 1).getCheckedData().getList();
+        return rows.isEmpty() ? new ErpStockDO().setProductId(productId).setWarehouseId(warehouseId).setCount(BigDecimal.ZERO) : convert(rows.getFirst());
     }
-
-    @Override
-    public BigDecimal getStockCount(Long productId) {
-        BigDecimal count = stockMapper.selectSumByProductId(productId);
-        return count != null ? count : BigDecimal.ZERO;
+    @Override public BigDecimal getStockCount(Long productId) { return wms.balance("ERP", productId, null).getCheckedData().getAvailableQuantity(); }
+    @Override public PageResult<ErpStockDO> getStockPage(ErpStockPageReqVO request) {
+        var page = wms.balances("ERP", request.getProductId(), request.getWarehouseId(), null, request.getPageNo(), request.getPageSize()).getCheckedData();
+        return new PageResult<>(page.getList().stream().map(this::convert).toList(), page.getTotal());
     }
-
-    @Override
-    public PageResult<ErpStockDO> getStockPage(ErpStockPageReqVO pageReqVO) {
-        return stockMapper.selectPage(pageReqVO);
+    @Override public BigDecimal updateStockCountIncrement(Long productId, Long warehouseId, BigDecimal count) {
+        throw new IllegalStateException("请经 ERP 库存流水提交 WMS 库存事务");
     }
-
-    @Override
-    public BigDecimal updateStockCountIncrement(Long productId, Long warehouseId, BigDecimal count) {
-        // 1.1 查询当前库存
-        ErpStockDO stock = stockMapper.selectByProductIdAndWarehouseId(productId, warehouseId);
-        if (stock == null) {
-            stock = new ErpStockDO().setProductId(productId).setWarehouseId(warehouseId).setCount(BigDecimal.ZERO);
-            stockMapper.insert(stock);
-        }
-        // 1.2 校验库存是否充足
-        if (!NEGATIVE_STOCK_COUNT_ENABLE && stock.getCount().add(count).compareTo(BigDecimal.ZERO) < 0) {
-            throw exception(STOCK_COUNT_NEGATIVE, productService.getProduct(productId).getName(),
-                    warehouseService.getWarehouse(warehouseId).getName(), stock.getCount(), count);
-        }
-
-        // 2. 库存变更
-        int updateCount = stockMapper.updateCountIncrement(stock.getId(), count, NEGATIVE_STOCK_COUNT_ENABLE);
-        if (updateCount == 0) {
-            // 此时不好去查询最新库存，所以直接抛出该提示，不提供具体库存数字
-            throw exception(STOCK_COUNT_NEGATIVE2, productService.getProduct(productId).getName(),
-                    warehouseService.getWarehouse(warehouseId).getName());
-        }
-
-        // 3. 返回最新库存
-        return stock.getCount().add(count);
+    private ErpStockDO convert(WmsStockApi.SourceBalance balance) {
+        return new ErpStockDO().setId(balance.getInventoryId()).setProductId(balance.getProductId())
+                .setWarehouseId(balance.getSourceWarehouseId()).setCount(balance.getAvailableQuantity());
     }
-
 }

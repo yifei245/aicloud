@@ -107,7 +107,8 @@ public class BpmHttpRequestUtils {
         URI uri = URI.create(url);
         if ("http".equals(uri.getScheme()) && uri.getPort() == -1 && uri.getUserInfo() == null
                 && (("oa-server".equals(uri.getHost()) && uri.getPath().startsWith("/rpc-api/oa/"))
-                || ("crm-server".equals(uri.getHost()) && uri.getPath().startsWith("/rpc-api/crm/")))) {
+                || ("crm-server".equals(uri.getHost()) && uri.getPath().startsWith("/rpc-api/crm/"))
+                || ("hrm-server".equals(uri.getHost()) && uri.getPath().startsWith("/rpc-api/hrm/")))) {
             headers.set(SecurityProperties.INTERNAL_TOKEN_HEADER,
                     SpringUtils.getBean(SecurityProperties.class).getInternalSecret());
         }

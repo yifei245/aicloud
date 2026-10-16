@@ -28,7 +28,7 @@ sql=sql.replace('QRTZ_', 'ac_QRTZ_')
 sql=re.sub(r'CREATE TABLE\s+(\w+)',r'CREATE TABLE IF NOT EXISTS `\1`',sql,flags=re.I)
 (ROOT/'sql/mysql/05-quartz.sql').write_text('-- Quartz 2.5.0, Apache-2.0; published MySQL InnoDB schema.\nUSE aicloud;\n'+sql)
 out=['-- aicloud complete MySQL 8.4 initialization; do not use on incompatible tables.\n-- Application source: MIT; Flowable schema: Apache-2.0 (see LICENSES).']
-for name in ['01-core.sql','02-business.sql','03-seed.sql','04-flowable.sql','05-quartz.sql','06-iot-history.sql','07-permission-menu.sql','08-business-config.sql','09-fms-subjects.sql','upgrade/20260926-fms-report-template.sql','upgrade/20261001-private-file.sql']:
+for name in ['01-core.sql','02-business.sql','03-seed.sql','04-flowable.sql','05-quartz.sql','06-iot-history.sql','07-permission-menu.sql','08-business-config.sql','09-fms-subjects.sql','10-integration.sql','upgrade/20260926-fms-report-template.sql','upgrade/20261001-private-file.sql']:
     out.append(f'-- BEGIN {name}\n'+(ROOT/'sql/mysql'/name).read_text()+f'\n-- END {name}')
 (ROOT/'sql/mysql/aicloud.sql').write_text('\n\n'.join(out)+'\n')
 print('Generated sql/mysql/aicloud.sql (core, all business modules, seed data, isolated Flowable tables).')

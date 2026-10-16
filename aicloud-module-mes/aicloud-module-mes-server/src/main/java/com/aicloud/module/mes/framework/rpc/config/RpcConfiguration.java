@@ -8,6 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "mesRpcConfiguration", proxyBeanMethods = false)
-@EnableFeignClients(clients = {AdminUserApi.class, PostApi.class, RoleApi.class, DictDataApi.class})
+@EnableFeignClients(clients = {AdminUserApi.class, PostApi.class, RoleApi.class, DictDataApi.class,
+        com.aicloud.module.wms.api.integration.WmsStockApi.class})
+@org.springframework.context.annotation.Import(com.aicloud.module.wms.api.integration.WmsStockSourceConfiguration.class)
 public class RpcConfiguration {
 }

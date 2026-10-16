@@ -18,6 +18,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-spring-boot-starter-mybatis</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.aicloud</groupId>
+            <artifactId>aicloud-spring-boot-starter-biz-tenant</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>com.aicloud</groupId>
             <artifactId>aicloud-common</artifactId>
         </dependency>

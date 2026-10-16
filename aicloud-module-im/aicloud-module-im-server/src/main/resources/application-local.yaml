@@ -56,6 +56,12 @@ lock4j:
   acquire-timeout: 3000
   expire: 30000
 aicloud:
+  im:
+    rtc:
+      enabled: ${AICLOUD_LIVEKIT_ENABLED:true}
+      livekit-url: ${AICLOUD_LIVEKIT_URL:ws://127.0.0.1:7880}
+      api-key: ${AICLOUD_LIVEKIT_API_KEY:}
+      api-secret: ${AICLOUD_LIVEKIT_API_SECRET:}
   env:
     tag: local
   security:

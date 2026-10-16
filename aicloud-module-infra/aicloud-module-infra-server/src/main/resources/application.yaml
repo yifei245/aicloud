@@ -119,14 +119,11 @@ aicloud:
     admin-ui:
       url: http://localhost:3000 # Admin 管理后台 UI 的地址
   xss:
-    enable: false
-    exclude-urls: # 如下两个 url，仅仅是为了演示，去掉配置也没关系
-      - ${spring.boot.admin.context-path}/** # 不处理 Spring Boot Admin 的请求
-      - ${management.endpoints.web.base-path}/** # 不处理 Actuator 的请求
+    enable: true
   websocket:
     enable: true # websocket的开关
     path: /infra/ws # 路径
-    sender-type: local # 消息发送的类型，可选值为 local、redis、rocketmq、kafka、rabbitmq
+    sender-type: redis # 使用已有 Redis 广播至全部 WebSocket 实例
     sender-rocketmq:
       topic: ${spring.application.name}-websocket # 消息发送的 RocketMQ Topic
       consumer-group: ${spring.application.name}-websocket-consumer # 消息发送的 RocketMQ Consumer Group

@@ -149,7 +149,7 @@ public class ImProperties {
         /**
          * 是否启用实时通话功能
          */
-        private boolean enabled = true;
+        private boolean enabled = false;
 
         /**
          * LiveKit Server WebSocket 地址；客户端 connect 时使用，通常 ws://host:7880 或 wss://host
@@ -160,15 +160,18 @@ public class ImProperties {
         /**
          * LiveKit API Key
          */
-        @NotBlank(message = "LiveKit API Key 不能为空")
-        private String apiKey = "devkey";
+        private String apiKey;
 
         /**
          * LiveKit API Secret；生产必须改为强随机值
          */
-        @NotBlank(message = "LiveKit API Secret 不能为空")
-        @Size(min = 32, message = "LiveKit API Secret 长度需 ≥ 32 位")
-        private String apiSecret = "secret-poc-key-min-32-chars-required-here";
+        private String apiSecret;
+
+        @jakarta.validation.constraints.AssertTrue(message = "启用通话必须配置 LiveKit Key 和至少 32 位的随机 Secret")
+        public boolean isCredentialsValid() {
+            return !enabled || (apiKey != null && !apiKey.isBlank()
+                    && apiSecret != null && apiSecret.length() >= 32);
+        }
 
         /**
          * 单次签发的 Token 有效期（小时）

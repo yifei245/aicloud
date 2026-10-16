@@ -53,6 +53,8 @@ public class MesWmTransactionServiceImpl implements MesWmTransactionService {
     private MesWmWarehouseLocationService locationService;
     @Resource
     private MesWmWarehouseAreaService areaService;
+    @Resource private com.aicloud.module.wms.api.integration.WmsStockBridge wmsStock;
+    @Resource private com.aicloud.module.mes.service.md.unitmeasure.MesMdUnitMeasureService unitService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -93,6 +95,15 @@ public class MesWmTransactionServiceImpl implements MesWmTransactionService {
                 .materialStockId(materialStock.getId()).relatedTransactionId(reqDTO.getRelatedTransactionId())
                 .build();
         transactionMapper.insert(transaction);
+        MesMdItemDO item = itemService.validateItemExists(reqDTO.getItemId());
+        var unit = unitService.getUnitMeasure(item.getUnitMeasureId());
+        if (unit == null) throw new IllegalArgumentException("MES 物料基本单位不存在");
+        var movement = new com.aicloud.module.wms.api.integration.WmsStockApi.Movement();
+        movement.setBusinessKey("transaction:" + transaction.getId());
+        movement.setProductId(reqDTO.getItemId()); movement.setWarehouseId(reqDTO.getWarehouseId());
+        movement.setUnit(unit.getName()); movement.setQuantity(reqDTO.getQuantity());
+        movement.setDocumentId(reqDTO.getBizId()); movement.setDocumentNo(reqDTO.getBizCode());
+        wmsStock.prepare(movement, true);
         return transaction.getId();
     }
 

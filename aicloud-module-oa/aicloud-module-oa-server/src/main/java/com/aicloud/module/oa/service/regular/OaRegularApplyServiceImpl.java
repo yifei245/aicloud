@@ -32,6 +32,7 @@ import static com.aicloud.module.oa.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class OaRegularApplyServiceImpl implements OaRegularApplyService {
+    @Resource private com.aicloud.module.oa.service.leave.OaHrmIntegration hrmIntegration;
 
     @Resource
     private OaRegularApplyMapper regularApplyMapper;
@@ -68,6 +69,7 @@ public class OaRegularApplyServiceImpl implements OaRegularApplyService {
     public void submitRegularApply(OaRegularApplySubmitReqVO submitReqVO, Long userId) {
         // 1. 校验申请可提交
         OaRegularApplyDO regularApply = validateRegularApplyEditable(submitReqVO.getId(), userId);
+        hrmIntegration.validateEmployee(userId);
 
         // 2. 更新为审批中
         regularApplyMapper.updateById(new OaRegularApplyDO().setId(regularApply.getId())
@@ -98,10 +100,13 @@ public class OaRegularApplyServiceImpl implements OaRegularApplyService {
     @Transactional(rollbackFor = Exception.class)
     public void updateRegularApplyStatus(Long id, Integer status) {
         // 1. 校验申请存在
-        validateRegularApplyExists(id);
+        OaRegularApplyDO record=validateRegularApplyExists(id);
+        if(java.util.Objects.equals(record.getStatus(),status)) return;
 
         // 2. 更新审批状态
         regularApplyMapper.updateById(new OaRegularApplyDO().setId(id).setStatus(status));
+        if(status.equals(BpmProcessInstanceStatusEnum.APPROVE.getStatus())) hrmIntegration.personnel("REGULAR","oa-regular:"+id+":"+record.getProcessInstanceId(),
+                Long.valueOf(record.getCreator()),record.getCreateTime(),record.getEndTime(),"OA 转正审批通过");
     }
 
     /**

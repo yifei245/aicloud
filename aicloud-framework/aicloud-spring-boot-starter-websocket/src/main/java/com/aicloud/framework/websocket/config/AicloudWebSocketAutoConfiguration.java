@@ -96,7 +96,7 @@ public class AicloudWebSocketAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnProperty(prefix = "aicloud.websocket", name = "sender-type", havingValue = "redis")
+    @ConditionalOnProperty(prefix = "aicloud.websocket", name = "sender-type", havingValue = "redis", matchIfMissing = true)
     public class RedisWebSocketMessageSenderConfiguration {
 
         @Bean

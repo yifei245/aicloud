@@ -54,22 +54,70 @@ mes、wms、hrm、im、pms、ai 只有查询和单测，没有通过网关执行
 
 | # | 缺口 | 现状 |
 |---|---|---|
-| 11 | 版本控制 | `main` 分支**没有任何提交**，8759 个文件只是暂存；没有 remote。建议尽快提交首个基线并推送到私有远端。 |
+| 11 | ~~版本控制~~ | 已解决：2026-10-13 推送到 GitHub `yifei245/aicloud`（公开仓库）。注意 AI 模块测试代码里有上游写死的 `sk-...` 密钥。 |
 | 12 | CI | 没有 `.github` 等流水线，构建、单测、SQL 校验都靠手动执行。 |
 | 13 | 上游残留 | 231 个文件仍含 `yudao/iocoder`，336 处 `芋艿` 注释；每个 `*Application` 启动时打印 iocoder 文档链接，网关 `BannerApplicationRunner` 还打印知识星球推广链接。 |
 | 14 | 上游 TODO | 337 处 TODO/FIXME（mall 66、system 22、bpm 20 等）。大部分是上游遗留，需要筛出真正影响功能的（如 IM 搜群/扫码/链接进群、CoAP 下行不支持）。 |
 | 15 | README 表述 | “提供管理端、手机 App、微信小程序、Web/H5 用户端”实际指的是对应的**接口**，仓库里没有前端；infra 写的“定时任务”也没有对应的管理接口和执行器。 |
 
+## 功能缺口（第二轮，2026-10-13）
+
+依据：各 `*-server/pom.xml` 的跨模块 API 依赖、控制器清单和配置。
+
+### 模块各自独立，业务没有打通
+
+各服务只依赖 system/infra，业务模块之间几乎没有调用：
+
+```text
+erp  -> system            wms -> system          mes -> system
+fms  -> infra system      hrm -> bpm system      oa  -> bpm infra system
+crm  -> bpm infra system  trade -> member pay product promotion system
+```
+
+| # | 缺口 | 现状 | 后果 |
+|---|---|---|---|
+| 16 | 四套商品/库存主数据互不相通 | 商城 `product` SKU 库存、ERP `ErpProduct/ErpWarehouse/ErpStock*`、WMS `WmsItem/WmsWarehouse/WmsInventory`、MES `MesWm*` 各管各的，彼此没有任何 API 依赖 | 商城下单不动 ERP/WMS 库存；ERP 采购入库不进 WMS；MES 领料、成品入库不影响 WMS。同一件商品要在四处分别维护 |
+| 17 | 财务没有业务凭证来源 | FMS 只依赖 infra/system，凭证只能手工录入 | ERP 收付款、商城收入、HRM 薪资、OA 报销审批通过后都不会生成凭证，财务报表反映不了业务 |
+| 18 | OA 与 HRM 功能重复且不联动 | OA 有请假、加班、转正、离职审批和考勤；HRM 有员工档案、假期、8 个考勤控制器、14 个薪资控制器。OA 不依赖 hrm-api | OA 离职、转正审批通过后，HRM 员工状态不变；请假不扣假期余额；考勤存在两套数据 |
+| 19 | CRM 与 ERP 不通 | CRM 合同、回款与 ERP 销售单、收款单没有关联 | 签约后要在 ERP 重新录一遍销售单，回款对账靠人工 |
+| 20 | 审批方式不统一 | ERP/WMS/MES/PMS/FMS 都用各自的审核状态，没接 BPM | 无法统一配置审批流和待办，影响较小 |
+
+### 通知与实时通信
+
+| # | 缺口 | 现状 |
+|---|---|---|
+| 21 | **审批没有任何通知** | `BpmMessageServiceImpl` 的待办、通过、驳回、超时通知**只发短信**，本地默认 `BPM_SMS_ENABLED=false`，也没有站内信兜底。OA、CRM、HRM 的审批都走 BPM，审批人收不到任何提醒。建议加一条站内信通道（`NotifyMessageSendApi`，HRM/OA 已经在用） |
+| 22 | WebSocket 只支持单实例 | infra `websocket.sender-type: local`，多实例部署时，连在其他实例上的用户收不到 IM 消息和公告推送。改为 `redis` 即可，现有 Redis 就能用 |
+| 23 | IM 音视频不可用 | 依赖 LiveKit SFU，项目没有部署，配置里默认是 `devkey` 和明文默认密钥；搜群、扫码、链接进群三种入群方式未实现（`ImGroupAddSourceEnum` 里有 TODO） |
+
+### 对外能力
+
+| # | 缺口 | 现状 |
+|---|---|---|
+| 24 | 开放 API 只有一个接口 | `/open-api/**` 只有 `OpenApiController` 的字典查询（`dictionary.read`）。OAuth2 客户端凭证和 scope 机制已经完整，但没有可用的业务接口（订单、会员、库存查询、事件回调/Webhook 等） |
+| 25 | 报表没有设计和打印 | 报表模块只有 GoView 大屏的后端（2 个控制器），积木报表按设计被移除（`docs/03-local-business-guide.md`）。单据打印、自定义报表都没有 |
+| 26 | 员工移动端没有专用接口 | `app-api` 只覆盖会员、商城、支付、system、infra。OA、HRM、BPM、IM、CRM 都没有用户端接口；员工手机审批、打卡只能直接调用管理端接口 |
+
+### 安全与依赖组件
+
+| # | 缺口 | 现状 |
+|---|---|---|
+| 27 | XSS 过滤全部关闭 | 23 个服务都是 `aicloud.xss.enable: false`。OA 公告、CRM 跟进、IM 消息等富文本存在存储型 XSS 风险 |
+| 28 | 以下能力依赖尚未部署的组件 | AI 知识库默认用本地简单向量库，Milvus/Qdrant/Redis 的依赖都在但没部署；IoT 历史数据写 MySQL，设备量大了会有瓶颈，没有接时序库；快递查询默认 `NOT_PROVIDE`，需要快递鸟或快递 100 凭据 |
+| 29 | 没有国际化 | 没有 `messages*.properties`，错误码和提示只有中文 |
+
 ## 已确认不算缺口
 
 - 外部支付、微信、短信、真实邮箱、AI 模型等待用户凭据，属于已约定的延期。
 - 仅提供后端是 `AGENTS.md` 规定的范围。
+- 积木报表是有意移除的（但打印和报表设计的需求仍要单独评估，见 #25）。
 
 ## 建议顺序
 
-1. 提交 Git 基线（#11）。
-2. 恢复定时任务调度（#1）。
-3. 用 mock/wallet 渠道补商城下单、支付、售后全链路验收和回归单测（#2）。
+1. 恢复定时任务调度（#1），同时给 BPM 加站内信通知（#21）。这两项不做，核心流程跑不完整。
+2. 用 mock/wallet 渠道补商城下单、支付、售后全链路验收和回归单测（#2）。
+3. **先定业务边界**：库存以哪套为准（#16）、OA 和 HRM 谁负责人事数据（#18）、哪些业务要自动出凭证（#17）。这一步需要产品层面拍板，再决定要写多少集成代码。
 4. 逐个补 mes/wms/hrm/im/pms/ai 的写入链路验收（#3）。
-5. 做生产化：profile、凭据、验证码/锁定、网关限流、数据库迁移（#4–#8）。
-6. 最后做 CI 和上游残留清理（#12–#15）。
+5. 做生产化：profile、凭据、验证码/锁定、XSS、网关限流、WebSocket 改 redis、数据库迁移（#4–#8、#22、#27）。
+6. 按需求补开放 API、打印报表、员工移动端（#24–#26）。
+7. 最后做 CI 和上游残留清理（#12–#15）。

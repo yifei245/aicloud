@@ -1,4 +1,16 @@
 USE aicloud;
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批待办','bpm_task_assigned','aicloud 审批','{startUserNickname} 发起的「{processInstanceName}」有待办任务「{taskName}」，查看：{detailUrl}',2,'["startUserNickname","processInstanceName","taskName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_task_assigned' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批通过','bpm_process_instance_approve','aicloud 审批','你的申请「{processInstanceName}」已通过，查看：{detailUrl}',2,'["processInstanceName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_process_instance_approve' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批驳回','bpm_process_instance_reject','aicloud 审批','你的申请「{processInstanceName}」已驳回，原因：{reason}，查看：{detailUrl}',2,'["processInstanceName","reason","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_process_instance_reject' AND deleted=0);
+INSERT INTO system_notify_template(name,code,nickname,content,type,params,status,remark)
+SELECT '审批超时','bpm_task_timeout','aicloud 审批','流程「{processInstanceName}」的任务「{taskName}」已超时，查看：{detailUrl}',2,'["processInstanceName","taskName","detailUrl"]',0,'审批主通知通道，不依赖短信'
+WHERE NOT EXISTS(SELECT 1 FROM system_notify_template WHERE code='bpm_task_timeout' AND deleted=0);
 -- Only complete the aicloud demonstration department; preserve configured leaders.
 UPDATE system_dept SET leader_user_id=1 WHERE id=1 AND tenant_id=1 AND name='aicloud' AND parent_id=0 AND leader_user_id IS NULL AND deleted=0;
 

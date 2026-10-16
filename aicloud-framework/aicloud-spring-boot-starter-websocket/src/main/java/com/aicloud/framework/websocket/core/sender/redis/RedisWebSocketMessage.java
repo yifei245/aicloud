@@ -9,6 +9,9 @@ import lombok.Data;
 @Data
 public class RedisWebSocketMessage extends AbstractRedisChannelMessage {
 
+    @Override
+    public String getChannel() { return "aicloud:websocket"; }
+
     /**
      * Session 编号
      */

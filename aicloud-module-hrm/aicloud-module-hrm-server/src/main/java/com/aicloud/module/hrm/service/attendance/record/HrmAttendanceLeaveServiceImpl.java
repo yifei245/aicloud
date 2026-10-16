@@ -52,6 +52,7 @@ public class HrmAttendanceLeaveServiceImpl implements HrmAttendanceLeaveService 
     private HrmEmployeeService employeeService;
     @Resource
     private BpmProcessInstanceApi processInstanceApi;
+    @Resource private HrmLeaveBalanceService balances;
 
     @Override
     @SuppressWarnings("ExtractMethodRecommender")
@@ -73,6 +74,7 @@ public class HrmAttendanceLeaveServiceImpl implements HrmAttendanceLeaveService 
         HrmAttendanceLeaveDO attendanceLeave = BeanUtils.toBean(reqVO, HrmAttendanceLeaveDO.class)
                 .setEmployeeId(employee.getId()).setApprovalStatus(BpmProcessInstanceStatusEnum.RUNNING.getStatus());
         attendanceLeaveMapper.insert(attendanceLeave);
+        balances.reserveNative(attendanceLeave);
 
         // 3. 构建流程变量并发起审批流程
         Map<String, Object> variables = new HashMap<>();
@@ -175,6 +177,7 @@ public class HrmAttendanceLeaveServiceImpl implements HrmAttendanceLeaveService 
     }
 
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public void updateLeaveApprovalStatus(
             Long id, String processInstanceId, Integer status, String reason) {
         // 1. 仅处理当前审批流程的结束状态
@@ -189,10 +192,12 @@ public class HrmAttendanceLeaveServiceImpl implements HrmAttendanceLeaveService 
         }
 
         // 2. 仅允许当前审批中的流程写入一次终态
-        attendanceLeaveMapper.updateApprovalResultByIdAndProcessInstanceIdAndApprovalStatus(
+        int updated=attendanceLeaveMapper.updateApprovalResultByIdAndProcessInstanceIdAndApprovalStatus(
                 id, processInstanceId, BpmProcessInstanceStatusEnum.RUNNING.getStatus(),
                 new HrmAttendanceLeaveDO().setProcessInstanceId(processInstanceId)
                         .setApprovalStatus(status).setApprovalTime(LocalDateTime.now()).setApprovalReason(reason));
+        if(updated>0) balances.finish("HRM","leave:"+id,
+                status.equals(BpmProcessInstanceStatusEnum.APPROVE.getStatus()),processInstanceId);
     }
 
     private HrmAttendanceLeaveDO validateAttendanceLeaveExists(Long id) {

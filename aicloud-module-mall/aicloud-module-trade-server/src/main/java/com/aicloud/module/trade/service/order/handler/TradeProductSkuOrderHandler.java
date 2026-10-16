@@ -1,46 +1,53 @@
 package com.aicloud.module.trade.service.order.handler;
 
-import cn.hutool.core.collection.CollUtil;
-import com.aicloud.module.product.api.sku.ProductSkuApi;
-import com.aicloud.module.trade.convert.order.TradeOrderConvert;
-import com.aicloud.module.trade.dal.dataobject.order.TradeOrderDO;
-import com.aicloud.module.trade.dal.dataobject.order.TradeOrderItemDO;
-import org.springframework.stereotype.Component;
-
+import com.aicloud.module.wms.api.integration.WmsStockApi;
+import com.aicloud.module.wms.api.integration.WmsStockBridge;
+import com.aicloud.module.trade.dal.dataobject.order.*;
+import com.aicloud.module.trade.dal.dataobject.aftersale.AfterSaleDO;
+import com.aicloud.module.trade.dal.mysql.order.TradeOrderItemMapper;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-
-/**
- * 商品 SKU 库存的 {@link TradeOrderHandler} 实现类
- *
- * @author 芋道源码
- */
+/** Orders reserve WMS stock; shipping consumes it and cancellation releases it. */
 @Component
 public class TradeProductSkuOrderHandler implements TradeOrderHandler {
+    @Resource private WmsStockApi wms;
+    @Resource private WmsStockBridge bridge;
+    @Resource private TradeOrderItemMapper items;
+    @Value("${aicloud.trade.fulfillment-warehouse-id:1}") private Long warehouseId;
 
-    @Resource
-    private ProductSkuApi productSkuApi;
-
-    @Override
-    public void beforeOrderCreate(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
-        productSkuApi.updateSkuStock(TradeOrderConvert.INSTANCE.convertNegative(orderItems)).checkError();
-    }
-
-    @Override
-    public void afterCancelOrder(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
-        // 售后的订单项，已经在 afterCancelOrderItem 回滚库存，所以这里不需要重复回滚
-        orderItems = filterOrderItemListByNoneAfterSale(orderItems);
-        if (CollUtil.isEmpty(orderItems)) {
-            return;
+    @Override public void afterOrderCreate(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
+        for (TradeOrderItemDO item : orderItems) {
+            bridge.prepare(movement(order, item.getSkuId(), BigDecimal.valueOf(item.getCount()).negate(), key(item)), false);
         }
-        productSkuApi.updateSkuStock(TradeOrderConvert.INSTANCE.convert(orderItems)).checkError();
     }
-
-    @Override
-    public void afterCancelOrderItem(TradeOrderDO order, TradeOrderItemDO orderItem) {
-        productSkuApi.updateSkuStock(TradeOrderConvert.INSTANCE.convert(singletonList(orderItem))).checkError();
+    @Override public void afterCancelOrder(TradeOrderDO order, List<TradeOrderItemDO> orderItems) {
+        if (order.getDeliveryTime() != null) return;
+        for (TradeOrderItemDO item : filterOrderItemListByNoneAfterSale(orderItems)) bridge.finish(key(item), false);
     }
-
+    @Override public void afterCancelOrderItem(TradeOrderDO order, TradeOrderItemDO item) {
+        if (order.getDeliveryTime() == null) bridge.finish(key(item), false);
+        // A refund without returned goods never increases physical inventory.
+    }
+    @Override public void afterDeliveryOrder(TradeOrderDO order) {
+        for (TradeOrderItemDO item : filterOrderItemListByNoneAfterSale(items.selectListByOrderId(order.getId()))) bridge.finish(key(item), true);
+    }
+    public void returnReceived(TradeOrderDO order, AfterSaleDO afterSale) {
+        if (order.getDeliveryTime() == null) throw new IllegalArgumentException("未发货订单不能进行实物退库");
+        bridge.prepare(movement(order, afterSale.getSkuId(), BigDecimal.valueOf(afterSale.getCount()),
+                "return-received:" + afterSale.getId()), true);
+    }
+    private WmsStockApi.Movement movement(TradeOrderDO order, Long sku, BigDecimal quantity, String key) {
+        var balance = wms.balance("MALL", sku, warehouseId).getCheckedData();
+        if (!balance.isMapped()) throw new IllegalArgumentException("商城 SKU 尚未关联 ERP 商品和 WMS 库存");
+        var movement = new WmsStockApi.Movement();
+        movement.setBusinessKey(key); movement.setProductId(sku); movement.setWarehouseId(warehouseId);
+        movement.setQuantity(quantity); movement.setUnit(balance.getUnit());
+        movement.setDocumentId(order.getId()); movement.setDocumentNo(order.getNo());
+        return movement;
+    }
+    private String key(TradeOrderItemDO item) { return "order-item:" + item.getId(); }
 }

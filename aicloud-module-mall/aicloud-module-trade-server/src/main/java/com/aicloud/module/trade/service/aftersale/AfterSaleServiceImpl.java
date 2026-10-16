@@ -83,6 +83,9 @@ public class AfterSaleServiceImpl implements AfterSaleService {
 
     @Resource
     private TradeOrderProperties tradeOrderProperties;
+    @Resource private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
+    @Resource
+    private com.aicloud.module.trade.service.order.handler.TradeProductSkuOrderHandler stockHandler;
 
     @Override
     public PageResult<AfterSaleDO> getAfterSalePage(AfterSalePageReqVO pageReqVO) {
@@ -286,6 +289,7 @@ public class AfterSaleServiceImpl implements AfterSaleService {
     public void receiveAfterSale(Long userId, Long id) {
         // 校验售后单存在，并状态为已退货
         AfterSaleDO afterSale = validateAfterSaleReceivable(id);
+        stockHandler.returnReceived(tradeOrderQueryService.getOrder(afterSale.getOrderId()), afterSale);
 
         // 更新售后单的状态
         updateAfterSaleStatus(afterSale.getId(), AfterSaleStatusEnum.BUYER_DELIVERY.getStatus(), new AfterSaleDO()
@@ -407,6 +411,7 @@ public class AfterSaleServiceImpl implements AfterSaleService {
 
             // 更新交易订单项的售后状态为【已完成】
             tradeOrderUpdateService.updateOrderItemWhenAfterSaleSuccess(afterSale.getOrderItemId(), afterSale.getRefundPrice());
+            finance.record("MALL_REFUND", afterSale.getId(), afterSale.getNo(), java.math.BigDecimal.valueOf(afterSale.getRefundPrice(), 2), true, "商城售后退款");
             // 【情况二：退款失败】
         } else if (PayRefundStatusEnum.isFailure(payRefund.getStatus())) {
             // 记录售后日志

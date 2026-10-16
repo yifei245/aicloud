@@ -29,7 +29,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "tradeRpcConfiguration", proxyBeanMethods = false)
+@org.springframework.context.annotation.Import({com.aicloud.module.wms.api.integration.WmsStockSourceConfiguration.class, com.aicloud.module.fms.api.business.FmsBusinessSourceConfiguration.class})
 @EnableFeignClients(clients = {
+        com.aicloud.module.fms.api.business.FmsBusinessApi.class,
+        com.aicloud.module.wms.api.integration.WmsStockApi.class,
         BargainActivityApi.class, BargainRecordApi.class, CombinationRecordApi.class,
         CouponApi.class, DiscountActivityApi.class, RewardActivityApi.class, SeckillActivityApi.class, PointActivityApi.class,
         MemberUserApi.class, MemberPointApi.class, MemberLevelApi.class, MemberAddressApi.class, MemberConfigApi.class,
