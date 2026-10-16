@@ -55,6 +55,9 @@ import static org.mockito.Mockito.*;
 @Import({OaTravelReimbursementServiceImpl.class, ValidationAutoConfiguration.class})
 public class OaTravelReimbursementServiceImplTest extends BaseDbUnitTest {
 
+    @MockitoBean
+    private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
+
     @Resource
     private OaTravelReimbursementService travelReimbursementService;
 

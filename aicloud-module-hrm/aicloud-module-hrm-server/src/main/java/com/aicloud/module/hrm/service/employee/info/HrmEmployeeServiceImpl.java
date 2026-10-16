@@ -1182,13 +1182,13 @@ public class HrmEmployeeServiceImpl implements HrmEmployeeService {
             deptApi.validateDeptList(Collections.singleton(deptId)).checkError();
         }
         // 2. 校验直属上级链路不存在自引用或环路
-        if (leaderEmployeeId == null) {
+        if (leaderEmployeeId == null || leaderEmployeeId == 0L) {
             return;
         }
         Set<Long> visitedEmployeeIds = new HashSet<>();
         Long currentLeaderEmployeeId = leaderEmployeeId;
-        while (currentLeaderEmployeeId != null) {
-            if (currentLeaderEmployeeId.equals(employeeId)
+        while (currentLeaderEmployeeId != null && currentLeaderEmployeeId != 0L) {
+            if (currentLeaderEmployeeId < 0 || currentLeaderEmployeeId.equals(employeeId)
                     || !visitedEmployeeIds.add(currentLeaderEmployeeId)) {
                 throw exception(EMPLOYEE_LEADER_INVALID);
             }

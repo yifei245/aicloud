@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaSupplyApplyStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaSupplyApplyService supplyApplyService;
 
     @Override
@@ -32,7 +35,9 @@ public class OaSupplyApplyStatusListener extends BpmProcessInstanceStatusEventLi
     @Override
     @PostMapping(ApiConstants.PREFIX + "/supply-apply/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        supplyApplyService.updateSupplyApplyStatus(Long.parseLong(event.getBusinessKey()), event.getId(), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            supplyApplyService.updateSupplyApplyStatus(Long.parseLong(event.getBusinessKey()), event.getId(), event.getStatus());
+        });
     }
 
 }

@@ -24,9 +24,10 @@ public class AicloudDataPermissionRpcAutoConfiguration {
     }
 
     @Bean
-    public FilterRegistrationBean<DataPermissionRpcWebFilter> dataPermissionRpcFilter() {
+    public FilterRegistrationBean<DataPermissionRpcWebFilter> dataPermissionRpcFilter(
+            @org.springframework.beans.factory.annotation.Value("${aicloud.security.internal-secret:}") String internalSecret) {
         FilterRegistrationBean<DataPermissionRpcWebFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new DataPermissionRpcWebFilter());
+        registrationBean.setFilter(new DataPermissionRpcWebFilter(internalSecret));
         registrationBean.setOrder(TENANT_CONTEXT_FILTER - 1); // 顺序没有绝对的要求，在租户 Filter 前面稳妥点
         return registrationBean;
     }

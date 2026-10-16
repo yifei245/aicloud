@@ -1,8 +1,8 @@
 {
   "database": "aicloud",
-  "existingTablesPreserved": 756,
-  "applicationTables": 604,
-  "totalTablesAfterInit": 756,
+  "existingTablesPreserved": 763,
+  "applicationTables": 611,
+  "totalTablesAfterInit": 763,
   "createdTables": 0,
   "baselineOriginalTablesPreserved": 152,
   "baselineMissingTables": []

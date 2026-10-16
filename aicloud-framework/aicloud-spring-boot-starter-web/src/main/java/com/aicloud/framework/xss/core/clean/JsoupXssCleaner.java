@@ -35,31 +35,21 @@ public class JsoupXssCleaner implements XssCleaner {
     /**
      * 构建一个 Xss 清理的 Safelist 规则。
      * 基于 Safelist#relaxed() 的基础上:
-     * 1. 扩展支持了 style 和 class 属性
+     * 1. 支持 class；移除 style，避免通过 CSS 注入脚本。
      * 2. a 标签额外支持了 target 属性
-     * 3. img 标签额外支持了 data 协议，便于支持 base64
+     * 3. 图片仅使用安全的网络协议或相对路径。
      *
      * @return Safelist
      */
     private Safelist buildSafelist() {
         // 使用 jsoup 提供的默认的
         Safelist relaxedSafelist = Safelist.relaxed();
-        // 富文本编辑时一些样式是使用 style 来进行实现的
-        // 比如红色字体 style="color:red;", 所以需要给所有标签添加 style 属性
-        // 注意：style 属性会有注入风险 <img STYLE="background-image:url(javascript:alert('XSS'))">
         relaxedSafelist.addAttributes(":all", "class");
         // 保留 a 标签的 target 属性
         relaxedSafelist.addAttributes("a", "target");
         relaxedSafelist.addEnforcedAttribute("a", "rel", "noopener noreferrer");
         relaxedSafelist.preserveRelativeLinks(true);
 
-        // 保留相对路径, 保留相对路径时，必须提供对应的 baseUri 属性，否则依然会被删除
-        // WHITELIST.preserveRelativeLinks(false);
-
-        // 移除 a 标签和 img 标签的一些协议限制，这会导致 xss 防注入失效，如 <img src=javascript:alert("xss")>
-        // 虽然可以重写 WhiteList#isSafeAttribute 来处理，但是有隐患，所以暂时不支持相对路径
-        // WHITELIST.removeProtocols("a", "href", "ftp", "http", "https", "mailto");
-        // WHITELIST.removeProtocols("img", "src", "http", "https");
         return relaxedSafelist;
     }
 

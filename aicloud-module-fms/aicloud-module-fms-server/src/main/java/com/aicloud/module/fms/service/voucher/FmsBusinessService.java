@@ -31,6 +31,15 @@ public class FmsBusinessService {
 
     @Transactional(rollbackFor = Exception.class)
     public void configure(Rule rule, Long userId) {
+        var existing = jdbc.queryForList("SELECT account_set_id FROM fms_business_rule WHERE tenant_id=? AND source=? FOR UPDATE", tenant(), rule.getSource());
+        if (!existing.isEmpty()) {
+            Long previousAccount = number(existing.getFirst(), "account_set_id");
+            accounts.validateAccountSetWritePermission(previousAccount, userId);
+            if (!previousAccount.equals(rule.getAccountSetId()) && jdbc.queryForObject(
+                    "SELECT COUNT(*) FROM fms_business_source WHERE tenant_id=? AND source=? AND state='ACTIVE'", Long.class, tenant(), rule.getSource()) > 0) {
+                throw new IllegalArgumentException("此业务来源仍有关联凭证，不能更换账套");
+            }
+        }
         accounts.validateAccountSetWritePermission(rule.getAccountSetId(), userId);
         words.validateVoucherWordExists(rule.getAccountSetId(), rule.getVoucherWordId());
         if (rule.getDebitSubjectId().equals(rule.getCreditSubjectId())) throw new IllegalArgumentException("借贷科目不能相同");
@@ -53,7 +62,7 @@ public class FmsBusinessService {
     }
     public Long deliver(FmsBusinessApi.Event event) {
         return inbox.execute(tenant(), "fms-business", event.getBusinessKey(), event, Long.class, () -> {
-            var rules = jdbc.queryForList("SELECT * FROM fms_business_rule WHERE tenant_id=? AND source=?", tenant(), event.getSource());
+            var rules = jdbc.queryForList("SELECT * FROM fms_business_rule WHERE tenant_id=? AND source=? FOR UPDATE", tenant(), event.getSource());
             if (rules.isEmpty()) throw new IllegalArgumentException("尚未配置财务来源规则：" + event.getSource());
             Map<String, Object> rule = rules.getFirst();
             Long account = number(rule, "account_set_id"), user = number(rule, "posting_user_id");

@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaResignApplyStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaResignApplyService resignApplyService;
 
     @Override
@@ -31,7 +34,9 @@ public class OaResignApplyStatusListener extends BpmProcessInstanceStatusEventLi
     @Override
     @PostMapping(ApiConstants.PREFIX + "/resign-apply/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        resignApplyService.updateResignApplyStatus(Long.valueOf(event.getBusinessKey()), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            resignApplyService.updateResignApplyStatus(Long.valueOf(event.getBusinessKey()), event.getStatus());
+        });
     }
 
 }

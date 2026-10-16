@@ -1,4 +1,21 @@
 USE aicloud;
+CREATE TABLE IF NOT EXISTS `crm_erp_mapping` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `kind` varchar(16) NOT NULL,
+  `crm_id` bigint NOT NULL,
+  `erp_id` bigint NOT NULL,
+  `source_unit` int DEFAULT NULL,
+  `unit` varchar(64) DEFAULT NULL,
+  UNIQUE KEY uk_mapping(tenant_id,kind,crm_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `crm_erp_contract_sale` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `contract_id` bigint NOT NULL,
+  `sale_order_id` bigint NOT NULL,
+  UNIQUE KEY uk_contract(tenant_id,contract_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `hrm_leave_policy` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `tenant_id` bigint NOT NULL,
@@ -54,7 +71,8 @@ CREATE TABLE IF NOT EXISTS `integration_outbox` (
   `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   UNIQUE KEY uk_source (tenant_id,producer,business_key),
-  KEY idx_pending (producer,status,next_attempt_time)
+  KEY idx_pending (producer,status,next_attempt_time),
+  KEY idx_aggregate (tenant_id,producer,aggregate_key,id,status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `fms_business_rule` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,

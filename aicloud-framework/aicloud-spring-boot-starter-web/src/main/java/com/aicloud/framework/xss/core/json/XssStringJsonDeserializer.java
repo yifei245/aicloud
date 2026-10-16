@@ -39,6 +39,8 @@ public class XssStringJsonDeserializer extends StringDeserializer {
     public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         // 1. 白名单 URL 的处理
         HttpServletRequest request = ServletUtils.getRequest();
+        // The shared ObjectMapper is also used by database JSON handlers and RPC clients.
+        if (request == null) return super.deserialize(p, ctxt);
         if (request != null) {
             String uri = ServletUtils.getRequest().getRequestURI();
             if (properties.getExcludeUrls().stream().anyMatch(excludeUrl -> pathMatcher.match(excludeUrl, uri))) {
@@ -48,7 +50,8 @@ public class XssStringJsonDeserializer extends StringDeserializer {
 
         // 2. 真正使用 xssCleaner 进行过滤
         if (p.hasToken(JsonToken.VALUE_STRING)) {
-            if (properties.getOpaqueFields().contains(p.currentName())) return p.getText();
+            String field = p.currentName();
+            if (field != null && properties.getOpaqueFields().contains(field)) return p.getText();
             return xssCleaner.clean(p.getText());
         }
         JsonToken t = p.currentToken();

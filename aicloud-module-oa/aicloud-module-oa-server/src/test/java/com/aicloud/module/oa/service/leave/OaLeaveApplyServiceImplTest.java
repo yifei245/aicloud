@@ -47,8 +47,17 @@ import static org.mockito.Mockito.*;
  *
  * @author 芋道源码
  */
-@Import(OaLeaveApplyServiceImpl.class)
+@Import({OaLeaveApplyServiceImpl.class,OaLeaveApplyServiceImplTest.JdbcConfig.class})
 public class OaLeaveApplyServiceImplTest extends BaseDbUnitTest {
+    @org.springframework.boot.test.context.TestConfiguration
+    static class JdbcConfig {
+        @org.springframework.context.annotation.Bean
+        org.springframework.jdbc.core.JdbcTemplate jdbcTemplate(javax.sql.DataSource source) { return new org.springframework.jdbc.core.JdbcTemplate(source); }
+    }
+
+
+    @MockitoBean
+    private com.aicloud.module.oa.service.leave.OaHrmIntegration hrmIntegration;
 
     @Resource
     private OaLeaveApplyService leaveApplyService;
@@ -63,12 +72,14 @@ public class OaLeaveApplyServiceImplTest extends BaseDbUnitTest {
 
     @BeforeEach
     public void before() {
+        com.aicloud.framework.tenant.core.context.TenantContextHolder.setTenantId(1L);
         SecurityFrameworkUtils.setLoginUser(new LoginUser().setId(10L).setUserType(2), new MockHttpServletRequest());
     }
 
     @AfterEach
     public void tearDown() {
         SecurityContextHolder.clearContext();
+        com.aicloud.framework.tenant.core.context.TenantContextHolder.clear();
     }
 
     @BeforeEach
@@ -77,7 +88,7 @@ public class OaLeaveApplyServiceImplTest extends BaseDbUnitTest {
     }
 
     @Test
-    public void testUpdateLeaveApplyStatus_createAttendance() {
+    public void testUpdateLeaveApplyStatus_delegatesToHrm() {
         // mock 数据
         OaLeaveApplyDO apply = randomPojo(OaLeaveApplyDO.class, row -> row.setId(null).setType(1).setUrgency(1))
                 .setStatus(1).setDays(2).setStartTime(LocalDateTime.of(2026, 9, 1, 8, 0));
@@ -88,9 +99,8 @@ public class OaLeaveApplyServiceImplTest extends BaseDbUnitTest {
         leaveApplyService.updateLeaveApplyStatus(apply.getId(), 2);
         // 断言
         assertEquals(2, leaveApplyMapper.selectById(apply.getId()).getStatus());
-        verify(attendanceService).createApplyAttendance(10L,
-                OaAttendanceTypeEnum.LEAVE,
-                apply.getStartTime());
+        verify(hrmIntegration).result(argThat(row -> row.getId().equals(apply.getId())), eq(true));
+        verifyNoInteractions(attendanceService);
     }
 
     @Test
@@ -258,7 +268,8 @@ public class OaLeaveApplyServiceImplTest extends BaseDbUnitTest {
 
         // 断言
         assertEquals(2, leaveApplyMapper.selectById(application.getId()).getStatus());
-        verify(attendanceService, times(1)).createApplyAttendance(1L, OaAttendanceTypeEnum.LEAVE, application.getStartTime());
+        verify(hrmIntegration, times(1)).result(argThat(row -> row.getId().equals(application.getId())), eq(true));
+        verifyNoInteractions(attendanceService);
     }
 
     @Test

@@ -42,6 +42,9 @@ import static org.mockito.Mockito.*;
 @Import(OaResignApplyServiceImpl.class)
 public class OaResignApplyServiceImplTest extends BaseDbUnitTest {
 
+    @MockitoBean
+    private com.aicloud.module.oa.service.leave.OaHrmIntegration hrmIntegration;
+
     @Resource
     private OaResignApplyService resignApplyService;
 

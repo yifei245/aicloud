@@ -687,6 +687,7 @@ CREATE TABLE IF NOT EXISTS oa_leave_apply (
   reason text DEFAULT NULL,
   status int DEFAULT NULL,
   process_instance_id varchar(255) DEFAULT NULL,
+  integration_key varchar(160) DEFAULT NULL,
   file_urls varchar DEFAULT NULL,
   creator varchar(64) DEFAULT '',
   create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -68,5 +68,15 @@
     "key": "oa_vehicle_return",
     "action": "preserved existing deployment",
     "passed": true
+  },
+  {
+    "key": "hrm_attendance_leave",
+    "action": "created and deployed",
+    "passed": true
+  },
+  {
+    "key": "crm-contract-audit",
+    "action": "preserved existing deployment",
+    "passed": true
   }
 ]

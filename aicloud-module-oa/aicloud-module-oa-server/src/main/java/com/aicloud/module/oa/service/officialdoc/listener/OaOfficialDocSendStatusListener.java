@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaOfficialDocSendStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaOfficialDocSendService officialDocSendService;
 
     @Override
@@ -31,7 +34,9 @@ public class OaOfficialDocSendStatusListener extends BpmProcessInstanceStatusEve
     @Override
     @PostMapping(ApiConstants.PREFIX + "/official-doc-send/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        officialDocSendService.updateOfficialDocSendStatus(Long.parseLong(event.getBusinessKey()), event.getId(), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            officialDocSendService.updateOfficialDocSendStatus(Long.parseLong(event.getBusinessKey()), event.getId(), event.getStatus());
+        });
     }
 
 }

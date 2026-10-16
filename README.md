@@ -2,7 +2,7 @@
 
 Java 21 后端微服务平台。目录以 ruoyi-vue-pro master-jdk17 为主，复用同源 MIT 项目 yudao-cloud 的真实业务实现；提供管理端、手机 App、微信小程序、Web/H5 用户端以及第三方 API。项目只包含后端，Swagger/Knife4j 可直接操作接口。
 
-完整数据库、业务服务和运行脚本见下文。Knife4j 22 个业务分组均已验证，OA 本地审批与协作、财务初始化和报表已补齐并通过业务验收。具体范围以 [实施清单](docs/02-implementation.md) 和验证报告为准；外部支付、微信、短信、AI 模型等使用真实服务调用，需要配置自己的账号。
+完整数据库、业务服务和运行脚本见下文。Knife4j 22 个业务分组已做基线检查，跨模块业务正在按统一数据归属补齐。当前联动能力及尚未完成的范围见 [业务集成状态](docs/07-integration-status.md)。模块内既有功能范围见 [实施清单](docs/02-implementation.md) 和验证报告为准；外部支付、微信、短信、AI 模型等使用真实服务调用，需要配置自己的账号。
 
 ## 设计与项目结构
 
@@ -75,7 +75,7 @@ python3 scripts/init-db.py
 python3 scripts/reuse-local.py
 python3 scripts/run-local.py start
 python3 scripts/run-local.py status
-python3 scripts/init-business.py  # 导入并发布 14 个 OA 审批流程，保留已有自定义模型
+python3 scripts/init-business.py  # 导入并发布 14 个 OA、HRM 请假和 CRM 合同审批流程，保留已有自定义模型
 python3 scripts/verify-openapi.py # 检查 Knife4j 的全部 22 个业务分组
 ```
 
@@ -93,6 +93,8 @@ python3 scripts/run-local.py start core
 python3 scripts/run-local.py start pay product promotion trade statistics bpm crm erp
 python3 scripts/run-local.py stop pay product promotion trade statistics bpm crm erp
 ```
+
+集成验收需先启动 `core bpm wms erp crm fms hrm oa`，再执行 `python3 scripts/verify-integration.py`。脚本通过本机网关创建带验收标识的单据，保留库存、审批和凭证审计记录；不会覆盖已有审批模型或财务规则。
 
 ## 登录与 API 调试
 
@@ -167,9 +169,9 @@ docker compose --profile erp --profile crm up -d --build
 
 ## 本地验收结果
 
-Java 21 全模块编译通过，87 个 Maven 模块、24 个应用包。Knife4j 22/22 分组通过文档与浏览器检查；核心真实 HTTP 55 项、业务查询 393 次、OA 293 项、财务 24 项检查通过。业务模块本地单测报告累计 2460 项，无失败；原平台单测、五类业务流程和 Docker 验证详见[验收清单](docs/02-implementation.md)。完整 SQL 在全新本地库执行成功，创建 599 张应用表；本机原有 152 张表保留。
+Java 21 全模块编译通过，87 个 Maven 模块、24 个应用包。Knife4j 22/22 分组通过文档与浏览器检查；核心真实 HTTP 55 项、业务查询 393 次、OA 293 项、财务 24 项检查通过。业务模块本地单测报告累计 2460 项，无失败；原平台单测、五类业务流程和 Docker 验证详见[验收清单](docs/02-implementation.md)。完整 SQL 在全新本地库执行成功，基线创建 599 张应用表；集成升级后应用表为 611 张，本机原有 152 张表保留。
 
-这些检查覆盖服务启动、接口契约、真实 MySQL 查询和已列出的数据流，不代表全部接口逐条完成业务验收。外部支付、微信、短信、真实邮箱和 AI 调用按约定待配置凭据后验证。运行核心验收与业务验收时使用串行命令，核心单点退出检查会撤销管理员的其他令牌。
+上述数字是集成改造前的历史基线，不能代替当前联动验收。新增改动及回归结果以 [业务集成状态](docs/07-integration-status.md)、`docs/integration-http-verification.json` 和 `docs/integration-unit-verification.json` 为准。外部支付、微信、短信、真实邮箱和 AI 调用按约定待配置凭据后验证。运行核心验收与业务验收时使用串行命令，核心单点退出检查会撤销管理员的其他令牌。
 
 ## 协议与参考
 

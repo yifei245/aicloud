@@ -85,6 +85,9 @@ public class ErpProductServiceImpl implements ErpProductService {
         // TODO 芋艿：校验分类
         // 校验存在
         validateProductExists(updateReqVO.getId());
+        if (!java.util.Objects.equals(productMapper.selectById(updateReqVO.getId()).getUnitId(), updateReqVO.getUnitId())) {
+            throw new IllegalArgumentException("商品基本计量单位不能直接更换；请新建商品并通过明确的转换单据处理库存");
+        }
         // 更新
         ErpProductDO updateObj = BeanUtils.toBean(updateReqVO, ErpProductDO.class);
         wmsIntegration.validateMaster(updateObj);

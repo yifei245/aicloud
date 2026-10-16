@@ -38,7 +38,7 @@ public class IntegrationOutboxService {
     /** Preserve causal order for transitions of the same business document. */
     @Transactional(rollbackFor = Exception.class)
     public Long enqueueOrdered(Long tenantId, String eventType, String businessKey, String aggregateKey, Object payload) {
-        if (tenantId == null || tenantId <= 0 || businessKey == null || businessKey.length() > 200 || !handlers().containsKey(eventType)) {
+        if (tenantId == null || tenantId <= 0 || businessKey == null || businessKey.isBlank() || businessKey.length() > 200 || !handlers().containsKey(eventType)) {
             throw new IllegalArgumentException("Invalid tenant, business key or integration event type");
         }
         if (aggregateKey == null || aggregateKey.isBlank() || aggregateKey.length() > 200) throw new IllegalArgumentException("Invalid aggregate key");
@@ -47,9 +47,12 @@ public class IntegrationOutboxService {
             jdbc.update("INSERT INTO integration_outbox(tenant_id,producer,event_type,business_key,aggregate_key,payload,status,next_attempt_time) VALUES(?,?,?,?,?,?,'PENDING',CURRENT_TIMESTAMP)",
                     tenantId, producer, eventType, businessKey, aggregateKey, body);
         } catch (DuplicateKeyException duplicate) {
-            String previous = jdbc.queryForObject("SELECT payload FROM integration_outbox WHERE tenant_id=? AND producer=? AND business_key=?", String.class,
+            var previous = jdbc.queryForMap("SELECT payload,event_type,aggregate_key FROM integration_outbox WHERE tenant_id=? AND producer=? AND business_key=?",
                     tenantId, producer, businessKey);
-            if (!body.equals(previous)) throw new IllegalArgumentException("Integration business key already has different content");
+            if (!body.equals(previous.get("payload")) || !eventType.equals(previous.get("event_type"))
+                    || !aggregateKey.equals(previous.get("aggregate_key"))) {
+                throw new IllegalArgumentException("Integration business key already has different content or ordering");
+            }
         }
         return jdbc.queryForObject("SELECT id FROM integration_outbox WHERE tenant_id=? AND producer=? AND business_key=?", Long.class,
                 tenantId, producer, businessKey);
@@ -84,7 +87,9 @@ public class IntegrationOutboxService {
                 jdbc.update("UPDATE integration_outbox SET status='DONE',last_error=NULL,lock_token=NULL,lease_until=NULL,update_time=CURRENT_TIMESTAMP WHERE id=? AND lock_token=?",
                         event.getId(), token);
             } catch (Exception error) {
-                String reason = error.getClass().getSimpleName() + (error instanceof ServiceException service ? ":" + service.getCode() : "");
+                String reason = error.getClass().getSimpleName() + (error instanceof ServiceException service ? ":" + service.getCode() + ":" + service.getMessage() : "");
+                reason=reason.replaceAll("[\\r\\n]"," ").replaceAll("(?i)(bearer|access_token|password|secret)[=: ]+[^ ,;]+","$1=[redacted]");
+                if(reason.length()>200) reason=reason.substring(0,200);
                 long delay = Math.min(300, 2L << Math.min(event.getAttempts(), 7));
                 jdbc.update("UPDATE integration_outbox SET status='RETRY',last_error=?,next_attempt_time=?,lock_token=NULL,lease_until=NULL,update_time=CURRENT_TIMESTAMP WHERE id=? AND lock_token=?",
                         reason, LocalDateTime.now().plusSeconds(delay), event.getId(), token);

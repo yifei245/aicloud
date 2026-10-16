@@ -22,6 +22,9 @@ import com.aicloud.module.bpm.api.event.BpmProcessInstanceStatusEventListener;
 public class OaVehicleReturnStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaVehicleReturnService vehicleReturnService;
 
     @Override
@@ -32,7 +35,9 @@ public class OaVehicleReturnStatusListener extends BpmProcessInstanceStatusEvent
     @Override
     @PostMapping(ApiConstants.PREFIX + "/vehicle-return/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        vehicleReturnService.updateVehicleReturnStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            vehicleReturnService.updateVehicleReturnStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        });
     }
 
 }

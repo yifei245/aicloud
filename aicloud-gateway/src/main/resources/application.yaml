@@ -28,6 +28,30 @@ spring:
       server:
         webflux:
           routes:
+            - id: system-employee-api
+              uri: grayLb://system-server
+              predicates:
+                - Path=/employee-api/system/**
+              filters:
+                - RewritePath=/employee-api/system/v3/api-docs, /v3/api-docs
+            - id: hrm-employee-api
+              uri: grayLb://hrm-server
+              predicates:
+                - Path=/employee-api/hrm/**
+              filters:
+                - RewritePath=/employee-api/hrm/v3/api-docs, /v3/api-docs
+            - id: oa-employee-api
+              uri: grayLb://oa-server
+              predicates:
+                - Path=/employee-api/oa/**
+              filters:
+                - RewritePath=/employee-api/oa/v3/api-docs, /v3/api-docs
+            - id: bpm-employee-api
+              uri: grayLb://bpm-server
+              predicates:
+                - Path=/employee-api/bpm/**
+              filters:
+                - RewritePath=/employee-api/bpm/v3/api-docs, /v3/api-docs
             - id: open-api
               uri: grayLb://system-server
               predicates:

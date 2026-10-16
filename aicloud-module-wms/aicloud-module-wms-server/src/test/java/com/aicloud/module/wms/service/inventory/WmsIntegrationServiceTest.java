@@ -49,8 +49,9 @@ class WmsIntegrationServiceTest extends BaseDbUnitTest {
         Path root = Path.of("").toAbsolutePath();
         while (!Files.exists(root.resolve("sql/mysql/10-integration.sql"))) root = root.getParent();
         try (var connection = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(connection, new ByteArrayResource(Files.readString(root.resolve("sql/mysql/10-integration.sql"))
-                    .replace("USE aicloud;", "").getBytes(StandardCharsets.UTF_8)));
+            ScriptUtils.executeSqlScript(connection, new ByteArrayResource(java.util.regex.Pattern.compile("CREATE TABLE IF NOT EXISTS `wms_integration_[^`]+`.*?;",java.util.regex.Pattern.DOTALL)
+                    .matcher(Files.readString(root.resolve("sql/mysql/10-integration.sql"))).results()
+                    .map(java.util.regex.MatchResult::group).collect(java.util.stream.Collectors.joining("\n")).getBytes(StandardCharsets.UTF_8)));
         }
         jdbc.update("DELETE FROM wms_integration_movement"); jdbc.update("DELETE FROM wms_integration_mapping");
         sku = service.syncProduct(new WmsStockApi.Product().setProductId(100L).setName("统一商品").setUnit("件").setEnabled(true));

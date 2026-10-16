@@ -1,0 +1,143 @@
+{
+  "passed": false,
+  "checkedAt": "2026-10-16T10:15:23.934703+08:00",
+  "checks": [
+    {
+      "check": "Administrator can log in with XSS filtering enabled",
+      "passed": true
+    },
+    {
+      "check": "bpm gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "wms gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "erp gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "crm gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "fms gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "hrm gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "oa gateway route is ready",
+      "passed": true
+    },
+    {
+      "check": "ERP inbound commits ten units into authoritative WMS inventory",
+      "passed": true
+    },
+    {
+      "check": "WMS and ERP inventory views agree",
+      "passed": true
+    },
+    {
+      "check": "ERP reversal also reverses WMS physical inventory",
+      "passed": true
+    },
+    {
+      "check": "ERP reapproval creates a new stock movement without duplicate consumption",
+      "passed": true
+    },
+    {
+      "check": "BPM approval persisted",
+      "passed": true
+    },
+    {
+      "check": "Approved CRM contract creates an ERP sale order",
+      "passed": true
+    },
+    {
+      "check": "ERP receives mapped customer, product, quantity and discounted amount",
+      "passed": true
+    },
+    {
+      "check": "Generated ERP sale order remains pending review",
+      "passed": true
+    },
+    {
+      "check": "Repeated delivery leaves the same ERP sale order link",
+      "passed": true
+    },
+    {
+      "check": "BPM approval persisted",
+      "passed": true
+    },
+    {
+      "check": "Approved OA reimbursement creates an FMS business source",
+      "passed": true
+    },
+    {
+      "check": "Business voucher is pending review and balanced at the actual reimbursement amount",
+      "passed": true
+    },
+    {
+      "check": "BPM sends station notifications with SMS disabled",
+      "passed": true
+    },
+    {
+      "check": "Isolated employee role has every required explicit permission",
+      "passed": true
+    },
+    {
+      "check": "Isolated employee can sign in",
+      "passed": true
+    },
+    {
+      "check": "OA submission reserves one day in HRM",
+      "passed": true
+    },
+    {
+      "check": "Overlapping OA request is rejected without consuming more quota",
+      "passed": true
+    },
+    {
+      "check": "BPM approval persisted",
+      "passed": true
+    },
+    {
+      "check": "OA approval converts the same HRM reservation into used leave",
+      "passed": true
+    },
+    {
+      "check": "Native HRM leave reserves from the same balance",
+      "passed": true
+    },
+    {
+      "check": "Cancelled native HRM leave releases quota",
+      "passed": true
+    },
+    {
+      "check": "BPM approval persisted",
+      "passed": true
+    },
+    {
+      "check": "Approved OA regularization updates the HRM employee status",
+      "passed": false
+    }
+  ],
+  "records": {
+    "erpProduct": 7,
+    "erpWarehouse": 7,
+    "stockIn": 6,
+    "unitName": "件1792116923934966000",
+    "crmContract": 4,
+    "erpSaleOrder": 4,
+    "crmProcessInstance": "747fea7a-c907-11f1-9476-c2e402da8795",
+    "fmsAccountSet": 2,
+    "oaReimbursement": 6,
+    "fmsVoucher": 3
+  },
+  "error": "Approved OA regularization updates the HRM employee status"
+}

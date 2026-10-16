@@ -316,6 +316,18 @@ public class HrmEmployeeServiceImplTest extends BaseDbUnitTest {
     }
 
     @Test
+    public void testRegularEmployee_withoutLeaderUsesDatabaseZeroSentinel() {
+        HrmEmployeeDO employee = randomEmployeeDO(row -> row
+                .setStatus(HrmEmployeeStatusEnum.PROBATION.getStatus()).setProbation(3)
+                .setDeptId(10L).setLeaderEmployeeId(0L));
+        employeeMapper.insert(employee);
+        employeeService.regularEmployee(new HrmEmployeeRegularReqVO().setEmployeeId(employee.getId())
+                .setReason(2).setEffectTime(LocalDate.now().atStartOfDay()));
+        assertEquals(HrmEmployeeStatusEnum.REGULAR.getStatus(), employeeMapper.selectById(employee.getId()).getStatus());
+        assertEquals(0L, employeeMapper.selectById(employee.getId()).getLeaderEmployeeId());
+    }
+
+    @Test
     public void testConvertEmployeeToFullTime_withProbationAndPosition() {
         // mock 数据
         HrmEmployeeDO employee = randomEmployeeDO(o -> o

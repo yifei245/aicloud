@@ -76,6 +76,10 @@ for name in ['04-flowable.sql','05-quartz.sql']:
         auxiliary.append(block[1])
         schema=schema[:block.start()]+schema[block.end():]
 mysql(schema)
+# Historical rows predate ordering groups; each used its own business key.
+mysql("UPDATE aicloud.integration_outbox SET aggregate_key=business_key WHERE aggregate_key='';")
+if mysql("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema='aicloud' AND table_name='integration_outbox' AND index_name='idx_aggregate';").strip() == '0':
+    mysql("ALTER TABLE aicloud.integration_outbox ADD KEY idx_aggregate(tenant_id,producer,aggregate_key,id,status);")
 for block in auxiliary:
     # Resume interrupted initialization by skipping existing indexes/constraints.
     indexes=set(mysql("SELECT CONCAT(table_name,':',index_name) FROM information_schema.statistics WHERE table_schema='aicloud';").split())

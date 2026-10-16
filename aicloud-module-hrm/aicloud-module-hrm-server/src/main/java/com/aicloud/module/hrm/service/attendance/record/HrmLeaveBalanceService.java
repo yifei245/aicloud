@@ -30,14 +30,14 @@ public class HrmLeaveBalanceService {
     private Long reserveOaOnce(HrmOaApi.Leave request) {
         var employee = employees.validateEmployeeBySelf(request.getUserId());
         initializePolicies();
-        var policies = jdbc.queryForList("SELECT code FROM hrm_leave_policy WHERE tenant_id=? AND oa_type=?", tenant(), request.getOaType());
+        var policies = jdbc.queryForList("SELECT code,name FROM hrm_leave_policy WHERE tenant_id=? AND oa_type=?", tenant(), request.getOaType());
         if (policies.isEmpty()) throw new IllegalArgumentException("OA 假别尚未关联 HRM 假期规则");
         String code = (String) policies.getFirst().get("code");
         // Keep a single HRM attendance fact for OA approvals.
         var rows = jdbc.queryForList("SELECT leave_id FROM hrm_leave_reservation WHERE tenant_id=? AND source='OA' AND business_key=?", tenant(), request.getKey());
         Long leaveId = rows.isEmpty() || rows.getFirst().get("leave_id") == null ? null : ((Number) rows.getFirst().get("leave_id")).longValue();
         if (leaveId == null) {
-            var record = new HrmAttendanceLeaveDO().setEmployeeId(employee.getId()).setType(code).setDay(request.getDays())
+            var record = new HrmAttendanceLeaveDO().setEmployeeId(employee.getId()).setType((String) policies.getFirst().get("name")).setDay(request.getDays())
                     .setStartTime(request.getStartTime()).setEndTime(request.getEndTime()).setReason(request.getReason())
                     .setRemark("OA 来源 " + request.getSourceId()).setApprovalStatus(BpmProcessInstanceStatusEnum.RUNNING.getStatus());
             leaves.insert(record); leaveId = record.getId();
@@ -48,7 +48,10 @@ public class HrmLeaveBalanceService {
 
     @Transactional(rollbackFor=Exception.class)
     public void reserveNative(HrmAttendanceLeaveDO record) {
-        reserve("HRM", "leave:" + record.getId(), record.getEmployeeId(), record.getType(), record.getDay(),
+        initializePolicies();
+        var policies = jdbc.queryForList("SELECT code FROM hrm_leave_policy WHERE tenant_id=? AND name=?", tenant(), record.getType());
+        if (policies.size() != 1) throw new IllegalArgumentException("HRM 假别尚未关联唯一的统一额度规则：" + record.getType());
+        reserve("HRM", "leave:" + record.getId(), record.getEmployeeId(), (String) policies.getFirst().get("code"), record.getDay(),
                 record.getStartTime(), record.getEndTime(), record.getId(), record);
     }
     private void reserve(String source, String key, Long employee, String code, BigDecimal days, LocalDateTime start, LocalDateTime end, Long leaveId, Object payload) {
@@ -103,6 +106,10 @@ public class HrmLeaveBalanceService {
     @Transactional(rollbackFor=Exception.class)
     public void grant(Long employee,String code,int year,BigDecimal entitlement) {
         employees.validateEmployeeExistsForUpdate(employee);
+        initializePolicies();
+        if (jdbc.queryForObject("SELECT COUNT(*) FROM hrm_leave_policy WHERE tenant_id=? AND code=?", Integer.class, tenant(), code) != 1) {
+            throw new IllegalArgumentException("统一假期规则不存在");
+        }
         var row = lockBalance(employee,code,year);
         if (entitlement.signum()<0 || entitlement.compareTo(decimal(row,"used").add(decimal(row,"reserved")))<0) throw new IllegalArgumentException("额度不能低于已使用与预占之和");
         jdbc.update("UPDATE hrm_leave_balance SET entitlement=? WHERE id=? AND tenant_id=?",entitlement,row.get("id"),tenant());
@@ -115,6 +122,7 @@ public class HrmLeaveBalanceService {
     private void initializePolicies() {
         String[] names={"年假","事假","病假","婚假","产假","陪产假","丧假"};
         for(int i=0;i<names.length;i++) jdbc.update("INSERT IGNORE INTO hrm_leave_policy(tenant_id,code,name,oa_type,limited) VALUES(?,?,?,?,?)",tenant(),String.valueOf(i+1),names[i],i+1,i==0 ? 1 : 0);
+        jdbc.update("INSERT IGNORE INTO hrm_leave_policy(tenant_id,code,name,oa_type,limited) VALUES(?,'8','调休',NULL,1)", tenant());
     }
     private Map<String,Object> lockBalance(Long employee,String code,int year) {
         jdbc.update("INSERT INTO hrm_leave_balance(tenant_id,employee_id,code,year) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE id=id",tenant(),employee,code,year);

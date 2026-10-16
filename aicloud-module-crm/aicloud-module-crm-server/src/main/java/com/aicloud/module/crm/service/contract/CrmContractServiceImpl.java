@@ -62,6 +62,8 @@ import static com.aicloud.module.crm.util.CrmAuditStatusUtils.convertBpmResultTo
 @Validated
 @Slf4j
 public class CrmContractServiceImpl implements CrmContractService {
+    @Resource private CrmErpIntegration erpIntegration;
+    @Resource private org.springframework.jdbc.core.JdbcTemplate jdbc;
 
     /**
      * BPM 合同审批流程标识
@@ -293,12 +295,16 @@ public class CrmContractServiceImpl implements CrmContractService {
     @Transactional(rollbackFor = Exception.class)
     @LogRecord(type = CRM_CONTRACT_TYPE, subType = CRM_CONTRACT_SUBMIT_SUB_TYPE, bizNo = "{{#id}}",
             success = CRM_CONTRACT_SUBMIT_SUCCESS)
+    @CrmPermission(bizType = CrmBizTypeEnum.CRM_CONTRACT, bizId = "#id", level = CrmPermissionLevelEnum.WRITE)
     public void submitContract(Long id, Long userId) {
+        jdbc.queryForList("SELECT id FROM crm_contract WHERE id=? AND tenant_id=? AND deleted=0 FOR UPDATE", id,
+                com.aicloud.framework.tenant.core.context.TenantContextHolder.getRequiredTenantId());
         // 1. 校验合同是否在审批
         CrmContractDO contract = validateContractExists(id);
         if (ObjUtil.notEqual(contract.getAuditStatus(), CrmAuditStatusEnum.DRAFT.getStatus())) {
             throw exception(CONTRACT_SUBMIT_FAIL_NOT_DRAFT);
         }
+        erpIntegration.request(contract);
 
         // 2. 创建合同审批流程实例
         String processInstanceId = bpmProcessInstanceApi.createProcessInstance(userId, new BpmProcessInstanceCreateReqDTO()
@@ -313,9 +319,13 @@ public class CrmContractServiceImpl implements CrmContractService {
     }
 
     @Override
-    public void updateContractAuditStatus(Long id, Integer bpmResult) {
+    @Transactional(rollbackFor=Exception.class)
+    public void updateContractAuditStatus(Long id, String processInstanceId, Integer bpmResult) {
+        jdbc.queryForList("SELECT id FROM crm_contract WHERE id=? AND tenant_id=? AND deleted=0 FOR UPDATE", id,
+                com.aicloud.framework.tenant.core.context.TenantContextHolder.getRequiredTenantId());
         // 1.1 校验合同是否存在
         CrmContractDO contract = validateContractExists(id);
+        if (processInstanceId == null || !processInstanceId.equals(contract.getProcessInstanceId())) return;
         if (ObjUtil.equal(contract.getAuditStatus(), convertBpmResultToAuditStatus(bpmResult))) return;
         // 1.2 只有审批中，可以更新审批结果
         if (ObjUtil.notEqual(contract.getAuditStatus(), CrmAuditStatusEnum.PROCESS.getStatus())) {
@@ -327,6 +337,7 @@ public class CrmContractServiceImpl implements CrmContractService {
         // 2. 更新合同审批结果
         Integer auditStatus = convertBpmResultToAuditStatus(bpmResult);
         contractMapper.updateById(new CrmContractDO().setId(id).setAuditStatus(auditStatus));
+        if (bpmResult.equals(com.aicloud.module.bpm.enums.task.BpmProcessInstanceStatusEnum.APPROVE.getStatus())) erpIntegration.approved(contract);
     }
 
     // ======================= 查询相关 =======================

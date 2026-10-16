@@ -48,6 +48,10 @@ public class ErpProductUnitServiceImpl implements ErpProductUnitService {
     public void updateProductUnit(ErpProductUnitSaveReqVO updateReqVO) {
         // 1.1 校验存在
         validateProductUnitExists(updateReqVO.getId());
+        if (!java.util.Objects.equals(productUnitMapper.selectById(updateReqVO.getId()).getName(), updateReqVO.getName())
+                && productService.getProductCountByUnitId(updateReqVO.getId()) > 0) {
+            throw new IllegalArgumentException("已被商品使用的基本计量单位不能改名，请新增单位，避免跨模块库存含义改变");
+        }
         // 1.2 校验名字唯一
         validateProductUnitNameUnique(updateReqVO.getId(), updateReqVO.getName());
         // 2. 更新

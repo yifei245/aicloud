@@ -14472,6 +14472,7 @@ CREATE TABLE IF NOT EXISTS `oa_leave_apply` (
   `days` int DEFAULT 0,
   `reason` text,
   `status` int DEFAULT 0,
+  `integration_key` varchar(160) DEFAULT NULL,
   `process_instance_id` text,
   `file_urls` json DEFAULT NULL,
   `tenant_id` bigint NOT NULL DEFAULT 0,
@@ -19731,6 +19732,61 @@ WHERE NOT EXISTS (SELECT 1 FROM fms_subject_template WHERE code='6000' AND delet
 
 -- BEGIN 10-integration.sql
 USE aicloud;
+CREATE TABLE IF NOT EXISTS `crm_erp_mapping` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `kind` varchar(16) NOT NULL,
+  `crm_id` bigint NOT NULL,
+  `erp_id` bigint NOT NULL,
+  `source_unit` int DEFAULT NULL,
+  `unit` varchar(64) DEFAULT NULL,
+  UNIQUE KEY uk_mapping(tenant_id,kind,crm_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `crm_erp_contract_sale` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `contract_id` bigint NOT NULL,
+  `sale_order_id` bigint NOT NULL,
+  UNIQUE KEY uk_contract(tenant_id,contract_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `hrm_leave_policy` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `oa_type` int DEFAULT NULL,
+  `limited` tinyint NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_policy(tenant_id,code),
+  UNIQUE KEY uk_oa_type(tenant_id,oa_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `hrm_leave_balance` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `employee_id` bigint NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `year` int NOT NULL,
+  `entitlement` decimal(6,2) NOT NULL DEFAULT 0,
+  `reserved` decimal(6,2) NOT NULL DEFAULT 0,
+  `used` decimal(6,2) NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_balance(tenant_id,employee_id,code,year)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `hrm_leave_reservation` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `source` varchar(16) NOT NULL,
+  `business_key` varchar(160) NOT NULL,
+  `payload_hash` varchar(64) DEFAULT NULL,
+  `employee_id` bigint DEFAULT NULL,
+  `code` varchar(64) DEFAULT NULL,
+  `year` int DEFAULT NULL,
+  `days` decimal(6,2) DEFAULT NULL,
+  `limited` tinyint NOT NULL DEFAULT 0,
+  `leave_id` bigint DEFAULT NULL,
+  `state` varchar(16) NOT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_reservation(tenant_id,source,business_key),
+  KEY idx_pending(source,state,create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `integration_outbox` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `tenant_id` bigint NOT NULL,
@@ -19748,7 +19804,40 @@ CREATE TABLE IF NOT EXISTS `integration_outbox` (
   `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   UNIQUE KEY uk_source (tenant_id,producer,business_key),
-  KEY idx_pending (producer,status,next_attempt_time)
+  KEY idx_pending (producer,status,next_attempt_time),
+  KEY idx_aggregate (tenant_id,producer,aggregate_key,id,status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `fms_business_rule` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `source` varchar(32) NOT NULL,
+  `account_set_id` bigint NOT NULL,
+  `voucher_word_id` bigint NOT NULL,
+  `debit_subject_id` bigint NOT NULL,
+  `credit_subject_id` bigint NOT NULL,
+  `posting_user_id` bigint NOT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_rule (tenant_id,source)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `fms_business_source` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `source` varchar(32) NOT NULL,
+  `document_id` bigint NOT NULL,
+  `business_key` varchar(160) NOT NULL,
+  `document_no` varchar(100) NOT NULL,
+  `amount` decimal(18,2) NOT NULL,
+  `account_set_id` bigint NOT NULL,
+  `posting_user_id` bigint NOT NULL,
+  `voucher_id` bigint DEFAULT NULL,
+  `reversal_voucher_id` bigint DEFAULT NULL,
+  `state` varchar(16) NOT NULL,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `active_document_id` bigint GENERATED ALWAYS AS (CASE WHEN state='ACTIVE' THEN document_id ELSE NULL END) STORED,
+  UNIQUE KEY uk_active_document (tenant_id,source,active_document_id),
+  UNIQUE KEY uk_business_key (tenant_id,source,business_key),
+  KEY idx_document (tenant_id,source,document_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `integration_stock_intent` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,

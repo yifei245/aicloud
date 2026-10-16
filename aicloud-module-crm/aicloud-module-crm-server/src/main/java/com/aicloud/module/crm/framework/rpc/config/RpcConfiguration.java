@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration(value = "crmRpcConfiguration", proxyBeanMethods = false)
 @EnableFeignClients(clients = {AdminUserApi.class, DeptApi.class, PostApi.class,
+        com.aicloud.module.erp.api.business.ErpBusinessApi.class,
         OperateLogApi.class,
         BpmProcessInstanceApi.class})
 public class RpcConfiguration {

@@ -17,12 +17,20 @@ import java.util.Objects;
  * @author 芋道源码
  */
 public class DataPermissionRpcWebFilter extends OncePerRequestFilter {
+    private final String internalSecret;
+
+    public DataPermissionRpcWebFilter(String internalSecret) { this.internalSecret = internalSecret; }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String enable = request.getHeader(DataPermissionRequestInterceptor.ENABLE_HEADER_NAME);
-        if (Objects.equals(enable, Boolean.FALSE.toString())) {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+        String credential = request.getHeader("X-Aicloud-Internal-Token");
+        boolean trustedRpc = path.startsWith("/rpc-api/") && internalSecret != null && !internalSecret.isBlank()
+                && credential != null && java.security.MessageDigest.isEqual(
+                internalSecret.getBytes(java.nio.charset.StandardCharsets.UTF_8), credential.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        if (trustedRpc && Objects.equals(enable, Boolean.FALSE.toString())) {
             DataPermissionUtils.executeIgnore(() -> {
                 try {
                     chain.doFilter(request, response);

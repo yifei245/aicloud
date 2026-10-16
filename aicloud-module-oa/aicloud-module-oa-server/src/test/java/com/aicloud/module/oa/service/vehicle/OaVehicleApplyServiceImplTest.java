@@ -47,6 +47,15 @@ import static org.mockito.Mockito.*;
 @Import({OaVehicleApplyServiceImpl.class, OaVehicleApplyStatusListener.class})
 public class OaVehicleApplyServiceImplTest extends BaseDbUnitTest {
 
+    @MockitoBean
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @org.junit.jupiter.api.BeforeEach
+    void allowCallbackForServiceUnitTest() {
+        org.mockito.Mockito.doAnswer(call -> { ((Runnable) call.getArgument(2)).run(); return null; })
+                .when(callbacks).execute(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
+    }
+
     @Resource
     private OaVehicleApplyService vehicleApplyService;
 

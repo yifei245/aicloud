@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize OA workflows through real local login; preserve existing models."""
+"""Initialize business workflows through real local login; preserve existing models."""
 import importlib.util, json, os, sys, urllib.parse
 from pathlib import Path
 
@@ -25,7 +25,10 @@ def initialize():
     identity = request('system/auth/get-permission-info')['user']
     models = {model['key']: model for model in request('bpm/model/list')}
     outcomes = []
-    for resource in sorted((ROOT / 'aicloud-module-oa/aicloud-module-oa-server/src/main/resources/bpm').glob('oa_*.json')):
+    resources = sorted((ROOT / 'aicloud-module-oa/aicloud-module-oa-server/src/main/resources/bpm').glob('oa_*.json'))
+    resources += sorted((ROOT / 'aicloud-module-hrm/aicloud-module-hrm-server/src/main/resources/bpm').glob('*.json'))
+    resources += sorted((ROOT / 'aicloud-module-crm/aicloud-module-crm-server/src/main/resources/bpm').glob('*.json'))
+    for resource in resources:
         template = json.loads(resource.read_text())
         template['managerUserIds'] = [identity['id']]
         model = models.get(template['key'])
@@ -40,8 +43,8 @@ def initialize():
             raise RuntimeError(template['key'] + ': 流程未生效，请检查挂起状态')
         outcomes.append({'key': template['key'], 'action': action, 'passed': True})
         print(template['name'] + ': ' + action, flush=True)
-    if len(outcomes) != 14:
-        raise RuntimeError('OA 流程资源数量不完整')
+    if len(outcomes) != 16:
+        raise RuntimeError('业务流程资源数量不完整')
     (ROOT / 'docs/business-initialization.json').write_text(json.dumps(outcomes, ensure_ascii=False, indent=2) + '\n')
     return outcomes
 

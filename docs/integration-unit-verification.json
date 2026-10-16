@@ -1,0 +1,908 @@
+{
+  "checkedAt": "2026-10-16T10:27:23.165277+08:00",
+  "scope": "OA, HRM, WMS and integration/security/scheduler regression",
+  "runtime": "JDK 21, headless=true, H2 local in-memory databases",
+  "suites": [
+    {
+      "name": "com.aicloud.framework.datapermission.core.rpc.DataPermissionRpcWebFilterTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.framework.mybatis.core.integration.IntegrationDeliveryTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.framework.quartz.core.LocalXxlJobSchedulerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.framework.web.core.util.EmployeeIdentityTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.framework.xss.JsoupXssCleanerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.framework.xss.XssStringJsonDeserializerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.bpm.service.message.BpmNoticeDeliveryHandlerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.config.HrmAttendanceGroupServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.config.HrmAttendanceHolidayServiceImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.record.HrmAttendanceClockServiceImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.record.HrmAttendanceLeaveServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.record.HrmLeaveBalanceServiceTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.attendance.statistics.HrmAttendanceStatisticsServiceImplTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.config.HrmConfigServiceImplTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.config.HrmEmployeeFieldConfigServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.employment.HrmEmployeeChangeRecordServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.employment.HrmEmployeeContractServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.employment.HrmEmployeeQuitInfoServiceImplTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.employment.HrmEmployeeSalaryCardServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.experience.HrmEmployeeCertificateServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.experience.HrmEmployeeEducationExperienceServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.experience.HrmEmployeeTrainingExperienceServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.experience.HrmEmployeeWorkExperienceServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.info.HrmEmployeeContactServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.info.HrmEmployeeFileServiceImplTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.info.HrmEmployeePersonalNoteServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.employee.info.HrmEmployeeServiceImplTest",
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.home.HrmHomeServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.insurance.config.HrmInsuranceSchemeServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.insurance.config.HrmInsuranceStandardServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.insurance.employee.HrmInsuranceEmployeeInfoServiceImplTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.insurance.monthrecord.HrmInsuranceMonthEmployeeRecordServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.insurance.monthrecord.HrmInsuranceMonthRecordServiceImplTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentActionRecordServiceImplTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentProcessServiceImplTest",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentQueryServiceImplTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentReviewServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.assessment.HrmPerformanceAssessmentServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.config.HrmPerformanceAssessmentTemplateServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.config.HrmPerformanceResultTemplateServiceImplTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.performance.plan.HrmPerformancePlanServiceImplTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.candidate.HrmRecruitCandidateServiceImplTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.candidate.HrmRecruitInterviewServiceImplTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.config.HrmRecruitChannelServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.config.HrmRecruitConfigServiceImplTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.post.HrmRecruitPostServiceImplTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.recruit.post.HrmRecruitPostTypeServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.config.HrmSalaryChangeTemplateServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.config.HrmSalaryConfigServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.config.HrmSalaryGroupServiceImplTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.config.HrmSalaryOptionServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.config.HrmSalaryTaxRuleServiceImplTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.employee.HrmSalaryChangeRecordServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.employee.HrmSalaryEmployeeInfoServiceImplTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.monthrecord.HrmSalaryMonthEmployeeRecordServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.monthrecord.HrmSalaryMonthRecordServiceImplTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.slip.HrmSalarySlipSendRecordServiceImplTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.slip.HrmSalarySlipServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.hrm.service.salary.slip.HrmSalarySlipTemplateServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.OaBpmModelInitTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 14,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.announcement.OaAnnouncementServiceImplTest",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.attendance.OaAttendanceServiceImplTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.bpm.OaBpmCallbackGuardTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.contact.OaContactCategoryServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.contact.OaContactServiceImplTest",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.discussion.OaDiscussionLikeServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.discussion.OaDiscussionReplyServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.discussion.OaDiscussionServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.discussion.OaDiscussionVoteServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.file.OaFileFavoriteServiceImplTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.file.OaFileNodeServiceImplTest",
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.file.OaFilePermissionServiceImplTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.leave.OaLeaveApplyServiceImplTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.mail.OaMailAccountServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.mail.OaMailMessageServiceImplTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.meetingroom.OaMeetingRoomBookingServiceImplTest",
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.meetingroom.OaMeetingRoomServiceImplTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.note.OaNoteCategoryServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.note.OaNoteServiceImplTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.officialdoc.OaOfficialDocReceiveServiceImplTest",
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.officialdoc.OaOfficialDocSendServiceImplTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.officialdoc.OaOfficialDocTemplateServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.overtime.OaOvertimeApplyServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.plan.OaPlanServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.regular.OaRegularApplyServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.reimbursement.OaReimbursementServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.resign.OaResignApplyServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.schedule.OaScheduleServiceImplTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.seal.OaSealApplyServiceImplTest",
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.seal.OaSealServiceImplTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.supply.OaSupplyApplyServiceImplTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.supply.OaSupplyIssueServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.supply.OaSupplyItemServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.task.OaTaskServiceImplTest",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.travel.OaTravelApplyServiceImplTest",
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.travel.OaTravelReimbursementServiceImplTest",
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.vehicle.OaVehicleApplyServiceImplTest",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.vehicle.OaVehicleReturnServiceImplTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.vehicle.OaVehicleServiceImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.oa.service.workreport.OaWorkReportServiceImplTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.inventory.WmsIntegrationServiceTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.inventory.WmsInventoryServiceImplTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.md.item.WmsItemBrandServiceImplTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.md.warehouse.WmsWarehouseServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.check.WmsCheckOrderDetailServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.check.WmsCheckOrderServiceImplTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.movement.WmsMovementOrderDetailServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.movement.WmsMovementOrderServiceImplTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.receipt.WmsReceiptOrderDetailServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.receipt.WmsReceiptOrderServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.shipment.WmsShipmentOrderDetailServiceImplTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    },
+    {
+      "name": "com.aicloud.module.wms.service.order.shipment.WmsShipmentOrderServiceImplTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": null
+    }
+  ],
+  "tests": 1488,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 14,
+  "passed": true
+}

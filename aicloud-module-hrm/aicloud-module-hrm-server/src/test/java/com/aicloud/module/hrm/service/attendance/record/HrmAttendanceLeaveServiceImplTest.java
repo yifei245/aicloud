@@ -49,6 +49,8 @@ public class HrmAttendanceLeaveServiceImplTest extends BaseDbUnitTest {
     private HrmEmployeeService employeeService;
     @MockitoBean
     private BpmProcessInstanceApi processInstanceApi;
+    @MockitoBean
+    private HrmLeaveBalanceService balances;
 
     @Test
     public void testCreateLeave_success() {

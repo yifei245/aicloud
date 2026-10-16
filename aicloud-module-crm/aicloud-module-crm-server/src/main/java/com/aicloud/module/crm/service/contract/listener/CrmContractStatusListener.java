@@ -33,7 +33,11 @@ public class CrmContractStatusListener extends BpmProcessInstanceStatusEventList
     @Override
     @PostMapping(PREFIX + "/update-audit-status") // 目的：提供给 bpm-server rpc 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        contractService.updateContractAuditStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        if (!getProcessDefinitionKey().equals(event.getProcessDefinitionKey())
+                || !com.aicloud.module.bpm.enums.task.BpmProcessInstanceStatusEnum.isProcessEndStatus(event.getStatus())) {
+            throw new IllegalArgumentException("合同审批回调的流程类型或结果无效");
+        }
+        contractService.updateContractAuditStatus(Long.parseLong(event.getBusinessKey()), event.getId(), event.getStatus());
     }
 
 }

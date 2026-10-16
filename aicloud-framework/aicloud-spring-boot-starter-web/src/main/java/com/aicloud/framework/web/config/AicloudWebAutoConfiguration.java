@@ -66,6 +66,7 @@ public class AicloudWebAutoConfiguration {
                 Map<String, Predicate<Class<?>>> pathPrefixes = Maps.newLinkedHashMapWithExpectedSize(2);
                 putPathPrefix(pathPrefixes, webProperties.getAdminApi(), antPathMatcher);
                 putPathPrefix(pathPrefixes, webProperties.getAppApi(), antPathMatcher);
+                putPathPrefix(pathPrefixes, webProperties.getEmployeeApi(), antPathMatcher);
                 return pathPrefixes;
             }
 

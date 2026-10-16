@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaSealApplyStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaSealApplyService sealApplyService;
 
     @Override
@@ -31,7 +34,9 @@ public class OaSealApplyStatusListener extends BpmProcessInstanceStatusEventList
     @Override
     @PostMapping(ApiConstants.PREFIX + "/seal-apply/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        sealApplyService.updateSealApplyStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            sealApplyService.updateSealApplyStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        });
     }
 
 }

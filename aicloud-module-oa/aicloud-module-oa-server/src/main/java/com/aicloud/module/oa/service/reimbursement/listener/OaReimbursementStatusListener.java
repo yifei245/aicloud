@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaReimbursementStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaReimbursementService reimbursementService;
 
     @Override
@@ -31,7 +34,9 @@ public class OaReimbursementStatusListener extends BpmProcessInstanceStatusEvent
     @Override
     @PostMapping(ApiConstants.PREFIX + "/reimbursement/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        reimbursementService.updateReimbursementStatus(Long.valueOf(event.getBusinessKey()), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            reimbursementService.updateReimbursementStatus(Long.valueOf(event.getBusinessKey()), event.getStatus());
+        });
     }
 
 }

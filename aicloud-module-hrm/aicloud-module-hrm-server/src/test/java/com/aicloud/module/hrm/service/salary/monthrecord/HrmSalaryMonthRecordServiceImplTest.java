@@ -77,6 +77,9 @@ import static org.mockito.Mockito.when;
 @Import(HrmSalaryMonthRecordServiceImpl.class)
 public class HrmSalaryMonthRecordServiceImplTest extends BaseDbUnitTest {
 
+    @MockitoBean
+    private com.aicloud.module.fms.api.business.FmsBusinessBridge finance;
+
     @Resource
     private HrmSalaryMonthRecordServiceImpl monthRecordService;
 

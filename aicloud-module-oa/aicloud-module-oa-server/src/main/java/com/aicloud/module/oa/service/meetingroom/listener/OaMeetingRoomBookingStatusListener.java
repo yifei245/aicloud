@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OaMeetingRoomBookingStatusListener extends BpmProcessInstanceStatusEventListener {
 
     @Resource
+    private com.aicloud.module.oa.service.bpm.OaBpmCallbackGuard callbacks;
+
+    @Resource
     private OaMeetingRoomBookingService meetingRoomBookingService;
 
     @Override
@@ -31,6 +34,8 @@ public class OaMeetingRoomBookingStatusListener extends BpmProcessInstanceStatus
     @Override
     @PostMapping(ApiConstants.PREFIX + "/meeting-room-booking/update-audit-status") // 提供给 bpm-server RPC 调用
     protected void onEvent(@RequestBody BpmProcessInstanceStatusEvent event) {
-        meetingRoomBookingService.updateMeetingRoomBookingStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        callbacks.execute(getProcessDefinitionKey(), event, () -> {
+            meetingRoomBookingService.updateMeetingRoomBookingStatus(Long.parseLong(event.getBusinessKey()), event.getStatus());
+        });
     }
 }

@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +39,9 @@ class IntegrationDeliveryTest {
         transaction = new TransactionTemplate(context.getBean(PlatformTransactionManager.class));
         Path root = Path.of("").toAbsolutePath();
         while (!Files.exists(root.resolve("sql/mysql/10-integration.sql"))) root = root.getParent();
-        String sql = Files.readString(root.resolve("sql/mysql/10-integration.sql")).replace("USE aicloud;", "");
+        String sourceSql = Files.readString(root.resolve("sql/mysql/10-integration.sql"));
+        String sql = Pattern.compile("CREATE TABLE IF NOT EXISTS `integration_[^`]+`.*?;",Pattern.DOTALL)
+                .matcher(sourceSql).results().map(java.util.regex.MatchResult::group).collect(java.util.stream.Collectors.joining("\n"));
         try (var connection = context.getBean(DataSource.class).getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8)));
         }
@@ -94,6 +97,36 @@ class IntegrationDeliveryTest {
             @Override public String eventType() { return "TEST"; }
             @Override public void handle(IntegrationEvent event) { delivery.accept(event); }
         }));
+    }
+
+    @Test void failedApprovalBlocksItsReversalButNotOtherDocuments() {
+        var delivered = new java.util.ArrayList<String>();
+        var failFirst = new java.util.concurrent.atomic.AtomicBoolean(true);
+        var outbox = outbox(event -> {
+            if ("approve".equals(event.getBusinessKey()) && failFirst.getAndSet(false)) throw new IllegalStateException("temporary outage");
+            delivered.add(event.getBusinessKey());
+        });
+        outbox.enqueueOrdered(1L, "TEST", "approve", "document:1", Map.of("status", "APPROVED"));
+        outbox.enqueueOrdered(1L, "TEST", "reverse", "document:1", Map.of("status", "CANCELLED"));
+        outbox.enqueueOrdered(1L, "TEST", "other", "document:2", Map.of("status", "APPROVED"));
+        outbox.dispatch();
+        assertEquals(List.of("other"), delivered);
+        outbox.dispatch();
+        assertEquals(List.of("other"), delivered);
+        jdbc.update("UPDATE integration_outbox SET next_attempt_time=TIMESTAMP '2000-01-01 00:00:00'");
+        outbox.dispatch();
+        assertEquals(List.of("other", "approve"), delivered);
+        outbox.dispatch();
+        assertEquals(List.of("other", "approve", "reverse"), delivered);
+    }
+
+    @Test void businessKeyCannotBeReusedForAnotherOrderingGroup() {
+        var outbox = outbox(event -> {});
+        outbox.enqueueOrdered(1L, "TEST", "same", "document:1", Map.of("amount", 10));
+        outbox.enqueueOrdered(1L, "TEST", "same", "document:1", Map.of("amount", 10));
+        assertThrows(IllegalArgumentException.class,
+                () -> outbox.enqueueOrdered(1L, "TEST", "same", "document:2", Map.of("amount", 10)));
+        assertEquals(1, jdbc.queryForObject("SELECT COUNT(*) FROM integration_outbox", Integer.class));
     }
     @Configuration @EnableTransactionManagement
     static class Config {
