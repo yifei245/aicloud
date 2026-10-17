@@ -19,6 +19,10 @@ public class AiMidjourneySyncJob {
     private AiImageService imageService;
 
     @XxlJob("aiMidjourneySyncJob")
+    public void execute() {
+        execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public void execute(String param) {
         Integer count = imageService.midjourneySync();
         log.info("[execute][同步 Midjourney ({}) 个]", count);

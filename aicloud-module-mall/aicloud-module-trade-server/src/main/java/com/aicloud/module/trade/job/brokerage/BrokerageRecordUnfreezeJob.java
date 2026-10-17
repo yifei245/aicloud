@@ -21,6 +21,10 @@ public class BrokerageRecordUnfreezeJob {
 
     @XxlJob("brokerageRecordUnfreezeJob")
     @TenantJob // 多租户
+    public String execute() {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) {
         int count = brokerageRecordService.unfreezeRecord();
         return StrUtil.format("解冻佣金 {} 个", count);

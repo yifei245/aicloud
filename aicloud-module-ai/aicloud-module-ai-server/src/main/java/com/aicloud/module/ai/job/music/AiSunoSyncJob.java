@@ -20,6 +20,10 @@ public class AiSunoSyncJob {
     private AiMusicService musicService;
 
     @XxlJob("aiSunoSyncJob")
+    public void execute() {
+        execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public void execute(String param) {
         Integer count = musicService.syncMusic();
         log.info("[execute][同步 Suno ({}) 个]", count);

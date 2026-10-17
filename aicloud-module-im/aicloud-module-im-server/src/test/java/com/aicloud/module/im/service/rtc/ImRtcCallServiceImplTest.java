@@ -40,6 +40,7 @@ import static com.aicloud.module.im.enums.ErrorCodeConstants.RTC_GROUP_INVITEE_O
 import static com.aicloud.module.im.enums.ErrorCodeConstants.RTC_GROUP_INVITEE_REQUIRED;
 import static com.aicloud.module.im.enums.ErrorCodeConstants.RTC_SELF_BUSY;
 import static org.junit.jupiter.api.Assertions.*;
+import static com.aicloud.framework.test.core.util.AssertUtils.assertServiceException;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -67,6 +68,20 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
     private ImProperties imProperties;
     @Mock
     private ImGroupMemberService groupMemberService;
+
+    private static ImProperties.Rtc enabledRtc() {
+        ImProperties.Rtc config = new ImProperties.Rtc();
+        config.setEnabled(true);
+        return config;
+    }
+
+    @Test
+    public void testCreateCall_disabledFeatureRejectsBeforeBusinessWrites() {
+        when(imProperties.getRtc()).thenReturn(new ImProperties.Rtc());
+        assertServiceException(() -> rtcCallService.createCall(1L, new ImRtcCallCreateReqVO()),
+                com.aicloud.module.im.enums.ErrorCodeConstants.RTC_NOT_ENABLED);
+        verifyNoInteractions(rtcCallMapper, rtcParticipantMapper);
+    }
 
     // ========== timeoutInvitingParticipants ==========
 
@@ -194,7 +209,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
         // 准备：鉴权通过 + 后端配置阈值 2 分钟 + 无候选（避免触发推送）
         when(rtcParticipantMapper.selectByRoomAndUserId("r1", 100L))
                 .thenReturn(buildParticipant(10L, "r1", 100L, ImRtcParticipantStatusEnum.INVITING));
-        ImProperties.Rtc rtcConfig = new ImProperties.Rtc();
+        ImProperties.Rtc rtcConfig = enabledRtc();
         rtcConfig.setInviteTimeoutMinutes(2);
         when(imProperties.getRtc()).thenReturn(rtcConfig);
         when(rtcParticipantMapper.selectListByRoomAndStatusAndInviteTimeBefore(
@@ -220,7 +235,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
         // 准备：鉴权通过 + 单候选 CAS 成功 + 群通话不关房
         when(rtcParticipantMapper.selectByRoomAndUserId("r1", 100L))
                 .thenReturn(buildParticipant(10L, "r1", 100L, ImRtcParticipantStatusEnum.INVITING));
-        ImProperties.Rtc rtcConfig = new ImProperties.Rtc();
+        ImProperties.Rtc rtcConfig = enabledRtc();
         rtcConfig.setInviteTimeoutMinutes(1);
         when(imProperties.getRtc()).thenReturn(rtcConfig);
         ImRtcParticipantDO timeoutTarget = buildParticipant(11L, "r1", 101L, ImRtcParticipantStatusEnum.INVITING);
@@ -251,7 +266,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
 
     @Test
     public void testCreateCall_groupOnlyInviteSelf_throwInviteeRequired() throws Exception {
-        when(imProperties.getRtc()).thenReturn(new ImProperties.Rtc());
+        when(imProperties.getRtc()).thenReturn(enabledRtc());
         when(rtcCallLockRedisDAO.lockGroup(eq(10L), any())).thenAnswer(invocation -> {
             @SuppressWarnings("unchecked")
             Callable<ImRtcCallDO> callable = invocation.getArgument(1);
@@ -274,7 +289,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
     @Test
     public void testAcceptCall_joinedOtherRoom_throwSelfBusy() {
         // 准备：当前通话仍在邀请中，但用户已加入另一个房间
-        when(imProperties.getRtc()).thenReturn(new ImProperties.Rtc());
+        when(imProperties.getRtc()).thenReturn(enabledRtc());
         ImRtcCallDO call = buildCall("r1", 200L, ImConversationTypeEnum.PRIVATE, null);
         when(rtcCallMapper.selectByRoom("r1")).thenReturn(call);
         when(rtcParticipantMapper.selectByRoomAndUserId("r1", 100L))
@@ -292,7 +307,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
     @Test
     public void testJoinCall_joinedOtherRoom_throwSelfBusy() {
         // 准备：群通话活跃，用户已加入另一个房间
-        when(imProperties.getRtc()).thenReturn(new ImProperties.Rtc());
+        when(imProperties.getRtc()).thenReturn(enabledRtc());
         ImRtcCallDO call = buildCall("r1", 200L, ImConversationTypeEnum.GROUP, 999L);
         when(rtcCallMapper.selectByRoom("r1")).thenReturn(call);
         when(groupMemberService.validateMemberInGroup(999L, 100L)).thenReturn(new ImGroupMemberDO());
@@ -310,7 +325,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
     @Test
     public void testJoinCall_insertDuplicateKey_reuseExistingParticipant() {
         // 准备：群通话活跃，首次查询无参与者，插入时命中唯一键
-        when(imProperties.getRtc()).thenReturn(new ImProperties.Rtc());
+        when(imProperties.getRtc()).thenReturn(enabledRtc());
         ImRtcCallDO call = buildCall("r1", 200L, ImConversationTypeEnum.GROUP, 999L);
         when(rtcCallMapper.selectByRoom("r1")).thenReturn(call);
         when(groupMemberService.validateMemberInGroup(999L, 100L)).thenReturn(new ImGroupMemberDO());
@@ -330,7 +345,7 @@ public class ImRtcCallServiceImplTest extends BaseMockitoUnitTest {
 
     @Test
     public void testInviteCall_overLimit_throws() throws Exception {
-        ImProperties.Rtc rtcConfig = new ImProperties.Rtc();
+        ImProperties.Rtc rtcConfig = enabledRtc();
         rtcConfig.setGroupMaxParticipants(3);
         when(imProperties.getRtc()).thenReturn(rtcConfig);
         ImRtcCallDO call = buildCall("r1", 200L, ImConversationTypeEnum.GROUP, 999L);

@@ -1,0 +1,72 @@
+{
+  "checkedAt": "2026-10-16T23:33:36.841646+08:00",
+  "passed": true,
+  "checks": [
+    {
+      "check": "Business integration fixtures have passed real HTTP verification",
+      "passed": true
+    },
+    {
+      "check": "Scoped application reads the actual ERP product with public fields only",
+      "passed": true
+    },
+    {
+      "check": "Public product catalog has actual persisted records",
+      "passed": true
+    },
+    {
+      "check": "Public inventory comes from authoritative WMS availability",
+      "passed": true
+    },
+    {
+      "check": "Public inventory excludes reservation sources and internal history",
+      "passed": true
+    },
+    {
+      "check": "Anonymous business API access is rejected",
+      "passed": true
+    },
+    {
+      "check": "Administrator token cannot impersonate an application",
+      "passed": true
+    },
+    {
+      "check": "Catalog-only scope cannot read inventory",
+      "passed": true
+    },
+    {
+      "check": "Application cannot escape its token tenant",
+      "passed": true
+    },
+    {
+      "check": "Application cannot forge the tenant-visit permission",
+      "passed": true
+    },
+    {
+      "check": "Unknown product is not reported as zero inventory",
+      "passed": true
+    },
+    {
+      "check": "Unmapped warehouse is not reported as available stock",
+      "passed": true
+    },
+    {
+      "check": "Public catalog forbids unbounded export pagination",
+      "passed": true
+    },
+    {
+      "check": "Unapproved scope cannot access dictionaries",
+      "passed": true
+    },
+    {
+      "check": "erp publishes its public business APIs in Knife4j",
+      "passed": true
+    },
+    {
+      "check": "wms publishes its public business APIs in Knife4j",
+      "passed": true
+    }
+  ],
+  "productId": 8,
+  "warehouseId": 8
+}

@@ -24,6 +24,10 @@ public class PayOrderExpireJob {
 
     @XxlJob("payOrderExpireJob")
     @TenantJob // 多租户
+    public String execute() {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) {
         int count = orderService.expireOrder();
         log.info("[execute][支付过期 ({}) 个]", count);

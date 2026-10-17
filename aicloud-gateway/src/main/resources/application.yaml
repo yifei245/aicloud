@@ -52,6 +52,14 @@ spring:
                 - Path=/employee-api/bpm/**
               filters:
                 - RewritePath=/employee-api/bpm/v3/api-docs, /v3/api-docs
+            - id: erp-open-api
+              uri: grayLb://erp-server
+              predicates:
+                - Path=/open-api/v1/erp/**
+            - id: wms-open-api
+              uri: grayLb://wms-server
+              predicates:
+                - Path=/open-api/v1/wms/**
             - id: open-api
               uri: grayLb://system-server
               predicates:

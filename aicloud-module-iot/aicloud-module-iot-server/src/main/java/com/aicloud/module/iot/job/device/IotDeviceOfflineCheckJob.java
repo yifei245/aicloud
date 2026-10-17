@@ -43,6 +43,10 @@ public class IotDeviceOfflineCheckJob {
 
     @XxlJob("deviceOfflineCheckJob")
     @TenantJob // 多租户
+    public String execute() {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) {
         // 1.1 获得在线设备列表
         List<IotDeviceDO> devices = deviceService.getDeviceListByState(IotDeviceStateEnum.ONLINE.getState());

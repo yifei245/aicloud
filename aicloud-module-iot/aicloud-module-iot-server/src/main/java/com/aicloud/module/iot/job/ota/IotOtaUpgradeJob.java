@@ -38,6 +38,10 @@ public class IotOtaUpgradeJob {
 
     @XxlJob("deviceUpgradeJob")
     @TenantJob // 多租户
+    public String execute() throws Exception {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) throws Exception {
         // 1. 查询待推送的 OTA 升级记录
         List<IotOtaTaskRecordDO> records = otaTaskRecordService.getOtaRecordListByStatus(

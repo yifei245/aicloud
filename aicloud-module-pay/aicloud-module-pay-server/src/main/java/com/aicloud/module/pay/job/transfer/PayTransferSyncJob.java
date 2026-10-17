@@ -24,6 +24,10 @@ public class PayTransferSyncJob {
 
     @XxlJob("payTransferSyncJob")
     @TenantJob // 多租户
+    public String execute() {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) {
         int count = transferService.syncTransfer();
         log.info("[execute][同步转账订单 ({}) 个]", count);

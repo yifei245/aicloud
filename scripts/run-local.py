@@ -25,6 +25,7 @@ for line in (ROOT/'.env').read_text().splitlines():
         k,v=line.split('=',1);env.setdefault(k,v.strip().strip('"\''))
 env['SPRING_CLOUD_NACOS_DISCOVERY_IP']='127.0.0.1'
 env['SERVER_ADDRESS']='127.0.0.1'
+env['MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED']='true'
 data=ROOT/'data/local';data.mkdir(parents=True,exist_ok=True)
 java=env.get('AICLOUD_JAVA', '/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java')
 if not Path(java).exists(): java='java'
@@ -37,7 +38,7 @@ def wait_ready(app,pid):
                 with socket.create_connection(('127.0.0.1',app['port']),timeout=2):pass
                 ready=True
             else:
-                with urllib.request.urlopen(f'http://127.0.0.1:{app["port"]}/actuator/health',timeout=3) as response:
+                with urllib.request.urlopen(f'http://127.0.0.1:{app["port"]}/actuator/health/readiness',timeout=3) as response:
                     ready=json.load(response).get('status')=='UP'
             if ready:
                 print(f'{app["profile"]}: UP (port {app["port"]})',flush=True)

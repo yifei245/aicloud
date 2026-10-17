@@ -29,6 +29,10 @@ public class ProductStatisticsJob {
      */
     @XxlJob("productStatisticsJob")
     @TenantJob
+    public String execute() {
+        return execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public String execute(String param) {
         // 默认昨日
         param = ObjUtil.defaultIfBlank(param, "1");

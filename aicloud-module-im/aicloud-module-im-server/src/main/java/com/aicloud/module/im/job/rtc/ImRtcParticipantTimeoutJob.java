@@ -33,6 +33,10 @@ public class ImRtcParticipantTimeoutJob {
      */
     @XxlJob("imRtcParticipantTimeoutJob")
     @TenantJob
+    public void execute() {
+        execute(com.xxl.job.core.context.XxlJobHelper.getJobParam());
+    }
+
     public void execute(String param) {
         int thresholdMinutes = resolveThresholdMinutes(param);
         int timedOut = rtcCallService.timeoutInvitingParticipants(thresholdMinutes);
