@@ -118,7 +118,7 @@ public class MesWmTransferLineServiceImpl implements MesWmTransferLineService {
         if (stock == null) {
             throw exception(WM_MATERIAL_STOCK_NOT_EXISTS);
         }
-        if (stock.getQuantity() != null && reqVO.getQuantity().compareTo(stock.getQuantity()) > 0) {
+        if (stock.getAvailableQuantity() != null && reqVO.getQuantity().compareTo(stock.getAvailableQuantity()) > 0) {
             throw exception(WM_TRANSFER_LINE_QUANTITY_EXCEED_STOCK);
         }
     }

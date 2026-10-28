@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-10-17T15:05:13.667016+08:00",
+  "passed": true,
+  "tests": 17,
+  "suites": [
+    {
+      "suite": "com.aicloud.module.im.service.rtc.ImRtcCallServiceImplTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "aicloud-module-im/aicloud-module-im-server/target/surefire-reports/TEST-com.aicloud.module.im.service.rtc.ImRtcCallServiceImplTest.xml"
+    },
+    {
+      "suite": "com.aicloud.framework.quartz.core.LocalXxlJobSchedulerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "aicloud-framework/aicloud-spring-boot-starter-job/target/surefire-reports/TEST-com.aicloud.framework.quartz.core.LocalXxlJobSchedulerTest.xml"
+    }
+  ],
+  "scope": "IM call lifecycle and local scheduler regression; not whole-project verification",
+  "headless": true
+}

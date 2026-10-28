@@ -68,6 +68,7 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
     private MesWmMaterialStockService materialStockService;
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public MesWmItemConsumeDO generateItemConsume(MesProFeedbackDO feedback) {
         // 1.1 避免 routeId 等为 null 时 getRouteProductBomList 因 eqIfPresent 放宽条件导致误查
         if (feedback.getRouteId() == null || feedback.getProcessId() == null || feedback.getItemId() == null) {
@@ -117,7 +118,7 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
      * 规则：
      * 1. 查询该物料在虚拟线边库中的库存记录，按入库时间升序（FIFO）
      * 2. 依次从各批次分配，直到消耗量满足
-     * 3. 如果线边库无库存或库存不足，剩余数量生成无批次明细（待后续盘库核销）
+     * 3. 线边库可用库存不足时拒绝报工，不生成无批次负库存
      */
     private void generateDetailForLine(MesWmItemConsumeLineDO line, Long consumeId,
                                        MesWmWarehouseDO warehouse, MesWmWarehouseLocationDO location, MesWmWarehouseAreaDO area,
@@ -126,13 +127,10 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
         MesWmMaterialStockListReqVO stockQuery = new MesWmMaterialStockListReqVO().setItemId(line.getItemId())
                 .setWarehouseId(warehouse.getId()).setLocationId(location.getId()).setAreaId(area.getId());
         List<MesWmMaterialStockDO> stocks = materialStockService.getMaterialStockList(stockQuery)
-                .stream().filter(s -> s.getQuantity().compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
+                .stream().filter(s -> !Boolean.TRUE.equals(s.getFrozen()) && s.getAvailableQuantity().compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
 
         if (CollUtil.isEmpty(stocks)) {
-            // 线边库无该物料库存 → 生成不带批次的明细
-            allDetails.add(buildDetail(consumeId, line.getId(), null, line.getItemId(),
-                    line.getQuantity(), null, null, warehouse, location, area));
-            return;
+            throw exception(com.aicloud.module.mes.enums.ErrorCodeConstants.WM_MATERIAL_STOCK_INSUFFICIENT);
         }
 
         // 按 FIFO 依次从各批次分配
@@ -141,7 +139,7 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
             if (remaining.compareTo(BigDecimal.ZERO) <= 0) {
                 break;
             }
-            BigDecimal allocate = stock.getQuantity().min(remaining);
+            BigDecimal allocate = stock.getAvailableQuantity().min(remaining);
             allDetails.add(buildDetail(consumeId, line.getId(), stock.getId(), line.getItemId(),
                     allocate, stock.getBatchId(), stock.getBatchCode(), warehouse, location, area));
             remaining = remaining.subtract(allocate);
@@ -149,8 +147,7 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
 
         // 库存不足时，剩余数量生成无批次明细（待后续盘库手工核销）
         if (remaining.compareTo(BigDecimal.ZERO) > 0) {
-            allDetails.add(buildDetail(consumeId, line.getId(), null, line.getItemId(),
-                    remaining, null, null, warehouse, location, area));
+            throw exception(com.aicloud.module.mes.enums.ErrorCodeConstants.WM_MATERIAL_STOCK_INSUFFICIENT);
         }
     }
 
@@ -169,7 +166,12 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public void finishItemConsume(Long consumeId) {
+        var consume = itemConsumeMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<MesWmItemConsumeDO>()
+                .eq(MesWmItemConsumeDO::getId, consumeId).last("FOR UPDATE"));
+        if (consume == null) throw new IllegalArgumentException("物料消耗单不存在");
+        if (MesWmItemConsumeStatusEnum.FINISHED.getStatus().equals(consume.getStatus())) return;
         // 1. 查询消耗明细（detail 级别，包含精确的批次/仓库信息）
         List<MesWmItemConsumeDetailDO> details = itemConsumeDetailService
                 .getItemConsumeDetailListByConsumeId(consumeId);
@@ -184,7 +186,7 @@ public class MesWmItemConsumeServiceImpl implements MesWmItemConsumeService {
                     .setWarehouseId(detail.getWarehouseId())
                     .setLocationId(detail.getLocationId())
                     .setAreaId(detail.getAreaId())
-                    .setCheckFlag(false) // 线边库允许负库存
+                    .setCheckFlag(true)
                     .setBizType(MesBizTypeConstants.WM_ITEM_CONSUME)
                     .setBizId(consumeId)
                     .setBizCode("")

@@ -50,19 +50,28 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
     @Resource
     @Lazy
     private MesWmWarehouseService warehouseService;
+    @Resource private com.aicloud.module.wms.api.integration.WmsStockApi wms;
+    @Resource private com.aicloud.module.wms.api.integration.WmsStockBridge stockBridge;
+    @Resource private com.aicloud.module.mes.service.md.unitmeasure.MesMdUnitMeasureService unitService;
+    @Resource private com.aicloud.module.mes.service.wm.batch.MesWmBatchService batchService;
+    @Resource @Lazy private com.aicloud.module.mes.service.wm.warehouse.MesWmWarehouseLocationService locationService;
+    @Resource private com.aicloud.module.mes.dal.mysql.wm.warehouse.MesWmWarehouseAreaMapper areaMapper;
 
     @Override
     public MesWmMaterialStockDO getMaterialStock(Long id) {
-        return materialStockMapper.selectById(id);
+        var stock = materialStockMapper.selectById(id);
+        if (stock != null) hydrate(List.of(stock));
+        return stock;
     }
 
     @Override
     public List<MesWmMaterialStockDO> getMaterialStockListByAreaId(Long areaId) {
-        return materialStockMapper.selectList(MesWmMaterialStockDO::getAreaId, areaId);
+        var rows = materialStockMapper.selectList(MesWmMaterialStockDO::getAreaId, areaId);
+        hydrate(rows); return rows;
     }
 
     public MesWmMaterialStockDO validateMaterialStockExists(Long id) {
-        MesWmMaterialStockDO stock = materialStockMapper.selectById(id);
+        MesWmMaterialStockDO stock = getMaterialStock(id);
         if (stock == null) {
             throw exception(WM_MATERIAL_STOCK_NOT_EXISTS);
         }
@@ -96,7 +105,8 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
         }
 
         // 2. 分页查询
-        return materialStockMapper.selectPage(pageReqVO, itemTypeIds, itemIds, virtualWarehouseId);
+        var page = materialStockMapper.selectPage(pageReqVO, itemTypeIds, itemIds, virtualWarehouseId);
+        hydrate(page.getList()); return page;
     }
 
     @Override
@@ -137,21 +147,27 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
         if (CollUtil.isEmpty(ids)) {
             return Collections.emptyList();
         }
-        return materialStockMapper.selectListByIds(ids);
+        var rows = materialStockMapper.selectListByIds(ids);
+        hydrate(rows); return rows;
     }
 
     @Override
     public List<MesWmMaterialStockDO> getMaterialStockList(MesWmMaterialStockListReqVO reqVO) {
-        return materialStockMapper.selectList(reqVO);
+        var rows = materialStockMapper.selectList(reqVO);
+        hydrate(rows); return rows;
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
     public MesWmMaterialStockDO getOrCreateMaterialStock(Long itemId, Long warehouseId, Long locationId, Long areaId,
                                                          Long batchId, String batchCode, Long vendorId, LocalDateTime receiptTime) {
+        // Serialize metadata creation per physical bin; remote zero-balance registration is harmless on rollback.
+        if (areaMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmWarehouseAreaDO>().eq("id", areaId).last("FOR UPDATE")) == null) throw new IllegalArgumentException("库位不存在");
         // 1. 查找已有库存记录
         MesWmMaterialStockDO stock = materialStockMapper.selectByCompositeKey(
                 itemId, warehouseId, locationId, areaId, batchId);
         if (stock != null) {
+            ensurePosition(stock);
             return stock;
         }
 
@@ -166,16 +182,13 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
                 .frozen(false)
                 .build();
         materialStockMapper.insert(newStock);
+        ensurePosition(newStock);
         return newStock;
     }
 
     @Override
     public void updateMaterialStockQuantity(Long id, BigDecimal quantity, boolean checkFlag) {
-        // 更新库存数量（Mapper 层 CAS 防负库存；checkFlag=false 时允许负数）
-        int updatedRows = materialStockMapper.updateQuantity(id, quantity, checkFlag);
-        if (updatedRows == 0) {
-            throw exception(WM_MATERIAL_STOCK_INSUFFICIENT);
-        }
+        throw new IllegalStateException("MES 数量由 WMS 库存事务管理，禁止直接修改本地数量");
     }
 
     @Override
@@ -185,6 +198,7 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
 
         // 2. 查询当前库位上已有的库存记录
         List<MesWmMaterialStockDO> stockList = getMaterialStockListByAreaId(areaId);
+        stockList = stockList.stream().filter(stock -> stock.getQuantity().signum() > 0).toList();
         if (CollUtil.isEmpty(stockList)) {
             return;
         }
@@ -226,10 +240,73 @@ public class MesWmMaterialStockServiceImpl implements MesWmMaterialStockService 
             throw exception(WM_MATERIAL_STOCK_SELECTION_MISMATCH);
         }
         // 3. 校验库存数量充足（如果前端传了 quantity，则必须保证库存数量 >= quantity）
-        if (quantity != null && stock.getQuantity() != null && stock.getQuantity().compareTo(quantity) < 0) {
+        if (quantity != null && (quantity.signum() <= 0 || stock.getAvailableQuantity().compareTo(quantity) < 0)) {
             throw exception(WM_MATERIAL_STOCK_INSUFFICIENT);
         }
         return stock;
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    public Long allocate(com.aicloud.module.mes.controller.admin.wm.materialstock.vo.MesWmMaterialStockAllocateReqVO request) {
+        if (request.getBatchId() == null && Boolean.TRUE.equals(itemService.validateItemExists(request.getItemId()).getBatchFlag())) {
+            if (request.getBatch() == null || !Objects.equals(request.getBatch().getItemId(), request.getItemId())) throw new IllegalArgumentException("批次管理物料必须选择已有批次或提供批次生成参数");
+            var generated = batchService.getOrGenerateBatchCode(request.getBatch());
+            request.setBatchId(Objects.requireNonNull(generated, "批次生成失败").getId());
+        }
+        var batch = request.getBatchId() == null ? null : batchService.getBatch(request.getBatchId());
+        if (request.getBatchId() != null && batch == null) throw exception(WM_TRANSACTION_BATCH_NOT_EXISTS);
+        String code = batch == null ? null : batch.getCode();
+        checkAreaMixingRule(request.getAreaId(), request.getItemId(), request.getBatchId());
+        var stock = getOrCreateMaterialStock(request.getItemId(), request.getWarehouseId(), request.getLocationId(), request.getAreaId(), request.getBatchId(), code, null, null);
+        var warehouse = warehouseService.validateWarehouseExists(request.getWarehouseId());
+        var location = locationService.validateWarehouseLocationExists(request.getLocationId());
+        var area = areaService.validateWarehouseAreaExists(request.getAreaId());
+        if (Boolean.TRUE.equals(warehouse.getFrozen()) || Boolean.TRUE.equals(location.getFrozen()) || Boolean.TRUE.equals(area.getFrozen()) || Boolean.TRUE.equals(stock.getFrozen())) throw new IllegalArgumentException("冻结的库存位置不能上架");
+        var movement = new com.aicloud.module.wms.api.integration.WmsStockApi.Movement();
+        movement.setBusinessKey("putaway:" + request.getBusinessKey()); movement.setDocumentId(stock.getId());
+        movement.setDocumentNo("PUTAWAY-" + request.getBusinessKey()); movement.setProductId(request.getItemId()); movement.setWarehouseId(request.getWarehouseId());
+        movement.setUnit(unitService.getUnitMeasure(itemService.validateItemExists(request.getItemId()).getUnitMeasureId()).getName());
+        movement.setQuantity(request.getQuantity()); movement.setPositionId(stock.getId()); movement.setAllocationOnly(true);
+        stockBridge.prepare(movement, true);
+        return stock.getId();
+    }
+
+    private void ensurePosition(MesWmMaterialStockDO stock) {
+        normalizeBatch(stock);
+        var item = itemService.validateItemExists(stock.getItemId());
+        var location = locationService.validateWarehouseLocationExists(stock.getLocationId());
+        var area = areaService.validateWarehouseAreaExists(stock.getAreaId());
+        if (!Objects.equals(location.getWarehouseId(), stock.getWarehouseId()) || !Objects.equals(area.getLocationId(), stock.getLocationId())) throw new IllegalArgumentException("仓库、库区、库位归属不一致");
+        if (stock.getBatchId() != null) {
+            var batch = batchService.getBatch(stock.getBatchId());
+            if (batch == null || !Objects.equals(batch.getItemId(), stock.getItemId()) || !Objects.equals(batch.getCode(), stock.getBatchCode())) throw new IllegalArgumentException("批次与物料不匹配");
+        } else if (Boolean.TRUE.equals(item.getBatchFlag()) || stock.getBatchCode() != null) throw exception(WM_TRANSACTION_BATCH_REQUIRED);
+        var unit = unitService.getUnitMeasure(item.getUnitMeasureId());
+        if (unit == null) throw new IllegalArgumentException("MES 物料基本单位不存在");
+        wms.ensurePosition(new com.aicloud.module.wms.api.integration.WmsStockApi.Position().setStockId(stock.getId())
+                .setProductId(stock.getItemId()).setWarehouseId(stock.getWarehouseId()).setLocationId(stock.getLocationId()).setAreaId(stock.getAreaId())
+                .setBatchId(stock.getBatchId()).setBatchCode(stock.getBatchCode()).setUnit(unit.getName())).checkError();
+    }
+
+    private void hydrate(List<MesWmMaterialStockDO> rows) {
+        for (int from = 0; from < rows.size(); from += 200) {
+            var chunk = rows.subList(from, Math.min(from + 200, rows.size()));
+            var balances = wms.positions(chunk.stream().map(MesWmMaterialStockDO::getId).toList()).getCheckedData();
+            Map<Long, com.aicloud.module.wms.api.integration.WmsStockApi.PositionBalance> byId = new HashMap<>();
+            balances.forEach(balance -> byId.put(balance.getStockId(), balance));
+            for (var stock : chunk) {
+                normalizeBatch(stock);
+                var balance = byId.get(stock.getId());
+                stock.setQuantity(balance == null ? BigDecimal.ZERO : balance.getQuantity());
+                stock.setReservedQuantity(balance == null ? BigDecimal.ZERO : balance.getReservedQuantity());
+                stock.setAvailableQuantity(balance == null ? BigDecimal.ZERO : balance.getAvailableQuantity());
+            }
+        }
+    }
+    private static void normalizeBatch(MesWmMaterialStockDO stock) {
+        if (Long.valueOf(0).equals(stock.getBatchId())) stock.setBatchId(null);
+        if (stock.getBatchCode() != null && stock.getBatchCode().isBlank()) stock.setBatchCode(null);
     }
 
 }

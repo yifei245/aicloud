@@ -61,12 +61,12 @@ public interface MesWmBatchMapper extends BaseMapperX<MesWmBatchDO> {
         LambdaQueryWrapper<MesWmBatchDO> query = new LambdaQueryWrapper<>();
         query.eq(MesWmBatchDO::getItemId, batch.getItemId());
         if (ObjUtil.isNull(batch.getVendorId())) {
-            query.isNull(MesWmBatchDO::getVendorId);
+            query.and(value -> value.isNull(MesWmBatchDO::getVendorId).or().eq(MesWmBatchDO::getVendorId, 0));
         } else {
             query.eq(MesWmBatchDO::getVendorId, batch.getVendorId());
         }
         if (ObjUtil.isNull(batch.getClientId())) {
-            query.isNull(MesWmBatchDO::getClientId);
+            query.and(value -> value.isNull(MesWmBatchDO::getClientId).or().eq(MesWmBatchDO::getClientId, 0));
         } else {
             query.eq(MesWmBatchDO::getClientId, batch.getClientId());
         }
@@ -81,27 +81,27 @@ public interface MesWmBatchMapper extends BaseMapperX<MesWmBatchDO> {
             query.eq(MesWmBatchDO::getPurchaseOrderCode, batch.getPurchaseOrderCode());
         }
         if (ObjUtil.isNull(batch.getWorkOrderId())) {
-            query.isNull(MesWmBatchDO::getWorkOrderId);
+            query.and(value -> value.isNull(MesWmBatchDO::getWorkOrderId).or().eq(MesWmBatchDO::getWorkOrderId, 0));
         } else {
             query.eq(MesWmBatchDO::getWorkOrderId, batch.getWorkOrderId());
         }
         if (ObjUtil.isNull(batch.getTaskId())) {
-            query.isNull(MesWmBatchDO::getTaskId);
+            query.and(value -> value.isNull(MesWmBatchDO::getTaskId).or().eq(MesWmBatchDO::getTaskId, 0));
         } else {
             query.eq(MesWmBatchDO::getTaskId, batch.getTaskId());
         }
         if (ObjUtil.isNull(batch.getWorkstationId())) {
-            query.isNull(MesWmBatchDO::getWorkstationId);
+            query.and(value -> value.isNull(MesWmBatchDO::getWorkstationId).or().eq(MesWmBatchDO::getWorkstationId, 0));
         } else {
             query.eq(MesWmBatchDO::getWorkstationId, batch.getWorkstationId());
         }
         if (ObjUtil.isNull(batch.getToolId())) {
-            query.isNull(MesWmBatchDO::getToolId);
+            query.and(value -> value.isNull(MesWmBatchDO::getToolId).or().eq(MesWmBatchDO::getToolId, 0));
         } else {
             query.eq(MesWmBatchDO::getToolId, batch.getToolId());
         }
         if (ObjUtil.isNull(batch.getMoldId())) {
-            query.isNull(MesWmBatchDO::getMoldId);
+            query.and(value -> value.isNull(MesWmBatchDO::getMoldId).or().eq(MesWmBatchDO::getMoldId, 0));
         } else {
             query.eq(MesWmBatchDO::getMoldId, batch.getMoldId());
         }
@@ -111,7 +111,7 @@ public interface MesWmBatchMapper extends BaseMapperX<MesWmBatchDO> {
             query.eq(MesWmBatchDO::getLotNumber, batch.getLotNumber());
         }
         if (ObjUtil.isNull(batch.getQualityStatus())) {
-            query.isNull(MesWmBatchDO::getQualityStatus);
+            query.and(value -> value.isNull(MesWmBatchDO::getQualityStatus).or().eq(MesWmBatchDO::getQualityStatus, 0));
         } else {
             query.eq(MesWmBatchDO::getQualityStatus, batch.getQualityStatus());
         }

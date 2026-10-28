@@ -133,6 +133,7 @@ public class MesWmReturnSalesServiceImpl implements MesWmReturnSalesService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishReturnSales(Long id) {
+        returnSalesMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmReturnSalesDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在 + 待执行状态
         MesWmReturnSalesDO returnSales = validateReturnSalesExists(id);
         if (ObjUtil.notEqual(MesWmReturnSalesStatusEnum.APPROVING.getStatus(), returnSales.getStatus())) {

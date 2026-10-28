@@ -40,6 +40,9 @@ public class WmsInventoryChangeReqDTO {
     @Data
     public static class Item {
 
+        /** Optional explicit MES stock position, used only by the internal inventory integration. */
+        private Long positionId;
+
         /**
          * SKU 编号
          */

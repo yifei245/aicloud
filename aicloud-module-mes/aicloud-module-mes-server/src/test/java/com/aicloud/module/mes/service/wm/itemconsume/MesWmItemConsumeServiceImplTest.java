@@ -185,39 +185,11 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         when(materialStockService.getMaterialStockList(any(MesWmMaterialStockListReqVO.class)))
                 .thenReturn(Collections.emptyList());
 
-        // 调用
-        MesWmItemConsumeDO result = itemConsumeService.generateItemConsume(feedback);
-
-        // 断言 1：消耗单头已入库
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertEquals(MesWmItemConsumeStatusEnum.PREPARE.getStatus(), result.getStatus());
-        assertEquals(feedback.getId(), result.getFeedbackId());
-
-        // 断言 2：消耗行正确
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<MesWmItemConsumeLineDO>> lineCaptor = ArgumentCaptor.forClass(List.class);
-        verify(itemConsumeLineService).createItemConsumeLineBatch(lineCaptor.capture());
-        List<MesWmItemConsumeLineDO> lines = lineCaptor.getValue();
-        assertEquals(1, lines.size());
-        assertEquals(bomItemId, lines.get(0).getItemId());
-        // 消耗数量 = 2 × 10 = 20
-        assertEquals(0, new BigDecimal("20").compareTo(lines.get(0).getQuantity()));
-
-        // 断言 3：生成 1 条无批次的 detail
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<MesWmItemConsumeDetailDO>> detailCaptor = ArgumentCaptor.forClass(List.class);
-        verify(itemConsumeDetailService).createItemConsumeDetailBatch(detailCaptor.capture());
-        List<MesWmItemConsumeDetailDO> details = detailCaptor.getValue();
-        assertEquals(1, details.size());
-        MesWmItemConsumeDetailDO detail = details.get(0);
-        assertEquals(bomItemId, detail.getItemId());
-        assertEquals(0, new BigDecimal("20").compareTo(detail.getQuantity()));
-        assertNull(detail.getMaterialStockId());
-        assertNull(detail.getBatchId());
-        assertEquals(WAREHOUSE_ID, detail.getWarehouseId());
-        assertEquals(LOCATION_ID, detail.getLocationId());
-        assertEquals(AREA_ID, detail.getAreaId());
+        int beforeCount = itemConsumeMapper.selectList().size();
+        assertServiceException(() -> itemConsumeService.generateItemConsume(feedback),
+                com.aicloud.module.mes.enums.ErrorCodeConstants.WM_MATERIAL_STOCK_INSUFFICIENT);
+        verify(itemConsumeDetailService, never()).createItemConsumeDetailBatch(any());
+        assertEquals(beforeCount, itemConsumeMapper.selectList().size()); // No orphan consume document after rollback.
     }
 
     @Test
@@ -236,7 +208,7 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         MesWmMaterialStockDO stock = new MesWmMaterialStockDO();
         stock.setId(stockId);
         stock.setItemId(bomItemId);
-        stock.setQuantity(new BigDecimal("50")); // 库存 50 > 需求 30
+        stock.setQuantity(new BigDecimal("50")); stock.setAvailableQuantity(new BigDecimal("50")); // 库存 50 > 需求 30
         stock.setBatchId(batchId);
         stock.setBatchCode("BATCH-001");
         when(materialStockService.getMaterialStockList(any(MesWmMaterialStockListReqVO.class)))
@@ -275,14 +247,14 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         MesWmMaterialStockDO stock1 = new MesWmMaterialStockDO();
         stock1.setId(stockId1);
         stock1.setItemId(bomItemId);
-        stock1.setQuantity(new BigDecimal("20")); // 先进先出：先消耗这批
+        stock1.setQuantity(new BigDecimal("20")); stock1.setAvailableQuantity(new BigDecimal("20")); // 先进先出：先消耗这批
         stock1.setBatchId(1L);
         stock1.setBatchCode("BATCH-001");
 
         MesWmMaterialStockDO stock2 = new MesWmMaterialStockDO();
         stock2.setId(stockId2);
         stock2.setItemId(bomItemId);
-        stock2.setQuantity(new BigDecimal("15"));
+        stock2.setQuantity(new BigDecimal("15")); stock2.setAvailableQuantity(new BigDecimal("15"));
         stock2.setBatchId(2L);
         stock2.setBatchCode("BATCH-002");
 
@@ -327,32 +299,17 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         MesWmMaterialStockDO stock = new MesWmMaterialStockDO();
         stock.setId(stockId);
         stock.setItemId(bomItemId);
-        stock.setQuantity(new BigDecimal("18")); // 不够 30
+        stock.setQuantity(new BigDecimal("18")); stock.setAvailableQuantity(new BigDecimal("18")); // 不够 30
         stock.setBatchId(1L);
         stock.setBatchCode("BATCH-001");
         when(materialStockService.getMaterialStockList(any(MesWmMaterialStockListReqVO.class)))
                 .thenReturn(ListUtil.of(stock));
 
-        // 调用
-        MesWmItemConsumeDO result = itemConsumeService.generateItemConsume(feedback);
-
-        // 断言：2 条 detail（18 带批次 + 12 无批次）
-        assertNotNull(result);
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<MesWmItemConsumeDetailDO>> detailCaptor = ArgumentCaptor.forClass(List.class);
-        verify(itemConsumeDetailService).createItemConsumeDetailBatch(detailCaptor.capture());
-        List<MesWmItemConsumeDetailDO> details = detailCaptor.getValue();
-        assertEquals(2, details.size());
-
-        // 第 1 条：批次全部消耗 18
-        assertEquals(stockId, details.get(0).getMaterialStockId());
-        assertEquals(0, new BigDecimal("18").compareTo(details.get(0).getQuantity()));
-        assertEquals("BATCH-001", details.get(0).getBatchCode());
-
-        // 第 2 条：剩余 12 无批次
-        assertNull(details.get(1).getMaterialStockId());
-        assertEquals(0, new BigDecimal("12").compareTo(details.get(1).getQuantity()));
-        assertNull(details.get(1).getBatchId());
+        int beforeCount = itemConsumeMapper.selectList().size();
+        assertServiceException(() -> itemConsumeService.generateItemConsume(feedback),
+                com.aicloud.module.mes.enums.ErrorCodeConstants.WM_MATERIAL_STOCK_INSUFFICIENT);
+        verify(itemConsumeDetailService, never()).createItemConsumeDetailBatch(any());
+        assertEquals(beforeCount, itemConsumeMapper.selectList().size()); // No orphan consume document after rollback.
     }
 
     @Test
@@ -377,7 +334,7 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         MesWmMaterialStockDO stockA = new MesWmMaterialStockDO();
         stockA.setId(randomLongId());
         stockA.setItemId(itemA);
-        stockA.setQuantity(new BigDecimal("100"));
+        stockA.setQuantity(new BigDecimal("100")); stockA.setAvailableQuantity(new BigDecimal("100"));
         stockA.setBatchId(1L);
         stockA.setBatchCode("BATCH-A");
 
@@ -388,38 +345,12 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
                 req != null && itemB.equals(req.getItemId()))))
                 .thenReturn(Collections.emptyList());
 
-        // 调用
-        MesWmItemConsumeDO result = itemConsumeService.generateItemConsume(feedback);
-
-        // 断言：2 条消耗行，2 条 detail
-        assertNotNull(result);
-
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<MesWmItemConsumeLineDO>> lineCaptor = ArgumentCaptor.forClass(List.class);
-        verify(itemConsumeLineService).createItemConsumeLineBatch(lineCaptor.capture());
-        assertEquals(2, lineCaptor.getValue().size());
-
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<MesWmItemConsumeDetailDO>> detailCaptor = ArgumentCaptor.forClass(List.class);
-        verify(itemConsumeDetailService).createItemConsumeDetailBatch(detailCaptor.capture());
-        List<MesWmItemConsumeDetailDO> details = detailCaptor.getValue();
-        assertEquals(2, details.size());
-
-        // 物料 A：有批次
-        MesWmItemConsumeDetailDO detailA = CollUtil.findOne(details,
-                d -> itemA.equals(d.getItemId()));
-        assertEquals(0, new BigDecimal("10").compareTo(detailA.getQuantity()));
-        assertNotNull(detailA.getMaterialStockId());
-        assertEquals("BATCH-A", detailA.getBatchCode());
-
-        // 物料 B：无批次
-        MesWmItemConsumeDetailDO detailB = CollUtil.findOne(details,
-                d -> itemB.equals(d.getItemId()));
-        assertEquals(0, new BigDecimal("20").compareTo(detailB.getQuantity()));
-        assertNull(detailB.getMaterialStockId());
+        int beforeCount = itemConsumeMapper.selectList().size();
+        assertServiceException(() -> itemConsumeService.generateItemConsume(feedback),
+                com.aicloud.module.mes.enums.ErrorCodeConstants.WM_MATERIAL_STOCK_INSUFFICIENT);
+        verify(itemConsumeDetailService, never()).createItemConsumeDetailBatch(any());
+        assertEquals(beforeCount, itemConsumeMapper.selectList().size()); // No orphan consume document after rollback.
     }
-
-    // ========== finishItemConsume ==========
 
     @Test
     public void testFinishItemConsume_withDetails() {
@@ -465,7 +396,7 @@ public class MesWmItemConsumeServiceImplTest extends BaseDbUnitTest {
         assertEquals(1L, tx1.getBatchId());
         assertEquals("BATCH-001", tx1.getBatchCode());
         assertEquals(WAREHOUSE_ID, tx1.getWarehouseId());
-        assertFalse(tx1.getCheckFlag());
+        assertTrue(tx1.getCheckFlag());
         assertEquals(MesBizTypeConstants.WM_ITEM_CONSUME, tx1.getBizType());
         assertEquals(consume.getId(), tx1.getBizId());
         assertEquals(lineId1, tx1.getBizLineId());

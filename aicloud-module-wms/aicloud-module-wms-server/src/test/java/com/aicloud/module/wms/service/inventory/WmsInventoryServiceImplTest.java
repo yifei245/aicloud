@@ -43,6 +43,7 @@ import static org.mockito.Mockito.when;
 
 @Import({WmsInventoryServiceImpl.class, WmsInventoryHistoryServiceImpl.class})
 public class WmsInventoryServiceImplTest extends BaseDbUnitTest {
+    @MockitoBean private WmsStockPositionService positions;
 
     @Resource
     private WmsInventoryServiceImpl inventoryService;

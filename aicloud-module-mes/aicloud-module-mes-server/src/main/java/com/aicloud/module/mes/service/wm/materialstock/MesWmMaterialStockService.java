@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface MesWmMaterialStockService {
 
+    Long allocate(@Valid com.aicloud.module.mes.controller.admin.wm.materialstock.vo.MesWmMaterialStockAllocateReqVO request);
+
     /**
      * 获得库存记录
      *

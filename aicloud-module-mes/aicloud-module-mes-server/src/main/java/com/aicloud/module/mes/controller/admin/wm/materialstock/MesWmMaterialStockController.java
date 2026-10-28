@@ -65,6 +65,13 @@ public class MesWmMaterialStockController {
     @Resource
     private MesMdVendorService vendorService;
 
+    @PostMapping("/allocate")
+    @Operation(summary = "将 WMS 未分配库存上架到批次和库位（不增加总量）")
+    @PreAuthorize("@ss.hasPermission('mes:wm-material-stock:update')")
+    public CommonResult<Long> allocate(@Valid @RequestBody com.aicloud.module.mes.controller.admin.wm.materialstock.vo.MesWmMaterialStockAllocateReqVO request) {
+        return success(materialStockService.allocate(request));
+    }
+
     @GetMapping("/get")
     @Operation(summary = "获得库存记录")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

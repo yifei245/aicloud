@@ -42,6 +42,9 @@ before = set(mysql("SELECT table_name FROM information_schema.tables WHERE table
 pending_columns=[]
 safe_columns={('infra_file_record','private_file'): "bit(1) NOT NULL DEFAULT b'0' COMMENT '私有附件，仅限签名访问'",
               ('wms_inventory','reserved_quantity'): "decimal(24,8) NOT NULL DEFAULT 0 COMMENT '业务预占库存'",
+              ('wms_inventory','putaway_quantity'): "decimal(24,8) NOT NULL DEFAULT 0 COMMENT '上架分配预占'",
+              ('wms_integration_movement','position_id'): "bigint DEFAULT NULL",
+              ('wms_integration_movement','allocation_only'): "tinyint NOT NULL DEFAULT 0",
               ('integration_outbox','aggregate_key'): "varchar(200) NOT NULL DEFAULT ''",
               ('oa_leave_apply','integration_key'): "varchar(160) DEFAULT NULL"}
 schema = (ROOT/'sql/mysql/aicloud.sql').read_text()

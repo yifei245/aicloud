@@ -80,6 +80,10 @@ public class MesWmMaterialStockRespVO {
     @Schema(description = "在库数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.0000")
     @ExcelProperty("在库数量")
     private BigDecimal quantity;
+    @Schema(description = "WMS 预占数量")
+    private BigDecimal reservedQuantity;
+    @Schema(description = "WMS 可用数量")
+    private BigDecimal availableQuantity;
 
     @Schema(description = "入库时间")
     @ExcelProperty("入库时间")

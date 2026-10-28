@@ -14,7 +14,7 @@ from livekit import rtc
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('http_local',ROOT/'scripts/smoke-test.py');http=importlib.util.module_from_spec(spec);spec.loader.exec_module(http)
 report={'checkedAt':datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'passed':False,'sdk':'livekit==1.1.21','syntheticMedia':True,'checks':[]}
-admin=None;users=[];room_id=None;tokens=[]
+admin=None;users=[];room_id=None;tokens=[];call_ended=False
 
 def check(label,condition):
     report['checks'].append({'check':label,'passed':bool(condition)});print(('PASS ' if condition else 'FAIL ')+label,flush=True)
@@ -58,14 +58,17 @@ async def media(url,join_tokens):
             await room.local_participant.publish_track(audio_track,rtc.TrackPublishOptions(source=rtc.TrackSource.SOURCE_MICROPHONE))
             await room.local_participant.publish_track(video_track,rtc.TrackPublishOptions(source=rtc.TrackSource.SOURCE_CAMERA,video_codec=rtc.VideoCodec.VP8,simulcast=False))
             pixels=np.zeros((120,160,3),dtype=np.uint8);pixels[:]=[230,40,20] if index==0 else [20,40,230]
-            video_frame=rtc.VideoFrame(160,120,rtc.VideoBufferType.RGB24,pixels.tobytes())
             try:
                 for step in range(500):
                     frame=rtc.AudioFrame.create(48000,1,480)
                     positions=(np.arange(480)+step*480)/48000
                     np.frombuffer(frame.data,dtype=np.int16)[:]=(5000*np.sin(2*np.pi*(440+index*220)*positions)).astype(np.int16)
                     await audio.capture_frame(frame)
-                    if step%10==0:video.capture_frame(video_frame)
+                    if step%10==0:
+                        # Moving marker prevents static-frame suppression in the encoder.
+                        pixels[:]=[230,40,20] if index==0 else [20,40,230]
+                        pixels[:,(step//10*3)%150:(step//10*3)%150+10]=[240,240,240]
+                        video.capture_frame(rtc.VideoFrame(160,120,rtc.VideoBufferType.RGB24,pixels.tobytes()))
                     await asyncio.sleep(.01)
             finally:
                 await audio.aclose();await video.aclose()
@@ -80,6 +83,29 @@ async def media(url,join_tokens):
         for task in tasks:task.cancel()
         if tasks:await asyncio.gather(*tasks,return_exceptions=True)
         for room in rooms:await room.disconnect()
+
+def saved_call():
+    page=request('im/manager/rtc/page?pageNo=1&pageSize=20&inviterUserId='+str(users[0]),token=admin)
+    return next((entry for entry in page['list'] if entry['room']==room_id),None)
+
+def verify_ended_call():
+    global call_ended
+    # Disconnect webhooks may already have closed the call before the REST hangup.
+    current=saved_call()
+    if current and current['status']!=30:
+        request('im/rtc/leave?room='+room_id,'POST',token=tokens[0])
+    deadline=time.monotonic()+15
+    while time.monotonic()<deadline:
+        current=saved_call()
+        if current and current['status']==30:break
+        time.sleep(.5)
+    check('Disconnected or hung-up call is persisted as ended',current is not None and current['status']==30 and current.get('endTime') is not None)
+    call_ended=True
+    report['callId']=current['id']
+    participants=request('im/manager/rtc/participant-list?id='+str(current['id']),token=admin)
+    check('Both participant audit records close with leave times',len(participants)==2 and {p['userId'] for p in participants}==set(users) and all(p['status']==50 and p.get('leaveTime') for p in participants))
+    replay=http.call('/admin-api/im/rtc/accept?room='+room_id,'POST',token=tokens[1])
+    check('Ended call cannot issue a new join token',replay.get('code') not in [0,None])
 
 try:
     admin=request('system/auth/login','POST',{'username':'admin','password':'Aicloud@123'})['accessToken']
@@ -103,11 +129,12 @@ try:
     check('Uninvited user cannot obtain a private call token',rejected.get('code') not in [0,None])
     asyncio.run(media(call['livekitUrl'],[call['token'],accepted['token']]))
     check('Media verification completed through the local SFU',True)
+    verify_ended_call()
     report['passed']=all(c['passed'] for c in report['checks'])
 except Exception as error:
     report['error']=str(error);print('FAIL '+str(error),flush=True)
 finally:
-    if room_id and tokens:
+    if room_id and tokens and not call_ended:
         try:request('im/rtc/leave?room='+room_id,'POST',token=tokens[0])
         except Exception as error:report['callCleanupError']=str(error)
     if admin:

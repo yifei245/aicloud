@@ -6,7 +6,7 @@ Java 21 后端微服务平台。目录以 ruoyi-vue-pro master-jdk17 为主，�
 
 ## 设计与项目结构
 
-[架构设计](docs/01-architecture.md) · [实施顺序](docs/02-implementation.md) · [服务端口清单](docs/services.json) · [数据库实体清单](docs/schema-inventory.json) · [本地业务操作](docs/03-local-business-guide.md)
+[架构设计](docs/01-architecture.md) · [实施顺序](docs/02-implementation.md) · [逐步交付验收清单](docs/08-delivery-checklist.md) · [服务端口清单](docs/services.json) · [数据库实体清单](docs/schema-inventory.json) · [本地业务操作](docs/03-local-business-guide.md)
 
 ```text
 aicloud

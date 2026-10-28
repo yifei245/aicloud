@@ -147,6 +147,7 @@ public class MesWmArrivalNoticeServiceImpl implements MesWmArrivalNoticeService 
 
     @Override
     public void finishArrivalNotice(Long id) {
+        arrivalNoticeMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmArrivalNoticeDO>().eq("id", id).last("FOR UPDATE"));
         // 校验存在
         MesWmArrivalNoticeDO notice = validateArrivalNoticeExists(id);
         // 校验状态：只有待入库才允许完成

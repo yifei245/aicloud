@@ -53,6 +53,7 @@ public class MesWmMaterialStockDO extends BaseDO {
      *
      * 关联 {@link MesWmBatchDO#getId()}
      */
+    @com.baomidou.mybatisplus.annotation.TableField(insertStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.ALWAYS)
     private Long batchId;
     /**
      * 批次号
@@ -94,6 +95,10 @@ public class MesWmMaterialStockDO extends BaseDO {
      * 在库数量
      */
     private BigDecimal quantity;
+    @com.baomidou.mybatisplus.annotation.TableField(exist = false)
+    private BigDecimal reservedQuantity;
+    @com.baomidou.mybatisplus.annotation.TableField(exist = false)
+    private BigDecimal availableQuantity;
     /**
      * 入库时间
      */

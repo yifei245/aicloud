@@ -108,6 +108,7 @@ public class MesWmMiscIssueServiceImpl implements MesWmMiscIssueService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishMiscIssue(Long id) {
+        miscIssueMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmMiscIssueDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在
         MesWmMiscIssueDO issue = validateMiscIssueExists(id);
         if (ObjUtil.notEqual(MesWmMiscIssueStatusEnum.APPROVED.getStatus(), issue.getStatus())) {

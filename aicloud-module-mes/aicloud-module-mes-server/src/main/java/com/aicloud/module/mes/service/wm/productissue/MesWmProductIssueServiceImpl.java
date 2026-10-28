@@ -151,6 +151,7 @@ public class MesWmProductIssueServiceImpl implements MesWmProductIssueService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishProductIssue(Long id) {
+        issueMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmProductIssueDO>().eq("id", id).last("FOR UPDATE"));
         // 1. 校验存在
         MesWmProductIssueDO issue = validateProductIssueExists(id);
         if (ObjUtil.notEqual(MesWmProductIssueStatusEnum.APPROVED.getStatus(), issue.getStatus())) {

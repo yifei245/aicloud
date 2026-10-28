@@ -1,0 +1,72 @@
+{
+  "checkedAt": "2026-10-17T15:03:52.803691+08:00",
+  "passed": true,
+  "sdk": "livekit==1.1.21",
+  "syntheticMedia": true,
+  "checks": [
+    {
+      "check": "IM invite and acceptance persist an active video call",
+      "passed": true
+    },
+    {
+      "check": "Uninvited user cannot obtain a private call token",
+      "passed": true
+    },
+    {
+      "check": "Two clients join LiveKit using IM-issued room tokens",
+      "passed": true
+    },
+    {
+      "check": "Client 1 receives and decodes actual remote audio samples",
+      "passed": true
+    },
+    {
+      "check": "Client 1 receives remote video with the expected color and dimensions",
+      "passed": true
+    },
+    {
+      "check": "Client 2 receives and decodes actual remote audio samples",
+      "passed": true
+    },
+    {
+      "check": "Client 2 receives remote video with the expected color and dimensions",
+      "passed": true
+    },
+    {
+      "check": "Media verification completed through the local SFU",
+      "passed": true
+    },
+    {
+      "check": "Disconnected or hung-up call is persisted as ended",
+      "passed": true
+    },
+    {
+      "check": "Both participant audit records close with leave times",
+      "passed": true
+    },
+    {
+      "check": "Ended call cannot issue a new join token",
+      "passed": true
+    }
+  ],
+  "users": [
+    1006,
+    1007
+  ],
+  "room": "6da855d3f48e42b49d5e5e5dae42b378",
+  "mediaReceived": [
+    {
+      "audioFrames": 587,
+      "audibleFrames": 562,
+      "videoFrames": 48,
+      "matchedVideoFrames": 48
+    },
+    {
+      "audioFrames": 600,
+      "audibleFrames": 570,
+      "videoFrames": 48,
+      "matchedVideoFrames": 48
+    }
+  ],
+  "callId": 1
+}

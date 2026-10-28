@@ -1,4 +1,21 @@
 USE aicloud;
+-- Required production identifiers. Preserve any existing tenant rule and its parts.
+INSERT INTO mes_md_auto_code_rule(tenant_id,code,name,max_length,padded,status,creator)
+SELECT 1,seed.code,seed.name,32,0,0,'aicloud-bootstrap'
+FROM (SELECT 'WM_BATCH_CODE' AS code,'批次编码' AS name UNION ALL SELECT 'PRO_TASK_CODE','生产任务编码') seed
+WHERE NOT EXISTS (SELECT 1 FROM mes_md_auto_code_rule r WHERE r.tenant_id=1 AND r.code=seed.code AND r.deleted=0);
+INSERT INTO mes_md_auto_code_part(tenant_id,rule_id,sort,type,length,fix_character)
+SELECT 1,r.id,1,3,5,CASE r.code WHEN 'WM_BATCH_CODE' THEN 'BATCH' ELSE 'TASK-' END
+FROM mes_md_auto_code_rule r WHERE r.tenant_id=1 AND r.creator='aicloud-bootstrap' AND r.deleted=0
+AND r.code IN ('WM_BATCH_CODE','PRO_TASK_CODE') AND NOT EXISTS (SELECT 1 FROM mes_md_auto_code_part p WHERE p.tenant_id=r.tenant_id AND p.rule_id=r.id AND p.sort=1 AND p.deleted=0);
+INSERT INTO mes_md_auto_code_part(tenant_id,rule_id,sort,type,length,date_format)
+SELECT 1,r.id,2,2,8,'yyyyMMdd'
+FROM mes_md_auto_code_rule r WHERE r.tenant_id=1 AND r.creator='aicloud-bootstrap' AND r.deleted=0
+AND r.code IN ('WM_BATCH_CODE','PRO_TASK_CODE') AND NOT EXISTS (SELECT 1 FROM mes_md_auto_code_part p WHERE p.tenant_id=r.tenant_id AND p.rule_id=r.id AND p.sort=2 AND p.deleted=0);
+INSERT INTO mes_md_auto_code_part(tenant_id,rule_id,sort,type,length,serial_start_no,serial_step,cycle_flag)
+SELECT 1,r.id,3,4,8,1,1,0
+FROM mes_md_auto_code_rule r WHERE r.tenant_id=1 AND r.creator='aicloud-bootstrap' AND r.deleted=0
+AND r.code IN ('WM_BATCH_CODE','PRO_TASK_CODE') AND NOT EXISTS (SELECT 1 FROM mes_md_auto_code_part p WHERE p.tenant_id=r.tenant_id AND p.rule_id=r.id AND p.sort=3 AND p.deleted=0);
 CREATE TABLE IF NOT EXISTS `crm_erp_mapping` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `tenant_id` bigint NOT NULL,
@@ -141,10 +158,28 @@ CREATE TABLE IF NOT EXISTS `wms_integration_movement` (
   `price` decimal(24,8) DEFAULT NULL,
   `document_id` bigint DEFAULT NULL,
   `document_no` varchar(200) DEFAULT NULL,
+  `position_id` bigint DEFAULT NULL,
+  `allocation_only` tinyint NOT NULL DEFAULT 0,
   `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `update_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   UNIQUE KEY uk_movement (tenant_id,source,business_key),
   KEY idx_reconcile (state,create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `wms_stock_position` (
+  `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` bigint NOT NULL,
+  `stock_id` bigint NOT NULL,
+  `sku_id` bigint NOT NULL,
+  `warehouse_id` bigint NOT NULL,
+  `location_id` bigint NOT NULL,
+  `area_id` bigint NOT NULL,
+  `batch_id` bigint DEFAULT NULL,
+  `batch_code` varchar(128) DEFAULT NULL,
+  `quantity` decimal(24,8) NOT NULL DEFAULT 0,
+  `reserved_quantity` decimal(24,8) NOT NULL DEFAULT 0,
+  `create_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY uk_stock(tenant_id,stock_id),
+  KEY idx_inventory(tenant_id,sku_id,warehouse_id,id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `integration_inbox` (
   `id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,

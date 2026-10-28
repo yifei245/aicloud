@@ -129,6 +129,7 @@ public class MesWmReturnVendorServiceImpl implements MesWmReturnVendorService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishReturnVendor(Long id) {
+        returnVendorMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmReturnVendorDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在
         MesWmReturnVendorDO returnVendor = validateReturnVendorExists(id);
         if (ObjUtil.notEqual(MesWmReturnVendorStatusEnum.APPROVED.getStatus(), returnVendor.getStatus())) {

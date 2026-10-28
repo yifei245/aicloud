@@ -166,6 +166,7 @@ public class MesWmOutsourceIssueServiceImpl implements MesWmOutsourceIssueServic
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishOutsourceIssue(Long id) {
+        outsourceIssueMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmOutsourceIssueDO>().eq("id", id).last("FOR UPDATE"));
         // 1. 校验存在 + 待执行出库状态
         MesWmOutsourceIssueDO issue = validateOutsourceIssueExists(id);
         if (ObjUtil.notEqual(MesWmOutsourceIssueStatusEnum.APPROVED.getStatus(), issue.getStatus())) {

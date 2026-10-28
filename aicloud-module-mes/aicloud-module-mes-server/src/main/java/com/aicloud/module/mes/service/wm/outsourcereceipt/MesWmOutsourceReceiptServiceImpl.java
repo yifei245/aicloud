@@ -175,6 +175,7 @@ public class MesWmOutsourceReceiptServiceImpl implements MesWmOutsourceReceiptSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishOutsourceReceipt(Long id) {
+        outsourceReceiptMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmOutsourceReceiptDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在
         MesWmOutsourceReceiptDO receipt = validateOutsourceReceiptExists(id);
         if (ObjUtil.notEqual(MesWmOutsourceReceiptStatusEnum.APPROVED.getStatus(), receipt.getStatus())) {

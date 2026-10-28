@@ -33,9 +33,13 @@ try:
     assert mysql(f"USE {scratch}; SELECT COUNT(*) FROM fms_subject_template WHERE deleted=0;").strip()=='113'
     assert mysql(f"USE {scratch}; SELECT COUNT(*) FROM fms_report_template WHERE deleted=0;").strip()=='135'
     assert mysql(f"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='{scratch}' AND table_name='infra_file_record' AND column_name='private_file';").strip()=='1'
+    assert mysql(f"USE {scratch}; SELECT COUNT(*) FROM mes_md_auto_code_rule WHERE tenant_id=1 AND code IN ('WM_BATCH_CODE','PRO_TASK_CODE') AND deleted=0;").strip()=='2'
+    assert mysql(f"USE {scratch}; SELECT COUNT(*) FROM mes_md_auto_code_part p JOIN mes_md_auto_code_rule r ON r.id=p.rule_id AND r.tenant_id=p.tenant_id WHERE r.tenant_id=1 AND r.code IN ('WM_BATCH_CODE','PRO_TASK_CODE') AND r.deleted=0 AND p.deleted=0;").strip()=='6'
+    assert mysql(f"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='{scratch}' AND ((table_name='wms_inventory' AND column_name='putaway_quantity') OR (table_name='wms_integration_movement' AND column_name IN ('position_id','allocation_only')));").strip()=='3'
     assert original==mysql("SELECT table_name FROM information_schema.tables WHERE table_schema='aicloud';")
     report={'freshSchemaVerified':True,'applicationTables':count,'demoAccountsVerified':3,
             'financeSubjectsVerified':113,'financeReportDefinitionsVerified':135,'privateFileColumnVerified':True,
+            'mesIdentifierRulesVerified':2,'wmsPositionColumnsVerified':3,
             'existingAicloudSchemaPreserved':True,'middlewareInstalledOrRemoved':False}
     (ROOT/'docs/schema-execution-verification.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report))

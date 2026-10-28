@@ -59,6 +59,8 @@ public class MesWmTransactionServiceImpl implements MesWmTransactionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createTransaction(MesWmTransactionSaveReqDTO reqDTO) {
+        if (Long.valueOf(0).equals(reqDTO.getBatchId())) reqDTO.setBatchId(null);
+        if (StrUtil.isBlank(reqDTO.getBatchCode())) reqDTO.setBatchCode(null);
         // 1.1 校验事务类型
         MesWmTransactionTypeEnum typeEnum = MesWmTransactionTypeEnum.valueOf(reqDTO.getType());
         if (typeEnum == null) {
@@ -82,9 +84,7 @@ public class MesWmTransactionServiceImpl implements MesWmTransactionService {
                 reqDTO.getBatchId(), reqDTO.getBatchCode(), reqDTO.getVendorId(), reqDTO.getReceiptTime());
         // 2.2 冻结校验（仓库、库区、库位、库存记录）
         checkFrozen(reqDTO, materialStock);
-        // 2.3 更新库存数量
-        boolean checkFlag = ObjUtil.defaultIfNull(reqDTO.getCheckFlag(), true);
-        materialStockService.updateMaterialStockQuantity(materialStock.getId(), reqDTO.getQuantity(), checkFlag);
+        // Quantity and batch availability are checked atomically by WMS, including line-side stock.
 
         // 3. 插入事务流水
         MesWmTransactionDO transaction = MesWmTransactionDO.builder()
@@ -103,6 +103,8 @@ public class MesWmTransactionServiceImpl implements MesWmTransactionService {
         movement.setProductId(reqDTO.getItemId()); movement.setWarehouseId(reqDTO.getWarehouseId());
         movement.setUnit(unit.getName()); movement.setQuantity(reqDTO.getQuantity());
         movement.setDocumentId(reqDTO.getBizId()); movement.setDocumentNo(reqDTO.getBizCode());
+        if (StrUtil.isBlank(movement.getDocumentNo())) movement.setDocumentNo(reqDTO.getBizType() + "-" + reqDTO.getBizId());
+        movement.setPositionId(materialStock.getId());
         wmsStock.prepare(movement, true);
         return transaction.getId();
     }

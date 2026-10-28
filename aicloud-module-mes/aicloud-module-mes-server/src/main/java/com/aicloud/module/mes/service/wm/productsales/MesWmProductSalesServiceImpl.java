@@ -201,6 +201,7 @@ public class MesWmProductSalesServiceImpl implements MesWmProductSalesService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishProductSales(Long id) {
+        productSalesMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmProductSalesDO>().eq("id", id).last("FOR UPDATE"));
         // 1. 校验存在
         MesWmProductSalesDO sales = validateProductSalesExists(id);
         if (ObjUtil.notEqual(MesWmProductSalesStatusEnum.APPROVED.getStatus(), sales.getStatus())) {

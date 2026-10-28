@@ -69,6 +69,7 @@ public class MesWmProductProduceServiceImpl implements MesWmProductProduceServic
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishProductProduce(Long id) {
+        productProduceMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmProductProduceDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在 + 草稿状态
         validateProductProduceExistsAndPrepare(id);
         // 1.2 校验至少有一条行

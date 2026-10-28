@@ -33,8 +33,7 @@ public interface MesWmMaterialStockMapper extends BaseMapperX<MesWmMaterialStock
                 .eqIfPresent(MesWmMaterialStockDO::getAreaId, reqVO.getAreaId())
                 .eqIfPresent(MesWmMaterialStockDO::getVendorId, reqVO.getVendorId())
                 .eqIfPresent(MesWmMaterialStockDO::getFrozen, reqVO.getFrozen());
-        wrapper.ne(MesWmMaterialStockDO::getQuantity, BigDecimal.ZERO)
-                .orderByAsc(MesWmMaterialStockDO::getReceiptTime);
+        wrapper.orderByAsc(MesWmMaterialStockDO::getReceiptTime);
         // 虚拟仓过滤（Service 层已将 virtualFilter 解析为 virtualWarehouseId）
         if (virtualWarehouseId != null) {
             if (MesWmMaterialStockPageReqVO.VIRTUAL_FILTER_ONLY.equals(reqVO.getVirtualFilter())) {
@@ -96,7 +95,7 @@ public interface MesWmMaterialStockMapper extends BaseMapperX<MesWmMaterialStock
         if (batchId != null) {
             wrapper.eq(MesWmMaterialStockDO::getBatchId, batchId);
         } else {
-            wrapper.isNull(MesWmMaterialStockDO::getBatchId);
+            wrapper.and(value -> value.isNull(MesWmMaterialStockDO::getBatchId).or().eq(MesWmMaterialStockDO::getBatchId, 0));
         }
         return selectOne(wrapper);
     }
@@ -111,7 +110,6 @@ public interface MesWmMaterialStockMapper extends BaseMapperX<MesWmMaterialStock
                 .likeIfPresent(MesWmMaterialStockDO::getBatchCode, reqVO.getBatchCode())
                 .geIfPresent(MesWmMaterialStockDO::getUpdateTime, reqVO.getStartTime())
                 .leIfPresent(MesWmMaterialStockDO::getUpdateTime, reqVO.getEndTime())
-                .ne(MesWmMaterialStockDO::getQuantity, BigDecimal.ZERO)
                 .orderByAsc(MesWmMaterialStockDO::getReceiptTime));
     }
 

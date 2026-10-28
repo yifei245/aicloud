@@ -47,6 +47,7 @@ public class WmsInventoryServiceImpl implements WmsInventoryService {
 
     @Resource
     private WmsInventoryMapper inventoryMapper;
+    @Resource private WmsStockPositionService positions;
 
     @Resource
     private WmsInventoryHistoryService inventoryHistoryService;
@@ -98,6 +99,7 @@ public class WmsInventoryServiceImpl implements WmsInventoryService {
             if (beforeQuantity.compareTo(afterQuantity) == 0) {
                 continue;
             }
+            positions.change(inventory.getSkuId(), inventory.getWarehouseId(), null, afterQuantity.subtract(beforeQuantity), beforeQuantity);
             updateInventories.add(new WmsInventoryDO().setId(inventory.getId()).setQuantity(afterQuantity));
             histories.add(buildInventoryHistory(reqDTO, item, beforeQuantity, afterQuantity));
         }
@@ -158,6 +160,7 @@ public class WmsInventoryServiceImpl implements WmsInventoryService {
             if (afterQuantity.compareTo(ObjectUtil.defaultIfNull(inventory.getReservedQuantity(), BigDecimal.ZERO)) < 0) {
                 throw buildInventoryQuantityNotEnoughException(item, beforeQuantity);
             }
+            positions.change(item.getSkuId(), item.getWarehouseId(), item.getPositionId(), item.getQuantity(), beforeQuantity);
             inventory.setQuantity(afterQuantity);
             resultMap.put(item, new Tuple(beforeQuantity, afterQuantity));
         }

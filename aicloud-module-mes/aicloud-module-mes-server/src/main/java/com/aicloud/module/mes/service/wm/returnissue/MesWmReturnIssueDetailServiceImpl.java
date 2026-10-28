@@ -26,6 +26,8 @@ import static com.aicloud.module.mes.enums.ErrorCodeConstants.*;
 @Service
 @Validated
 public class MesWmReturnIssueDetailServiceImpl implements MesWmReturnIssueDetailService {
+    @Resource @org.springframework.context.annotation.Lazy
+    private com.aicloud.module.mes.service.wm.warehouse.MesWmWarehouseService warehouseService;
 
     @Resource
     private MesWmReturnIssueDetailMapper issueDetailMapper;
@@ -116,10 +118,14 @@ public class MesWmReturnIssueDetailServiceImpl implements MesWmReturnIssueDetail
                 reqVO.getWarehouseId(), reqVO.getLocationId(), reqVO.getAreaId());
         // 校验库位物料/批次混放规则
         materialStockService.checkAreaMixingRule(reqVO.getAreaId(), reqVO.getItemId(), reqVO.getBatchId());
-        // 校验库存记录
+        // Detail warehouse/bin is the return destination; selected stock belongs to the line-side source.
+        var source = materialStockService.getMaterialStock(reqVO.getMaterialStockId());
+        var lineSide = warehouseService.getWarehouseByCode(com.aicloud.module.mes.dal.dataobject.wm.warehouse.MesWmWarehouseDO.WIP_VIRTUAL_WAREHOUSE);
+        if (source == null || lineSide == null || !java.util.Objects.equals(source.getWarehouseId(), lineSide.getId())
+                || !java.util.Objects.equals(reqVO.getMaterialStockId(), line.getMaterialStockId())) throw exception(WM_MATERIAL_STOCK_SELECTION_MISMATCH);
         materialStockService.validateSelectedStock(
                 reqVO.getMaterialStockId(), reqVO.getItemId(), reqVO.getBatchId(), reqVO.getBatchCode(),
-                reqVO.getWarehouseId(), reqVO.getLocationId(), reqVO.getAreaId(), reqVO.getQuantity());
+                source.getWarehouseId(), source.getLocationId(), source.getAreaId(), reqVO.getQuantity());
         // 校验明细总数量不超过行数量（排除自身）
         validateDetailQuantityNotExceed(reqVO.getLineId(), reqVO.getQuantity(), reqVO.getId(), line);
     }

@@ -183,6 +183,7 @@ public class MesWmReturnIssueServiceImpl implements MesWmReturnIssueService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishReturnIssue(Long id) {
+        issueMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmReturnIssueDO>().eq("id", id).last("FOR UPDATE"));
         // 1. 校验存在 + 待执行退料状态
         MesWmReturnIssueDO issue = validateReturnIssueExists(id);
         if (ObjUtil.notEqual(MesWmReturnIssueStatusEnum.APPROVED.getStatus(), issue.getStatus())) {

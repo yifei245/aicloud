@@ -1,10 +1,12 @@
 {
   "freshSchemaVerified": true,
-  "applicationTables": 611,
+  "applicationTables": 612,
   "demoAccountsVerified": 3,
   "financeSubjectsVerified": 113,
   "financeReportDefinitionsVerified": 135,
   "privateFileColumnVerified": true,
+  "mesIdentifierRulesVerified": 2,
+  "wmsPositionColumnsVerified": 3,
   "existingAicloudSchemaPreserved": true,
   "middlewareInstalledOrRemoved": false
 }

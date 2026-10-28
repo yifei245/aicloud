@@ -31,6 +31,12 @@ public interface WmsStockApi {
     @PostMapping(PREFIX + "/abort")
     CommonResult<Boolean> abort(@RequestBody @Valid Command request);
 
+    @PostMapping(PREFIX + "/position")
+    CommonResult<Boolean> ensurePosition(@RequestBody @Valid Position request);
+
+    @PostMapping(PREFIX + "/positions")
+    CommonResult<java.util.List<PositionBalance>> positions(@RequestBody @Size(max = 200) java.util.List<@Positive Long> stockIds);
+
     @GetMapping(PREFIX + "/balance")
     CommonResult<Balance> balance(@RequestParam("source") String source,
                                   @RequestParam("productId") Long productId,
@@ -75,6 +81,31 @@ public interface WmsStockApi {
         @NotNull @Positive private Long documentId;
         @NotBlank @Size(max = 200) private String documentNo;
         private BigDecimal price;
+        @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+        @Positive private Long positionId;
+        /** Reclassify unallocated stock; does not change warehouse physical quantity. */
+        @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+        private Boolean allocationOnly;
+    }
+
+    @Data
+    class Position {
+        @NotNull @Positive private Long stockId;
+        @NotNull @Positive private Long productId;
+        @NotNull @Positive private Long warehouseId;
+        @NotNull @Positive private Long locationId;
+        @NotNull @Positive private Long areaId;
+        @Positive private Long batchId;
+        @Size(max = 128) private String batchCode;
+        @NotBlank private String unit;
+    }
+
+    @Data
+    class PositionBalance {
+        private Long stockId;
+        private BigDecimal quantity;
+        private BigDecimal reservedQuantity;
+        private BigDecimal availableQuantity;
     }
 
     @Data

@@ -11508,6 +11508,7 @@ CREATE TABLE IF NOT EXISTS `wms_inventory` (
   `warehouse_id` bigint DEFAULT 0,
   `quantity` decimal(24,8) DEFAULT 0,
   `reserved_quantity` decimal(24,8) NOT NULL DEFAULT 0,
+  `putaway_quantity` decimal(24,8) NOT NULL DEFAULT 0,
   `remark` text,
   `tenant_id` bigint NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),

@@ -28,6 +28,7 @@ public class WmsIntegrationService {
     @Resource private WmsItemSkuMapper skuMapper;
     @Resource private WmsWarehouseMapper warehouseMapper;
     @Resource private WmsInventoryService inventoryService;
+    @Resource private WmsStockPositionService positions;
     @Resource private ErpStockIntentApi erpIntent;
     @Resource private MesStockIntentApi mesIntent;
     @Resource private MallStockIntentApi mallIntent;
@@ -102,6 +103,9 @@ public class WmsIntegrationService {
     @Transactional(rollbackFor = Exception.class)
     public WmsStockApi.Balance prepare(WmsStockApi.Movement request) {
         validateSource(request.getSource());
+        boolean allocation = Boolean.TRUE.equals(request.getAllocationOnly());
+        if ("MES".equals(request.getSource()) && request.getPositionId() == null) throw new IllegalArgumentException("MES 库存事务必须指定批次/库位明细");
+        if (!"MES".equals(request.getSource()) && (request.getPositionId() != null || allocation)) throw new IllegalArgumentException("只有 MES 可以指定生产库存明细");
         if (request.getQuantity().signum() == 0) throw new IllegalArgumentException("库存变更数量不能为零");
         Long tenant = tenant();
         String hash = DigestUtil.sha256Hex(JsonUtils.toJsonString(request));
@@ -122,13 +126,15 @@ public class WmsIntegrationService {
         Map<String, Object> stock = lockStock(skuId, warehouseId);
         BigDecimal quantity = (BigDecimal) stock.get("quantity");
         BigDecimal reserved = (BigDecimal) stock.get("reserved_quantity");
-        if (request.getQuantity().signum() < 0) {
-            BigDecimal needed = request.getQuantity().negate();
+        positions.reserve(skuId, warehouseId, request.getPositionId(), request.getQuantity(), allocation, quantity);
+        if (request.getQuantity().signum() < 0 || allocation) {
+            BigDecimal needed = request.getQuantity().abs();
             if (quantity.subtract(reserved).compareTo(needed) < 0) throw new IllegalArgumentException("WMS 可用库存不足：" + quantity.subtract(reserved));
             jdbc.update("UPDATE wms_inventory SET reserved_quantity=reserved_quantity+? WHERE id=? AND tenant_id=?", needed, stock.get("id"), tenant);
+            if (allocation) jdbc.update("UPDATE wms_inventory SET putaway_quantity=putaway_quantity+? WHERE id=? AND tenant_id=?", needed, stock.get("id"), tenant);
         }
-        jdbc.update("UPDATE wms_integration_movement SET state='PREPARED',sku_id=?,warehouse_id=?,quantity=?,price=?,document_id=?,document_no=? WHERE id=?",
-                skuId, warehouseId, request.getQuantity(), request.getPrice(), request.getDocumentId(), request.getDocumentNo(), movement.get("id"));
+        jdbc.update("UPDATE wms_integration_movement SET state='PREPARED',sku_id=?,warehouse_id=?,quantity=?,price=?,document_id=?,document_no=?,position_id=?,allocation_only=? WHERE id=?",
+                skuId, warehouseId, request.getQuantity(), request.getPrice(), request.getDocumentId(), request.getDocumentNo(), request.getPositionId(), allocation, movement.get("id"));
         return balanceByTarget(skuId, warehouseId);
     }
 
@@ -140,13 +146,18 @@ public class WmsIntegrationService {
         Long sku = ((Number) movement.get("sku_id")).longValue(), warehouse = ((Number) movement.get("warehouse_id")).longValue();
         BigDecimal delta = (BigDecimal) movement.get("quantity");
         Map<String, Object> stock = lockStock(sku, warehouse);
-        if (delta.signum() < 0) release(stock, delta.negate());
+        Long position = movement.get("position_id") == null ? null : ((Number) movement.get("position_id")).longValue();
+        boolean allocation = ((Number) movement.get("allocation_only")).intValue() != 0;
+        if (delta.signum() < 0 || allocation) release(stock, delta.abs());
+        if (allocation) jdbc.update("UPDATE wms_inventory SET putaway_quantity=putaway_quantity-? WHERE tenant_id=? AND id=? AND putaway_quantity>=?", delta, tenant(), stock.get("id"), delta);
+        if (!allocation && delta.signum() < 0 && position != null) positions.release(sku, warehouse, position, delta.negate());
         BigDecimal price = movement.get("price") == null ? BigDecimal.ZERO : (BigDecimal) movement.get("price");
-        inventoryService.changeInventory(new WmsInventoryChangeReqDTO()
+        if (allocation) positions.allocate(sku, warehouse, position, delta);
+        else inventoryService.changeInventory(new WmsInventoryChangeReqDTO()
                 .setOrderId(((Number) movement.get("document_id")).longValue()).setOrderNo((String) movement.get("document_no"))
                 .setOrderType(switch (command.getSource()) { case "ERP" -> 90; case "MES" -> 91; default -> 92; })
                 .setItems(List.of(new WmsInventoryChangeReqDTO.Item().setSkuId(sku).setWarehouseId(warehouse)
-                        .setQuantity(delta).setPrice(price).setTotalPrice(price.multiply(delta)).setRemark(command.getSource() + ":" + command.getBusinessKey()))));
+                        .setPositionId(position).setQuantity(delta).setPrice(price).setTotalPrice(price.multiply(delta)).setRemark(command.getSource() + ":" + command.getBusinessKey()))));
         jdbc.update("UPDATE wms_integration_movement SET state='COMMITTED',update_time=CURRENT_TIMESTAMP WHERE id=?", movement.get("id"));
     }
 
@@ -160,8 +171,14 @@ public class WmsIntegrationService {
         if ("ABORTED".equals(movement.get("state"))) return;
         if ("COMMITTED".equals(movement.get("state"))) throw new IllegalArgumentException("实物已变更，须使用退库/冲回单据");
         BigDecimal delta = (BigDecimal) movement.get("quantity");
-        if (delta != null && delta.signum() < 0) release(lockStock(((Number) movement.get("sku_id")).longValue(),
-                ((Number) movement.get("warehouse_id")).longValue()), delta.negate());
+        boolean allocation = ((Number) movement.get("allocation_only")).intValue() != 0;
+        if (delta != null && (delta.signum() < 0 || allocation)) {
+            Long sku = ((Number) movement.get("sku_id")).longValue(), warehouse = ((Number) movement.get("warehouse_id")).longValue();
+            var stock = lockStock(sku, warehouse);
+            release(stock, delta.abs());
+            if (allocation) jdbc.update("UPDATE wms_inventory SET putaway_quantity=putaway_quantity-? WHERE tenant_id=? AND id=? AND putaway_quantity>=?", delta, tenant(), stock.get("id"), delta);
+            if (!allocation && movement.get("position_id") != null) positions.release(sku, warehouse, ((Number) movement.get("position_id")).longValue(), delta.negate());
+        }
         jdbc.update("UPDATE wms_integration_movement SET state='ABORTED',update_time=CURRENT_TIMESTAMP WHERE id=?", movement.get("id"));
     }
 
@@ -173,6 +190,16 @@ public class WmsIntegrationService {
         }
         return balanceByTarget(target("PRODUCT", source, product), warehouse == null ? null : target("WAREHOUSE", source, warehouse));
     }
+    @Transactional(rollbackFor = Exception.class)
+    public void ensurePosition(WmsStockApi.Position request) {
+        Long sku = target("PRODUCT", "MES", request.getProductId()), warehouse = target("WAREHOUSE", "MES", request.getWarehouseId());
+        var itemSku = Objects.requireNonNull(skuMapper.selectById(sku), "映射的 WMS SKU 不存在");
+        var item = Objects.requireNonNull(itemMapper.selectById(itemSku.getItemId()), "映射的 WMS 商品不存在");
+        if (!Objects.equals(item.getUnit(), request.getUnit())) throw new IllegalArgumentException("MES 基本单位与 ERP 主档不一致");
+        lockStock(sku, warehouse);
+        positions.ensure(request, sku, warehouse);
+    }
+    public List<WmsStockApi.PositionBalance> positions(List<Long> ids) { return positions.balances(ids); }
     private WmsStockApi.Balance balanceByTarget(Long sku, Long warehouse) {
         String filter = warehouse == null ? "" : " AND warehouse_id=?";
         List<Object> args = new ArrayList<>(List.of(tenant(), sku));

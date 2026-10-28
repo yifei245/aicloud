@@ -157,6 +157,7 @@ public class MesWmTransferServiceImpl implements MesWmTransferService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishTransfer(Long id) {
+        transferMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmTransferDO>().eq("id", id).last("FOR UPDATE"));
         // 1. 校验存在 + 待执行状态
         MesWmTransferDO transfer = validateTransferExistsAndApproved(id);
         List<MesWmTransferLineDO> lines = transferLineService.getTransferLineListByTransferId(id);

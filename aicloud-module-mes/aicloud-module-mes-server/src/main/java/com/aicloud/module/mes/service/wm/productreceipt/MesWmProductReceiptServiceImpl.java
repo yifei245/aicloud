@@ -161,6 +161,7 @@ public class MesWmProductReceiptServiceImpl implements MesWmProductReceiptServic
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishProductReceipt(Long id) {
+        productReceiptMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmProductReceiptDO>().eq("id", id).last("FOR UPDATE"));
         // 校验存在
         MesWmProductReceiptDO receipt = validateProductReceiptExists(id);
         if (ObjUtil.notEqual(MesWmProductReceiptStatusEnum.APPROVED.getStatus(), receipt.getStatus())) {

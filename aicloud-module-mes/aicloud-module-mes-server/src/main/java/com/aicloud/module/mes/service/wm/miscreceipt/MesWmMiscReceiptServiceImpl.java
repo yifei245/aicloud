@@ -109,6 +109,7 @@ public class MesWmMiscReceiptServiceImpl implements MesWmMiscReceiptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishMiscReceipt(Long id) {
+        miscReceiptMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesWmMiscReceiptDO>().eq("id", id).last("FOR UPDATE"));
         // 校验存在
         MesWmMiscReceiptDO receipt = validateMiscReceiptExists(id);
         if (ObjUtil.notEqual(MesWmMiscReceiptStatusEnum.APPROVED.getStatus(), receipt.getStatus())) {

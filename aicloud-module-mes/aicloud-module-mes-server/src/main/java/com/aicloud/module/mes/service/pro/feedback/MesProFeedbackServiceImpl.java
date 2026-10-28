@@ -132,6 +132,7 @@ public class MesProFeedbackServiceImpl implements MesProFeedbackService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean approveFeedback(Long id) {
+        feedbackMapper.selectOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<MesProFeedbackDO>().eq("id", id).last("FOR UPDATE"));
         // 1.1 校验存在 + 审批中状态
         MesProFeedbackDO feedback = validateFeedbackStatusApproving(id);
         // 1.2 校验报工数量 > 0

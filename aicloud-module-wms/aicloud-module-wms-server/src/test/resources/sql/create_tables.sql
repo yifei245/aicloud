@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS "wms_inventory" (
     "area_id" bigint NOT NULL DEFAULT '0',
     "quantity" decimal(20, 2) NOT NULL DEFAULT '0',
     "reserved_quantity" decimal(24,8) NOT NULL DEFAULT '0',
+    "putaway_quantity" decimal(24,8) NOT NULL DEFAULT '0',
     "remark" varchar(255) DEFAULT NULL,
     "creator" varchar(64) DEFAULT '',
     "create_time" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

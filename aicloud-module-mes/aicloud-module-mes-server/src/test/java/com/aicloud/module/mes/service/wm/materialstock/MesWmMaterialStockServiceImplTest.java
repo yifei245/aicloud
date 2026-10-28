@@ -45,6 +45,34 @@ public class MesWmMaterialStockServiceImplTest extends BaseDbUnitTest {
     private MesWmWarehouseAreaService areaService;
     @MockitoBean
     private MesWmWarehouseService warehouseService;
+    @MockitoBean private com.aicloud.module.wms.api.integration.WmsStockApi wms;
+    @MockitoBean private com.aicloud.module.wms.api.integration.WmsStockBridge bridge;
+    @MockitoBean private com.aicloud.module.mes.service.md.unitmeasure.MesMdUnitMeasureService unitService;
+    @MockitoBean private com.aicloud.module.mes.service.wm.batch.MesWmBatchService batchService;
+    @MockitoBean private com.aicloud.module.mes.service.wm.warehouse.MesWmWarehouseLocationService locationService;
+
+    @org.junit.jupiter.api.BeforeEach void wmsBalances() {
+        when(wms.positions(org.mockito.ArgumentMatchers.anyList())).thenReturn(com.aicloud.framework.common.pojo.CommonResult.success(java.util.List.of()));
+    }
+
+    @Test void quantityComesFromWmsInsteadOfHistoricalMesBalance() {
+        var stock = createMaterialStockPojo(o -> {}); materialStockMapper.insert(stock);
+        when(wms.positions(java.util.List.of(stock.getId()))).thenReturn(com.aicloud.framework.common.pojo.CommonResult.success(java.util.List.of(
+                new com.aicloud.module.wms.api.integration.WmsStockApi.PositionBalance().setStockId(stock.getId())
+                        .setQuantity(new BigDecimal("7")).setReservedQuantity(new BigDecimal("2")).setAvailableQuantity(new BigDecimal("5")))));
+        var actual = materialStockService.getMaterialStock(stock.getId());
+        assertEquals(new BigDecimal("7"), actual.getQuantity());
+        assertEquals(new BigDecimal("5"), actual.getAvailableQuantity());
+        org.junit.jupiter.api.Assertions.assertThrows(com.aicloud.framework.common.exception.ServiceException.class, () -> materialStockService.validateSelectedStock(
+                stock.getId(), stock.getItemId(), stock.getBatchId(), stock.getBatchCode(), stock.getWarehouseId(), stock.getLocationId(), stock.getAreaId(), new BigDecimal("6")));
+        assertEquals(0, new BigDecimal("10").compareTo(materialStockMapper.selectById(stock.getId()).getQuantity()));
+    }
+
+    @Test void historicalQuantityCannotBeUsedWithoutWmsAllocation() {
+        var stock = createMaterialStockPojo(o -> {}); materialStockMapper.insert(stock);
+        assertEquals(BigDecimal.ZERO, materialStockService.getMaterialStock(stock.getId()).getQuantity());
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class, () -> materialStockService.updateMaterialStockQuantity(stock.getId(), BigDecimal.ONE, false));
+    }
 
     @Test
     public void testGetMaterialStockPage_virtualFilterOnly() {

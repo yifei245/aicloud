@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-10-17T15:26:11.960236+08:00",
+  "passed": true,
+  "checks": [
+    {
+      "check": "ERP receipt creates ten authoritative WMS units",
+      "passed": true
+    },
+    {
+      "check": "MES putaway exposes ten units in the selected WMS batch/bin",
+      "passed": true
+    },
+    {
+      "check": "Putaway does not create extra physical stock",
+      "passed": true
+    },
+    {
+      "check": "Replayed putaway returns the original position",
+      "passed": true
+    },
+    {
+      "check": "Replayed putaway does not duplicate allocated quantity",
+      "passed": true
+    },
+    {
+      "check": "Already allocated stock cannot be allocated again",
+      "passed": true
+    },
+    {
+      "check": "Finished product is projected from ERP master data",
+      "passed": true
+    },
+    {
+      "check": "MES issue reduces the same ERP/WMS physical warehouse to six",
+      "passed": true
+    },
+    {
+      "check": "MES issue creates four units in the mapped line-side warehouse",
+      "passed": true
+    },
+    {
+      "check": "Issue preserves exact batch identity",
+      "passed": true
+    },
+    {
+      "check": "Duplicate finished issue cannot deduct stock twice",
+      "passed": true
+    },
+    {
+      "check": "Return material restores physical warehouse stock to eight",
+      "passed": true
+    },
+    {
+      "check": "Return material reduces line-side physical stock to two",
+      "passed": true
+    },
+    {
+      "check": "Approved production feedback consumes two raw-material WIP units",
+      "passed": true
+    },
+    {
+      "check": "Production output creates two finished WIP units",
+      "passed": true
+    },
+    {
+      "check": "Finished receipt transfers two units to the physical WMS warehouse",
+      "passed": true
+    },
+    {
+      "check": "Finished receipt empties finished WIP without creating extra units",
+      "passed": true
+    },
+    {
+      "check": "ERP sees the finished goods produced by MES",
+      "passed": true
+    },
+    {
+      "check": "ERP outbound is reflected in MES batch stock without resync",
+      "passed": true
+    },
+    {
+      "check": "MES and ERP now read the same remaining warehouse stock",
+      "passed": true
+    },
+    {
+      "check": "Cancelled unexecuted issue leaves warehouse and batch stock unchanged",
+      "passed": true
+    },
+    {
+      "check": "Only one of two competing three-unit issues can succeed against five units",
+      "passed": true
+    },
+    {
+      "check": "Concurrent issues deduct exactly three physical units",
+      "passed": true
+    },
+    {
+      "check": "Concurrent failure leaves no phantom batch reservation",
+      "passed": true
+    }
+  ],
+  "records": {
+    "erpProduct": 22,
+    "erpWarehouse": 20,
+    "erpReceipt": 18,
+    "wmsSku": 20,
+    "wmsWarehouse": 18,
+    "mesItem": 13,
+    "mesWarehouse": 10,
+    "wipWarehouse": 4,
+    "wipWmsWarehouse": 12,
+    "process": 7,
+    "workstation": 7,
+    "mesPosition": 9,
+    "batchId": 6,
+    "batchCode": "BATCH2026101700000006",
+    "workOrder": 3,
+    "issue": 3,
+    "returnIssue": 2,
+    "finishedErpProduct": 23,
+    "finishedMesItem": 14,
+    "productionWorkOrder": 3,
+    "productionTask": 2,
+    "productionFeedback": 2,
+    "finishedReceipt": 2,
+    "erpOutbound": 1,
+    "cancelledIssue": 4,
+    "competingIssues": [
+      5,
+      6
+    ]
+  }
+}
